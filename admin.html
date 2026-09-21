@@ -9,6 +9,11 @@
     <!-- LIBRARY HTML2PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+    <!-- FIREBASE SDKs (v10 COMPAT VERSION UNTUK BROWSER SCRIPT) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
+
     <style>
         /* === RESET & PERATAAN === */
         * {
@@ -736,7 +741,7 @@
                     </small>
                 </div>
 
-                <button class="btn-utama" onclick="simpanBerita()" style="margin-top:4px;">💾 Simpan Berita</button>
+                <button class="btn-utama" onclick="simpanBerita()">💾 Simpan Berita</button>
             </div>
         </div>
 
@@ -885,6 +890,22 @@
     </div>
 
     <script>
+        // === INISIALISASI FIREBASE ===
+        const firebaseConfig = {
+            apiKey: "AIzaSyCc1rUgdchrZ8vxk3HF6-yQKMZze-dNwzE",
+            authDomain: "tribuanaputra-1968.firebaseapp.com",
+            databaseURL: "https://tribuanaputra-1968-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "tribuanaputra-1968",
+            storageBucket: "tribuanaputra-1968.firebasestorage.app",
+            messagingSenderId: "772922168211",
+            appId: "1:772922168211:web:5bb280501e3d3e6fc50e66",
+            measurementId: "G-5Z8E2GWDHZ"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+        const db = firebase.database();
+
         // GLOBAL STATE
         let daftarSemuaBerita = JSON.parse(localStorage.getItem('daftarBerita') || '[]');
         let sedangEdit = false;
@@ -894,13 +915,85 @@
         let daftarRedaksi = JSON.parse(localStorage.getItem('daftarRedaksi') || '[]');
         let posisiKursorTerakhir = null;
 
+        // HELPER SINKRONISASI KE LOCALSTORAGE & FIREBASE
+        function setLocalAndCloud(key, value) {
+            let strVal = typeof value === 'object' ? JSON.stringify(value) : value;
+            localStorage.setItem(key, strVal);
+            db.ref('siteData/' + key).set(value);
+        }
+
+        // PRAPEMUATAN REALTIME LISTENER DARI FIREBASE
+        function inisialisasiFirebaseListener() {
+            db.ref('siteData').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                if (data.daftarBerita) {
+                    daftarSemuaBerita = typeof data.daftarBerita === 'string' ? JSON.parse(data.daftarBerita) : data.daftarBerita;
+                    localStorage.setItem('daftarBerita', JSON.stringify(daftarSemuaBerita));
+                    muatArsipBerita();
+                }
+                if (data.settingUtama) {
+                    let d = typeof data.settingUtama === 'string' ? JSON.parse(data.settingUtama) : data.settingUtama;
+                    localStorage.setItem('settingUtama', JSON.stringify(d));
+                    muatSettingUtama();
+                }
+                if (data.isiTentangPerusahaan) {
+                    localStorage.setItem('isiTentangPerusahaan', data.isiTentangPerusahaan);
+                }
+                if (data.tentangPerusahaan) {
+                    let d = typeof data.tentangPerusahaan === 'string' ? JSON.parse(data.tentangPerusahaan) : data.tentangPerusahaan;
+                    localStorage.setItem('tentangPerusahaan', JSON.stringify(d));
+                    muatTentangPerusahaan();
+                }
+                if (data.fotoPimred) localStorage.setItem('fotoPimred', data.fotoPimred);
+                if (data.daftarRedaksi) {
+                    daftarRedaksi = typeof data.daftarRedaksi === 'string' ? JSON.parse(data.daftarRedaksi) : data.daftarRedaksi;
+                    localStorage.setItem('daftarRedaksi', JSON.stringify(daftarRedaksi));
+                    muatDataRedaksi();
+                }
+                if (data.isiIndukOrganisasi) localStorage.setItem('isiIndukOrganisasi', data.isiIndukOrganisasi);
+                if (data.dataOrganisasi) localStorage.setItem('dataOrganisasi', JSON.stringify(data.dataOrganisasi));
+                if (data.logoOrganisasi) localStorage.setItem('logoOrganisasi', data.logoOrganisasi);
+                if (data.pedomanMediaSiber) {
+                    localStorage.setItem('pedomanMediaSiber', data.pedomanMediaSiber);
+                    muatPedomanMediaSiber();
+                }
+                if (data.pengaturanWarna) {
+                    let d = typeof data.pengaturanWarna === 'string' ? JSON.parse(data.pengaturanWarna) : data.pengaturanWarna;
+                    localStorage.setItem('pengaturanWarna', JSON.stringify(d));
+                    muatWarnaTampilan();
+                }
+                if (data.metaKeywordBerita) {
+                    localStorage.setItem('metaKeywordBerita', data.metaKeywordBerita);
+                    muatMetaKeyword();
+                }
+                if (data.runningTextData) {
+                    localStorage.setItem('runningTextData', typeof data.runningTextData === 'string' ? data.runningTextData : JSON.stringify(data.runningTextData));
+                    muatPengumumanAdmin();
+                }
+                if (data.daftarIklanHeader) {
+                    localStorage.setItem('daftarIklanHeader', typeof data.daftarIklanHeader === 'string' ? data.daftarIklanHeader : JSON.stringify(data.daftarIklanHeader));
+                    muatDaftarIklanHeader();
+                }
+                if (data.daftarIklanSamping) {
+                    localStorage.setItem('daftarIklanSamping', typeof data.daftarIklanSamping === 'string' ? data.daftarIklanSamping : JSON.stringify(data.daftarIklanSamping));
+                    muatDaftarIklanSamping();
+                }
+                if (data.daftarAfiliasi) {
+                    localStorage.setItem('daftarAfiliasi', typeof data.daftarAfiliasi === 'string' ? data.daftarAfiliasi : JSON.stringify(data.daftarAfiliasi));
+                    muatDaftarAfiliasi();
+                }
+            });
+        }
+
         function tampilHalaman(id) {
             document.querySelectorAll('.halaman').forEach(h => h.classList.remove('aktif'));
             let hal = document.getElementById(id);
             if (hal) {
                 hal.classList.add('aktif');
                 if (id === 'arsip-berita') muatArsipBerita();
-                if (id === 'daftar-iklan') {muatDaftarIklanHeader(); muatDaftarIklanSamping();}
+                if (id === 'daftar-iklan') { muatDaftarIklanHeader(); muatDaftarIklanSamping(); }
                 if (id === 'afiliasi') muatDaftarAfiliasi();
             }
         }
@@ -989,13 +1082,13 @@
         function simpanTentangPerusahaan() {
             let isi = document.getElementById('deskripsi-perusahaan').innerHTML;
             let namaPimred = document.getElementById('nama-pemimpin-redaksi').value.trim();
-            localStorage.setItem('isiTentangPerusahaan', isi);
-            localStorage.setItem('tentangPerusahaan', JSON.stringify({
+            setLocalAndCloud('isiTentangPerusahaan', isi);
+            setLocalAndCloud('tentangPerusahaan', {
                 namaPemimpinRedaksi: namaPimred,
                 foto: localStorage.getItem('fotoPimred') || '',
                 isi: isi
-            }));
-            alert("✅ Data Perusahaan Tersimpan!");
+            });
+            alert("✅ Data Perusahaan Tersimpan ke Cloud!");
         }
 
         function muatTentangPerusahaan() {
@@ -1008,19 +1101,19 @@
         function pratinjauFotoPimred(input) {
             if (!input.files || !input.files[0]) return;
             let p = new FileReader();
-            p.onload = e => localStorage.setItem('fotoPimred', e.target.result);
+            p.onload = e => setLocalAndCloud('fotoPimred', e.target.result);
             p.readAsDataURL(input.files[0]);
         }
 
         /* INDUK ORGANISASI */
         function simpanIndukOrganisasi() {
             let isi = document.getElementById('deskripsi-organisasi').innerHTML;
-            localStorage.setItem('isiIndukOrganisasi', isi);
-            localStorage.setItem('dataOrganisasi', JSON.stringify({
+            setLocalAndCloud('isiIndukOrganisasi', isi);
+            setLocalAndCloud('dataOrganisasi', {
                 logoOrganisasi: localStorage.getItem('logoOrganisasi') || '',
                 isi: isi
-            }));
-            alert("✅ Data Organisasi Tersimpan!");
+            });
+            alert("✅ Data Organisasi Tersimpan ke Cloud!");
         }
 
         function muatIndukOrganisasi() {
@@ -1031,20 +1124,20 @@
         document.getElementById('logo-organisasi')?.addEventListener('change', function () {
             if (!this.files || !this.files[0]) return;
             let p = new FileReader();
-            p.onload = e => localStorage.setItem('logoOrganisasi', e.target.result);
+            p.onload = e => setLocalAndCloud('logoOrganisasi', e.target.result);
             p.readAsDataURL(this.files[0]);
         });
 
         /* PEDOMAN MEDIA SIBER */
-        function terapkanBoldPedoman() {document.execCommand('bold', false, null);}
-        function terapkanItalicPedoman() {document.execCommand('italic', false, null);}
-        function buatDaftarBiasaPedoman() {document.execCommand('insertUnorderedList', false, null);}
-        function buatDaftarAngkaPedoman() {document.execCommand('insertOrderedList', false, null);}
+        function terapkanBoldPedoman() { document.execCommand('bold', false, null); }
+        function terapkanItalicPedoman() { document.execCommand('italic', false, null); }
+        function buatDaftarBiasaPedoman() { document.execCommand('insertUnorderedList', false, null); }
+        function buatDaftarAngkaPedoman() { document.execCommand('insertOrderedList', false, null); }
 
         function simpanPedomanMediaSiber() {
             let isi = document.getElementById('deskripsi-pedoman-siber').innerHTML;
-            localStorage.setItem('pedomanMediaSiber', isi);
-            alert("✅ Pedoman Media Siber Tersimpan!");
+            setLocalAndCloud('pedomanMediaSiber', isi);
+            alert("✅ Pedoman Media Siber Tersimpan ke Cloud!");
         }
 
         function muatPedomanMediaSiber() {
@@ -1064,17 +1157,17 @@
                 igLink: document.getElementById('ig-link').value.trim(),
                 ytLink: document.getElementById('yt-link').value.trim()
             };
-            localStorage.setItem('settingUtama', JSON.stringify(data));
+            setLocalAndCloud('settingUtama', data);
             let fileLogo = document.getElementById('logo-website').files[0];
             if (fileLogo) {
                 let p = new FileReader();
                 p.onload = e => {
-                    localStorage.setItem('logoWebsite', e.target.result);
-                    alert("✅ Setting Utama tersimpan!");
+                    setLocalAndCloud('logoWebsite', e.target.result);
+                    alert("✅ Setting Utama tersimpan ke Cloud!");
                 };
                 p.readAsDataURL(fileLogo);
             } else {
-                alert("✅ Setting Utama tersimpan!");
+                alert("✅ Setting Utama tersimpan ke Cloud!");
             }
         }
 
@@ -1105,10 +1198,10 @@
                 tb.appendChild(tr);
             });
         }
-        function tambahBarisRedaksi() {daftarRedaksi.push({jabatan: '', nama: ''}); tampilTabelRedaksi();}
-        function hapusBarisRedaksi(i) {daftarRedaksi.splice(i, 1); tampilTabelRedaksi();}
-        function simpanDataRedaksi() {localStorage.setItem('daftarRedaksi', JSON.stringify(daftarRedaksi)); alert("✅ Data Redaksi Tersimpan!");}
-        function muatDataRedaksi() {tampilTabelRedaksi();}
+        function tambahBarisRedaksi() { daftarRedaksi.push({ jabatan: '', nama: '' }); tampilTabelRedaksi(); }
+        function hapusBarisRedaksi(i) { daftarRedaksi.splice(i, 1); tampilTabelRedaksi(); }
+        function simpanDataRedaksi() { setLocalAndCloud('daftarRedaksi', daftarRedaksi); alert("✅ Data Redaksi Tersimpan ke Cloud!"); }
+        function muatDataRedaksi() { tampilTabelRedaksi(); }
 
         /* WARNA & TAMPILAN */
         function simpanWarnaTampilan() {
@@ -1126,9 +1219,9 @@
                 web_footer_latar: document.getElementById('web_footer_latar').value,
                 web_footer_teks: document.getElementById('web_footer_teks').value
             };
-            localStorage.setItem('pengaturanWarna', JSON.stringify(d));
+            setLocalAndCloud('pengaturanWarna', d);
             terapkanWarnaTampilan(d);
-            alert("✅ Semua warna tampilan berhasil disimpan!");
+            alert("✅ Semua warna tampilan berhasil disimpan ke Cloud!");
         }
 
         function terapkanWarnaTampilan(w) {
@@ -1150,8 +1243,9 @@
 
         /* META KEYWORD */
         function simpanMetaKeyword() {
-            localStorage.setItem('metaKeywordBerita', document.getElementById('input-meta-keyword').value.trim());
-            alert("✅ Meta Keyword Tersimpan!");
+            let val = document.getElementById('input-meta-keyword').value.trim();
+            setLocalAndCloud('metaKeywordBerita', val);
+            alert("✅ Meta Keyword Tersimpan ke Cloud!");
         }
         function muatMetaKeyword() {
             let k = localStorage.getItem('metaKeywordBerita');
@@ -1251,7 +1345,7 @@
 
         function simpanBerita() {
             let judul = document.getElementById('judul-berita').value.trim();
-            if (!judul) {alert("Judul Wajib Diisi!"); return;}
+            if (!judul) { alert("Judul Wajib Diisi!"); return; }
             let kategori = Array.from(document.getElementById('kategori-berita').selectedOptions).map(o => o.value);
             let tgl = document.getElementById('tgl-publish').value;
             let jam = document.getElementById('jam-publish').value;
@@ -1280,7 +1374,7 @@
                     };
                 }
                 sedangEdit = false; idBeritaDiedit = null;
-                alert("✅ Berita Diperbarui!");
+                alert("✅ Berita Diperbarui di Cloud!");
             } else {
                 let b = {
                     id: Date.now(),
@@ -1296,9 +1390,9 @@
                     viewer: 0
                 };
                 daftarSemuaBerita.unshift(b);
-                alert("✅ Berita Tersimpan dengan Permalink: /" + urlSlug);
+                alert("✅ Berita Tersimpan ke Cloud dengan Permalink: /" + urlSlug);
             }
-            localStorage.setItem('daftarBerita', JSON.stringify(daftarSemuaBerita));
+            setLocalAndCloud('daftarBerita', daftarSemuaBerita);
             resetFormBerita();
         }
 
@@ -1314,7 +1408,7 @@
 
         function muatArsipBerita() {
             let tb = document.getElementById('daftar-arsip-berita');
-            if (!daftarSemuaBerita.length) {tb.innerHTML = '<tr><td colspan="9" style="text-align:center;">Kosong</td></tr>'; return;}
+            if (!daftarSemuaBerita.length) { tb.innerHTML = '<tr><td colspan="9" style="text-align:center;">Kosong</td></tr>'; return; }
             tb.innerHTML = daftarSemuaBerita.map((b, i) => `
                 <tr>
                     <td style="text-align:center">${i + 1}</td>
@@ -1392,13 +1486,13 @@
             });
 
             sedangEdit = true; idBeritaDiedit = id;
-            window.scrollTo({top: 0, behavior: 'smooth'});
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function hapusBerita(id) {
             if (!confirm("Hapus berita ini?")) return;
             daftarSemuaBerita = daftarSemuaBerita.filter(x => x.id !== id);
-            localStorage.setItem('daftarBerita', JSON.stringify(daftarSemuaBerita));
+            setLocalAndCloud('daftarBerita', daftarSemuaBerita);
             muatArsipBerita();
         }
 
@@ -1435,8 +1529,8 @@
                 gambar: gambarIklanHeaderBase64
             });
 
-            localStorage.setItem('daftarIklanHeader', JSON.stringify(d));
-            alert("✅ Iklan Header Tersimpan!");
+            setLocalAndCloud('daftarIklanHeader', d);
+            alert("✅ Iklan Header Tersimpan ke Cloud!");
 
             document.getElementById('gambar-iklan-header').value = '';
             document.getElementById('judul-iklan-header').value = '';
@@ -1474,7 +1568,7 @@
             if (confirm("Hapus iklan ini?")) {
                 let d = JSON.parse(localStorage.getItem('daftarIklanHeader') || '[]');
                 d.splice(i, 1);
-                localStorage.setItem('daftarIklanHeader', JSON.stringify(d));
+                setLocalAndCloud('daftarIklanHeader', d);
                 muatDaftarIklanHeader();
             }
         }
@@ -1484,7 +1578,7 @@
             let input = document.getElementById('gambar-samping');
             if (!input.files || !input.files[0]) return;
             let p = new FileReader();
-            p.onload = e => {gambarIklanSampingBase64 = e.target.result;};
+            p.onload = e => { gambarIklanSampingBase64 = e.target.result; };
             p.readAsDataURL(input.files[0]);
         }
 
@@ -1497,8 +1591,8 @@
                 akhir: document.getElementById('akhir-samping').value,
                 gambar: gambarIklanSampingBase64
             });
-            localStorage.setItem('daftarIklanSamping', JSON.stringify(d));
-            alert("✅ Iklan Samping Tersimpan!");
+            setLocalAndCloud('daftarIklanSamping', d);
+            alert("✅ Iklan Samping Tersimpan ke Cloud!");
         }
 
         function muatDaftarIklanSamping() {
@@ -1511,7 +1605,7 @@
         function hapusIklanSamping(i) {
             let d = JSON.parse(localStorage.getItem('daftarIklanSamping') || '[]');
             d.splice(i, 1);
-            localStorage.setItem('daftarIklanSamping', JSON.stringify(d));
+            setLocalAndCloud('daftarIklanSamping', d);
             muatDaftarIklanSamping();
         }
 
@@ -1545,13 +1639,13 @@
                     link: link
                 });
 
-                localStorage.setItem('daftarAfiliasi', JSON.stringify(d));
+                setLocalAndCloud('daftarAfiliasi', d);
 
                 document.getElementById('nama-afiliasi').value = '';
                 fileInput.value = '';
                 document.getElementById('link-afiliasi').value = '';
 
-                alert('Iklan afiliasi berhasil ditambahkan!');
+                alert('Iklan afiliasi berhasil ditambahkan ke Cloud!');
                 muatDaftarAfiliasi();
             };
 
@@ -1588,7 +1682,7 @@
             if (confirm('Yakin ingin menghapus iklan afiliasi ini?')) {
                 let d = JSON.parse(localStorage.getItem('daftarAfiliasi') || '[]');
                 d.splice(index, 1);
-                localStorage.setItem('daftarAfiliasi', JSON.stringify(d));
+                setLocalAndCloud('daftarAfiliasi', d);
                 muatDaftarAfiliasi();
             }
         }
@@ -1600,9 +1694,9 @@
             let p = new FileReader();
             p.onload = e => {
                 let d = JSON.parse(localStorage.getItem('daftarVideo') || '[]');
-                d.push({id: Date.now(), judul: document.getElementById('judul-video').value, url: e.target.result});
-                localStorage.setItem('daftarVideo', JSON.stringify(d));
-                alert("✅ Video Tersimpan!");
+                d.push({ id: Date.now(), judul: document.getElementById('judul-video').value, url: e.target.result });
+                setLocalAndCloud('daftarVideo', d);
+                alert("✅ Video Tersimpan ke Cloud!");
             };
             p.readAsDataURL(file);
         }
@@ -1613,14 +1707,14 @@
             for (let i = 0; i < localStorage.length; i++) {
                 let k = localStorage.key(i); semua[k] = localStorage.getItem(k);
             }
-            let blob = new Blob([JSON.stringify(semua, null, 2)], {type: 'application/json'});
+            let blob = new Blob([JSON.stringify(semua, null, 2)], { type: 'application/json' });
             let a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = 'backup-tribuanaputra-' + (new Date().toISOString().slice(0, 10)) + '.json';
             a.click();
         }
 
-        function keluar() {if (confirm("Yakin Logout?")) alert("Logout Berhasil");}
+        function keluar() { if (confirm("Yakin Logout?")) alert("Logout Berhasil"); }
 
         /* MANAJEMEN RUNNING TEXT */
         function tambahBarisPengumuman(teks = '', link = '') {
@@ -1649,18 +1743,18 @@
                 let link = item.querySelector('.input-link-running').value.trim();
 
                 if (teks !== '') {
-                    daftarData.push({teks: teks, link: link});
+                    daftarData.push({ teks: teks, link: link });
                 }
             });
 
-            localStorage.setItem('runningTextData', JSON.stringify(daftarData));
+            setLocalAndCloud('runningTextData', daftarData);
 
             let pesan = document.getElementById('pesan-pengumuman');
             if (pesan) {
                 pesan.style.display = 'block';
-                setTimeout(() => {pesan.style.display = 'none';}, 3000);
+                setTimeout(() => { pesan.style.display = 'none'; }, 3000);
             } else {
-                alert("✅ Running text & link berhasil disimpan!");
+                alert("✅ Running text & link berhasil disimpan ke Cloud!");
             }
         }
 
@@ -1714,9 +1808,9 @@
             const opsi = {
                 margin: 12,
                 filename: `${judulBerita.toLowerCase().replace(/[^a-z0-9]/g, "_")}.pdf`,
-                image: {type: 'jpeg', quality: 0.98},
-                html2canvas: {scale: 2},
-                jsPDF: {unit: 'mm', format: 'a4', orientation: 'portrait'}
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
             html2pdf().set(opsi).from(wadahCetak).save();
@@ -1724,6 +1818,7 @@
 
         /* INIT DAFTAR DOKUMEN */
         document.addEventListener('DOMContentLoaded', function () {
+            inisialisasiFirebaseListener();
             muatSettingUtama();
             muatPengumumanAdmin();
             muatTentangPerusahaan();

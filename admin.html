@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,6 +18,7 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', sans-serif;
         }
+
         :root {
             --kiri-bg: #2c3e50;
             --kiri-text: #fff;
@@ -25,10 +27,12 @@
             --judul-bg: #34495e;
             --judul-text: #fff;
         }
+
         body {
             display: flex;
             min-height: 100vh;
         }
+
         /* PERATAAN DAFTAR EDITOR */
         #deskripsi-perusahaan ul,
         #deskripsi-perusahaan ol,
@@ -39,6 +43,7 @@
             margin: 4px 0 !important;
             padding-left: 20px !important;
         }
+
         /* === LAYOUT UTAMA === */
         .sidebar {
             width: 260px;
@@ -47,10 +52,12 @@
             padding: 20px 0;
             flex-shrink: 0;
         }
+
         .sidebar h3 {
             padding: 12px 20px;
             border-bottom: 1px solid #556;
         }
+
         .sidebar a {
             display: block;
             padding: 10px 20px;
@@ -58,18 +65,22 @@
             text-decoration: none;
             font-size: 14px;
         }
+
         .sidebar a:hover {
             background: rgba(255, 255, 255, 0.1);
         }
+
         .menu-judul {
             font-weight: bold;
             cursor: default;
             background: rgba(0, 0, 0, 0.15);
         }
+
         .submenu {
             padding-left: 36px !important;
             font-size: 13px !important;
         }
+
         .content {
             flex: 1;
             background: var(--kanan-bg);
@@ -77,6 +88,7 @@
             padding: 24px;
             overflow-y: auto;
         }
+
         .judul-section {
             background: var(--judul-bg);
             color: var(--judul-text);
@@ -85,6 +97,7 @@
             margin-bottom: 16px;
             font-weight: 600;
         }
+
         .card {
             background: #fff;
             padding: 20px;
@@ -92,17 +105,20 @@
             margin-bottom: 16px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
         }
+
         .grid3 {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 16px;
         }
+
         .stat-box {
             padding: 16px;
             background: #eaf2f8;
             border-radius: 6px;
             text-align: center;
         }
+
         input,
         select,
         textarea {
@@ -113,6 +129,7 @@
             border-radius: 4px;
             font-size: 14px;
         }
+
         button {
             padding: 9px 16px;
             border: none;
@@ -121,18 +138,22 @@
             font-size: 14px;
             margin: 4px;
         }
+
         .btn-utama {
             background: #27ae60;
             color: #fff;
         }
+
         .btn-baru {
             background: #2980b9;
             color: #fff;
         }
+
         .btn-hapus {
             background: #e74c3c;
             color: #fff;
         }
+
         .toolbar {
             display: flex;
             flex-wrap: wrap;
@@ -143,6 +164,7 @@
             background: #f4f4f4;
             border-radius: 4px;
         }
+
         .toolbar button,
         .toolbar select {
             height: 34px;
@@ -153,14 +175,17 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         .toolbar button:hover {
             background: #e6e6e6;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
         }
+
         th,
         td {
             border: 1px solid #ddd;
@@ -168,15 +193,19 @@
             text-align: left;
             font-size: 14px;
         }
+
         th {
             background: #f0f0f0;
         }
+
         .halaman {
             display: none;
         }
+
         .halaman.aktif {
             display: block;
         }
+
         /* TAMPILAN IKLAN HEADER */
         .img-iklan-header-preview {
             max-height: 200px;
@@ -187,6 +216,7 @@
             border: 1px solid #ddd;
             display: block;
         }
+
         .img-iklan-header-thumb {
             max-height: 80px;
             height: 100%;
@@ -195,6 +225,7 @@
             object-fit: contain;
             border-radius: 3px;
         }
+
         /* SAKLAR TOGGLE */
         .saklar-berita {
             position: relative;
@@ -202,11 +233,13 @@
             width: 44px;
             height: 22px;
         }
+
         .saklar-berita input {
             opacity: 0;
             width: 0;
             height: 0;
         }
+
         .latar-saklar {
             position: absolute;
             cursor: pointer;
@@ -218,6 +251,7 @@
             border-radius: 22px;
             transition: 0.25s;
         }
+
         .latar-saklar:before {
             position: absolute;
             content: "";
@@ -229,12 +263,15 @@
             border-radius: 50%;
             transition: 0.25s;
         }
+
         .saklar-berita input:checked+.latar-saklar {
             background: #28a745;
         }
+
         .saklar-berita input:checked+.latar-saklar:before {
             transform: translateX(22px);
         }
+
         /* MODAL LIHAT BERITA LENGKAP */
         .modal-overlay {
             display: none;
@@ -248,6 +285,7 @@
             justify-content: center;
             align-items: center;
         }
+
         .modal-container {
             background: #fff;
             width: 80%;
@@ -260,10 +298,19 @@
             overflow: hidden;
             animation: modalTampil 0.2s ease-out;
         }
+
         @keyframes modalTampil {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
+
         .modal-header {
             padding: 16px 20px;
             background: var(--judul-bg);
@@ -272,11 +319,13 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .modal-header h3 {
             font-size: 18px;
             margin: 0;
             line-height: 1.4;
         }
+
         .modal-body {
             padding: 20px;
             overflow-y: auto;
@@ -284,12 +333,14 @@
             font-size: 15px;
             line-height: 1.6;
         }
+
         .modal-body img {
             max-width: 100%;
             height: auto;
             display: block;
             margin: 10px 0;
         }
+
         .modal-info {
             font-size: 12px;
             color: #666;
@@ -297,6 +348,7 @@
             padding-bottom: 12px;
             border-bottom: 1px solid #eee;
         }
+
         .modal-footer {
             padding: 12px 20px;
             background: #f4f4f4;
@@ -305,16 +357,19 @@
         }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
         <h3>📋 Menu Admin</h3>
         <a href="#" onclick="tampilHalaman('beranda'); return false;">🏠 Dashboard</a>
         <a href="#" class="menu-judul">⚙️ Konfigurasi ▼</a>
         <a href="#" class="submenu" onclick="tampilHalaman('setting-utama'); return false;">• Setting Utama</a>
-        <a href="#" class="submenu" onclick="tampilHalaman('tentang-perusahaan'); return false;">• Tentang Perusahaan</a>
+        <a href="#" class="submenu" onclick="tampilHalaman('tentang-perusahaan'); return false;">• Tentang
+            Perusahaan</a>
         <a href="#" class="submenu" onclick="tampilHalaman('data-redaksi'); return false;">• Data Redaksi</a>
         <a href="#" class="submenu" onclick="tampilHalaman('induk-organisasi'); return false;">• Induk Organisasi</a>
-        <a href="#" class="submenu" onclick="tampilHalaman('pedoman-media-siber'); return false;">• Pedoman Media Siber</a>
+        <a href="#" class="submenu" onclick="tampilHalaman('pedoman-media-siber'); return false;">• Pedoman Media
+            Siber</a>
         <a href="#" class="submenu" onclick="tampilHalaman('setting-tampilan'); return false;">• Setting Tampilan</a>
         <a href="#" class="submenu" onclick="tampilHalaman('sec-meta-keyword'); return false;">• Meta Keyword Admin</a>
         <a href="#" class="menu-judul">📰 Data Berita ▼</a>
@@ -334,7 +389,8 @@
         <!-- DASHBOARD -->
         <div id="beranda" class="halaman aktif">
             <h2>Hai, Administrator 👋</h2>
-            <p style="margin:8px 0 20px 0;">Selamat datang di beranda Website Tribuana Putra News, Portal Berita Online Priangan Timur</p>
+            <p style="margin:8px 0 20px 0;">Selamat datang di beranda Website Tribuana Putra News, Portal Berita Online
+                Priangan Timur</p>
             <div class="grid3">
                 <div class="stat-box">
                     <h3 id="total-berita">0</h3>
@@ -378,7 +434,8 @@
                 <input type="file" id="foto-pemimpin-redaksi" accept="image/*" onchange="pratinjauFotoPimred(this)">
                 <label>Mengenal Perusahaan</label>
                 <div class="toolbar">
-                    <select onchange="formatUkuranFont(this.value); this.selectedIndex=0;" style="width: auto; display: inline-block;">
+                    <select onchange="formatUkuranFont(this.value); this.selectedIndex=0;"
+                        style="width: auto; display: inline-block;">
                         <option value="" disabled selected>Ukuran Font</option>
                         <option value="11px">11</option>
                         <option value="12px">12</option>
@@ -388,16 +445,25 @@
                         <option value="20px">20</option>
                         <option value="24px">24</option>
                     </select>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('bold')" title="Bold"><b>B</b></button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('italic')" title="Italic"><i>I</i></button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyLeft')" title="Rata Kiri">Kiri</button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyRight')" title="Rata Kanan">Kanan</button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyCenter')" title="Tengah">Tengah</button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyFull')" title="Rata Kanan-Kiri">Rata</button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="tambahLink()" title="Sisipkan Link">🔗 Link</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('bold')"
+                        title="Bold"><b>B</b></button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('italic')"
+                        title="Italic"><i>I</i></button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyLeft')"
+                        title="Rata Kiri">Kiri</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyRight')"
+                        title="Rata Kanan">Kanan</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyCenter')"
+                        title="Tengah">Tengah</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyFull')"
+                        title="Rata Kanan-Kiri">Rata</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="tambahLink()"
+                        title="Sisipkan Link">🔗 Link</button>
                 </div>
-                <div id="deskripsi-perusahaan" contenteditable="true" style="min-height:180px; border:1px solid #ccc; padding:8px; background:#fff;"></div>
-                <button class="btn-utama" onclick="simpanTentangPerusahaan()" style="margin-top:10px;">💾 Simpan Data</button>
+                <div id="deskripsi-perusahaan" contenteditable="true"
+                    style="min-height:180px; border:1px solid #ccc; padding:8px; background:#fff;"></div>
+                <button class="btn-utama" onclick="simpanTentangPerusahaan()" style="margin-top:10px;">💾 Simpan
+                    Data</button>
             </div>
         </div>
 
@@ -417,7 +483,8 @@
                     </thead>
                     <tbody id="isi-tabel-redaksi"></tbody>
                 </table>
-                <button class="btn-utama" onclick="simpanDataRedaksi()" style="margin-top:15px;">💾 Simpan Semua Redaksi</button>
+                <button class="btn-utama" onclick="simpanDataRedaksi()" style="margin-top:15px;">💾 Simpan Semua
+                    Redaksi</button>
             </div>
         </div>
 
@@ -429,7 +496,8 @@
                 <input type="file" accept="image/*" id="logo-organisasi" onchange="bacaLogoOrganisasi(this)">
                 <label>Keterangan Organisasi</label>
                 <div class="toolbar">
-                    <select onchange="formatUkuranFont(this.value); this.selectedIndex=0;" style="width: auto; display: inline-block;">
+                    <select onchange="formatUkuranFont(this.value); this.selectedIndex=0;"
+                        style="width: auto; display: inline-block;">
                         <option value="" disabled selected>Ukuran Font</option>
                         <option value="11px">11</option>
                         <option value="12px">12</option>
@@ -439,16 +507,25 @@
                         <option value="20px">20</option>
                         <option value="24px">24</option>
                     </select>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('bold')" title="Bold"><b>B</b></button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('italic')" title="Italic"><i>I</i></button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyLeft')" title="Rata Kiri">Kiri</button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyRight')" title="Rata Kanan">Kanan</button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyCenter')" title="Tengah">Tengah</button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyFull')" title="Rata Kanan-Kiri">Rata</button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="tambahLink()" title="Sisipkan Link">🔗 Link</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('bold')"
+                        title="Bold"><b>B</b></button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('italic')"
+                        title="Italic"><i>I</i></button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyLeft')"
+                        title="Rata Kiri">Kiri</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyRight')"
+                        title="Rata Kanan">Kanan</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyCenter')"
+                        title="Tengah">Tengah</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyFull')"
+                        title="Rata Kanan-Kiri">Rata</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="tambahLink()"
+                        title="Sisipkan Link">🔗 Link</button>
                 </div>
-                <div id="deskripsi-organisasi" contenteditable="true" style="min-height:180px; border:1px solid #ccc; padding:8px; background:#fff;"></div>
-                <button class="btn-utama" onclick="simpanIndukOrganisasi()" style="margin-top:10px;">💾 Simpan Data</button>
+                <div id="deskripsi-organisasi" contenteditable="true"
+                    style="min-height:180px; border:1px solid #ccc; padding:8px; background:#fff;"></div>
+                <button class="btn-utama" onclick="simpanIndukOrganisasi()" style="margin-top:10px;">💾 Simpan
+                    Data</button>
             </div>
         </div>
 
@@ -463,8 +540,10 @@
                     <button type="button" onclick="formatTeks('insertUnorderedList')">• Daftar</button>
                     <button type="button" onclick="formatTeks('insertOrderedList')">1. Daftar</button>
                 </div>
-                <div id="deskripsi-pedoman-siber" contenteditable="true" style="min-height:220px; border:1px solid #ccc; padding:10px; background:#fff;"></div>
-                <button class="btn-utama" onclick="simpanPedomanMediaSiber()" style="margin-top:10px;">💾 Simpan Pedoman</button>
+                <div id="deskripsi-pedoman-siber" contenteditable="true"
+                    style="min-height:220px; border:1px solid #ccc; padding:10px; background:#fff;"></div>
+                <button class="btn-utama" onclick="simpanPedomanMediaSiber()" style="margin-top:10px;">💾 Simpan
+                    Pedoman</button>
             </div>
         </div>
 
@@ -474,8 +553,10 @@
             <div class="card">
                 <h4>🎨 Tampilan Panel Admin</h4>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px; margin-bottom:15px;">
-                    <div>Sisi Kiri Latar: <input type="color" id="admin_kiri_latar" value="#2c3e50"> Teks: <input type="color" id="admin_kiri_teks" value="#ffffff"></div>
-                    <div>Sisi Kanan Latar: <input type="color" id="admin_kanan_latar" value="#ecf0f1"> Teks: <input type="color" id="admin_kanan_teks" value="#333333"></div>
+                    <div>Sisi Kiri Latar: <input type="color" id="admin_kiri_latar" value="#2c3e50"> Teks: <input
+                            type="color" id="admin_kiri_teks" value="#ffffff"></div>
+                    <div>Sisi Kanan Latar: <input type="color" id="admin_kanan_latar" value="#ecf0f1"> Teks: <input
+                            type="color" id="admin_kanan_teks" value="#333333"></div>
                 </div>
                 <h4>🌐 Tampilan Web Berita</h4>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px; margin-bottom:15px;">
@@ -497,7 +578,8 @@
                 </div>
                 <p id="pesan-pengumuman" style="color:green; display:none; margin-top:8px;">✅ Tersimpan!</p>
                 <hr style="margin:15px 0;">
-                <button class="btn-utama" style="width:100%;" onclick="simpanWarnaTampilan()">💾 Simpan Semua Warna</button>
+                <button class="btn-utama" style="width:100%;" onclick="simpanWarnaTampilan()">💾 Simpan Semua
+                    Warna</button>
             </div>
         </div>
 
@@ -518,7 +600,8 @@
                 <label>Judul Berita</label>
                 <input type="text" id="judul-berita" placeholder="Tulis judul berita...">
                 <label>📂 Kategori Berita <small>(Tekan Ctrl + klik untuk pilih lebih dari satu)</small></label>
-                <select id="kategori-berita" multiple style="width:100%; padding:8px; margin:6px 0 12px 0; border:1px solid #ccc; border-radius:4px; font-size:14px; height:180px;">
+                <select id="kategori-berita" multiple
+                    style="width:100%; padding:8px; margin:6px 0 12px 0; border:1px solid #ccc; border-radius:4px; font-size:14px; height:180px;">
                     <option value="Tasikmalaya">Tasikmalaya</option>
                     <option value="Kota Tasikmalaya">Kota Tasikmalaya</option>
                     <option value="Ciamis">Ciamis</option>
@@ -549,12 +632,14 @@
                     <label>🖼️ Gambar Sampul Berita</label>
                     <input type="file" accept="image/*" id="gambar-sampul-berita" onchange="bacaGambarSampul(this)">
                     <label>📹 Sisipkan Video YouTube</label>
-                    <input type="text" id="link-video-berita" placeholder="Contoh: https://www.youtube.com/watch?v=abc123">
+                    <input type="text" id="link-video-berita"
+                        placeholder="Contoh: https://www.youtube.com/watch?v=abc123">
                     <button type="button" onclick="sisipkanVideoBerita()">Masukkan Video</button>
                 </div>
                 <label>Isi Berita</label>
                 <div class="toolbar">
-                    <select onchange="formatUkuranFont(this.value); this.selectedIndex=0;" style="width: auto; display: inline-block;">
+                    <select onchange="formatUkuranFont(this.value); this.selectedIndex=0;"
+                        style="width: auto; display: inline-block;">
                         <option value="" disabled selected>Ukuran Font</option>
                         <option value="11px">11</option>
                         <option value="12px">12</option>
@@ -564,17 +649,27 @@
                         <option value="20px">20</option>
                         <option value="24px">24</option>
                     </select>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('bold')" title="Tebal"><b>B</b></button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('italic')" title="Miring"><i>I</i></button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyLeft')" title="Rata Kiri">◀</button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyCenter')" title="Tengah">■</button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyRight')" title="Rata Kanan">▶</button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('insertUnorderedList')" title="Daftar Biasa">•</button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('insertOrderedList')" title="Daftar Nomor">1.</button>
-                    <button type="button" onmousedown="event.preventDefault()" onclick="tambahLink()" title="Sisipkan Link">🔗</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('bold')"
+                        title="Tebal"><b>B</b></button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('italic')"
+                        title="Miring"><i>I</i></button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyLeft')"
+                        title="Rata Kiri">◀</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyCenter')"
+                        title="Tengah">■</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('justifyRight')"
+                        title="Rata Kanan">▶</button>
+                    <button type="button" onmousedown="event.preventDefault()"
+                        onclick="formatTeks('insertUnorderedList')" title="Daftar Biasa">•</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="formatTeks('insertOrderedList')"
+                        title="Daftar Nomor">1.</button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="tambahLink()"
+                        title="Sisipkan Link">🔗</button>
                 </div>
-                <div id="isi-berita" contenteditable="true" style="min-height:200px; border:1px solid #ccc; padding:10px; background:#fff;"></div>
-                <div style="background:#f9f9f9; padding:12px; border:1px solid #ddd; border-radius:4px; margin-top:15px;">
+                <div id="isi-berita" contenteditable="true"
+                    style="min-height:200px; border:1px solid #ccc; padding:10px; background:#fff;"></div>
+                <div
+                    style="background:#f9f9f9; padding:12px; border:1px solid #ddd; border-radius:4px; margin-top:15px;">
                     <label style="font-weight:600;">🔗 URL Berita (Permalink)</label>
                     <input type="text" id="url-berita" placeholder="Biarkan kosong = diisi otomatis dari judul">
                 </div>
@@ -608,7 +703,8 @@
             <div class="modal-container">
                 <div class="modal-header">
                     <h3 id="modal-judul"></h3>
-                    <button onclick="tutupModalBerita()" style="background:transparent; border:none; color:#fff; font-size:22px; cursor:pointer; padding:0;">✕</button>
+                    <button onclick="tutupModalBerita()"
+                        style="background:transparent; border:none; color:#fff; font-size:22px; cursor:pointer; padding:0;">✕</button>
                 </div>
                 <div class="modal-body">
                     <div id="modal-info" class="modal-info"></div>
@@ -712,19 +808,19 @@
         function bacaGambarSampul(input) {
             if (!input.files || !input.files[0]) return;
             const pembaca = new FileReader();
-            pembaca.onload = e => { gambarSampulBase64 = e.target.result; };
+            pembaca.onload = e => {gambarSampulBase64 = e.target.result;};
             pembaca.readAsDataURL(input.files[0]);
         }
 
         function sisipkanVideoBerita() {
             const url = document.getElementById('link-video-berita').value.trim();
             const id = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/)?.[1];
-            if (!id) { alert('Link YouTube tidak valid!'); return; }
-            
+            if (!id) {alert('Link YouTube tidak valid!'); return;}
+
             const editor = document.getElementById('isi-berita');
             editor.focus();
             const iframe = `<div style="margin:10px 0;"><iframe width="100%" height="315" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe></div>`;
-            
+
             if (posisiKursor) {
                 const sel = window.getSelection();
                 sel.removeAllRanges();
@@ -740,7 +836,7 @@
         // === SIMPAN BERITA ===
         async function simpanBerita() {
             const judul = document.getElementById('judul-berita').value.trim();
-            if (!judul) { alert('Judul wajib diisi!'); return; }
+            if (!judul) {alert('Judul wajib diisi!'); return;}
 
             const kategori = Array.from(document.getElementById('kategori-berita').selectedOptions).map(o => o.value);
             const tgl = document.getElementById('tgl-publish').value;
@@ -794,7 +890,7 @@
             const snap = await db.ref('berita').orderByChild('waktuSimpan').once('value');
             daftarSemuaBerita = [];
             snap.forEach(ch => {
-                daftarSemuaBerita.unshift({ id: ch.key, ...ch.val() });
+                daftarSemuaBerita.unshift({id: ch.key, ...ch.val()});
             });
             tampilDaftarBerita();
             perbaruiStatistik();
@@ -808,7 +904,7 @@
             }
             tb.innerHTML = daftarSemuaBerita.map((b, i) => `
                 <tr>
-                    <td style="text-align:center">${i+1}</td>
+                    <td style="text-align:center">${i + 1}</td>
                     <td><b>${b.judul}</b></td>
                     <td>${Array.isArray(b.kategori) ? b.kategori.join(', ') : b.kategori || '-'}</td>
                     <td>${b.tglPublish || '-'}</td>
@@ -860,11 +956,11 @@
             document.getElementById('berita-utama').checked = !!b.beritaUtama;
             document.getElementById('tampilkan-berita').checked = b.tampilkanDiWeb !== false;
             document.getElementById('isi-berita').innerHTML = b.isiBerita || '';
-            
+
             gambarSampulBase64 = b.gambarSampul || '';
             sedangEdit = true;
             idEdit = id;
-            window.scrollTo({top:0, behavior:'smooth'});
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         async function hapusBerita(id) {
@@ -925,7 +1021,7 @@
         function pratinjauFotoPimred(input) {
             if (!input.files || !input.files[0]) return;
             let p = new FileReader();
-            p.onload = e => { fotoPimredBase64 = e.target.result; };
+            p.onload = e => {fotoPimredBase64 = e.target.result;};
             p.readAsDataURL(input.files[0]);
         }
 
@@ -951,7 +1047,7 @@
         function bacaLogoOrganisasi(input) {
             if (!input.files || !input.files[0]) return;
             let p = new FileReader();
-            p.onload = e => { logoOrganisasiBase64 = e.target.result; };
+            p.onload = e => {logoOrganisasiBase64 = e.target.result;};
             p.readAsDataURL(input.files[0]);
         }
 
@@ -973,7 +1069,7 @@
         /* PEDOMAN MEDIA SIBER */
         async function simpanPedomanMediaSiber() {
             let isi = document.getElementById('deskripsi-pedoman-siber').innerHTML;
-            await db.ref('pengaturan/pedoman').set({ isi: isi });
+            await db.ref('pengaturan/pedoman').set({isi: isi});
             alert("✅ Pedoman Media Siber Tersimpan!");
         }
 
@@ -1001,8 +1097,8 @@
             });
         }
 
-        function tambahBarisRedaksi() { daftarRedaksi.push({ jabatan: '', nama: '' }); tampilTabelRedaksi(); }
-        function hapusBarisRedaksi(i) { daftarRedaksi.splice(i, 1); tampilTabelRedaksi(); }
+        function tambahBarisRedaksi() {daftarRedaksi.push({jabatan: '', nama: ''}); tampilTabelRedaksi();}
+        function hapusBarisRedaksi(i) {daftarRedaksi.splice(i, 1); tampilTabelRedaksi();}
 
         async function simpanDataRedaksi() {
             await db.ref('pengaturan/redaksi').set(daftarRedaksi);
@@ -1056,7 +1152,7 @@
 
         /* META KEYWORD */
         async function simpanMetaKeyword() {
-            await db.ref('pengaturan/meta').set({ kataKunci: document.getElementById('input-meta-keyword').value.trim() });
+            await db.ref('pengaturan/meta').set({kataKunci: document.getElementById('input-meta-keyword').value.trim()});
             alert("✅ Meta Keyword Tersimpan!");
         }
 
@@ -1072,7 +1168,7 @@
             baris.forEach(item => {
                 let teks = item.querySelector('.input-teks-running').value.trim();
                 let link = item.querySelector('.input-link-running').value.trim();
-                if (teks !== '') daftarData.push({ teks, link });
+                if (teks !== '') daftarData.push({teks, link});
             });
             await db.ref('pengaturan/pengumuman').set(daftarData);
             alert("✅ Running text & link berhasil disimpan!");
@@ -1119,7 +1215,7 @@
         }
 
         async function simpanIklanHeader() {
-            if (!gambarIklanHeaderBase64) { alert("⚠️ Pilih gambar iklan terlebih dahulu!"); return; }
+            if (!gambarIklanHeaderBase64) {alert("⚠️ Pilih gambar iklan terlebih dahulu!"); return;}
             const snap = await db.ref('iklan/header').once('value');
             let d = snap.val() || [];
             d.push({
@@ -1177,7 +1273,7 @@
         function bacaGambarIklanSamping(input) {
             if (!input.files || !input.files[0]) return;
             let p = new FileReader();
-            p.onload = e => { gambarIklanSampingBase64 = e.target.result; };
+            p.onload = e => {gambarIklanSampingBase64 = e.target.result;};
             p.readAsDataURL(input.files[0]);
         }
 
@@ -1216,16 +1312,16 @@
             let nama = document.getElementById('nama-afiliasi').value.trim();
             let link = document.getElementById('link-afiliasi').value.trim();
             let fileInput = document.getElementById('file-gambar-afiliasi');
-            if (!nama || !link) { alert('Nama dan Link Afiliasi wajib diisi!'); return; }
-            if (!fileInput.files || fileInput.files.length === 0) { alert('Harap pilih file gambar!'); return; }
-            
+            if (!nama || !link) {alert('Nama dan Link Afiliasi wajib diisi!'); return;}
+            if (!fileInput.files || fileInput.files.length === 0) {alert('Harap pilih file gambar!'); return;}
+
             let file = fileInput.files[0];
             let reader = new FileReader();
             reader.onload = async function (e) {
                 let base64Gambar = e.target.result;
                 const snap = await db.ref('iklan/afiliasi').once('value');
                 let d = snap.val() || [];
-                d.push({ id: Date.now(), nama, gambar: base64Gambar, link });
+                d.push({id: Date.now(), nama, gambar: base64Gambar, link});
                 await db.ref('iklan/afiliasi').set(d);
                 document.getElementById('nama-afiliasi').value = '';
                 fileInput.value = '';
@@ -1268,20 +1364,20 @@
         /* BACKUP & LAINNYA */
         async function simpanSemuaData() {
             const semua = await db.ref('/').once('value');
-            const blob = new Blob([JSON.stringify(semua.val(), null, 2)], { type: 'application/json' });
+            const blob = new Blob([JSON.stringify(semua.val(), null, 2)], {type: 'application/json'});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = 'backup-tribuanaputra-' + new Date().toISOString().slice(0, 10) + '.json';
             a.click();
         }
 
-        function keluar() { if (confirm("Yakin Logout?")) alert("Logout Berhasil"); }
+        function keluar() {if (confirm("Yakin Logout?")) alert("Logout Berhasil");}
 
         /* UNDUH PDF */
         function unduhBeritaPDF() {
             const elemenJudul = document.getElementById('modal-judul');
             const elemenIsi = document.getElementById('modal-isi');
-            if (!elemenJudul || !elemenIsi) { alert('Tidak ada konten berita yang dapat diunduh.'); return; }
+            if (!elemenJudul || !elemenIsi) {alert('Tidak ada konten berita yang dapat diunduh.'); return;}
             const judulBerita = elemenJudul.innerText;
             const wadahCetak = document.createElement('div');
             wadahCetak.style.padding = '10px';
@@ -1293,9 +1389,9 @@
             const opsi = {
                 margin: 12,
                 filename: `${judulBerita.toLowerCase().replace(/[^a-z0-9]/g, "_")}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                image: {type: 'jpeg', quality: 0.98},
+                html2canvas: {scale: 2},
+                jsPDF: {unit: 'mm', format: 'a4', orientation: 'portrait'}
             };
             html2pdf().set(opsi).from(wadahCetak).save();
         }
@@ -1312,7 +1408,7 @@
             await muatMetaKeyword();
             await muatDaftarIklanHeader();
             await muatDaftarBerita();
-            
+
             const editorIsiBerita = document.getElementById('isi-berita');
             if (editorIsiBerita) {
                 editorIsiBerita.addEventListener('keyup', simpanPosisiKursor);
@@ -1328,5 +1424,5 @@
         });
     </script>
 </body>
+
 </html>
-                

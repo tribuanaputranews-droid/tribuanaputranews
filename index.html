@@ -763,6 +763,312 @@
         </div>
     </footer>
 
+    <!-- FIREBASE INTEGRATION MODULE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, increment, query, orderBy 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // GANTI KONFIGURASI INI SESUAI FIREBASE KAMU
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // STATE GLOBAL WEB
+        window.daftarBerita = [];
+        window.daftarAktifDiLayar = [];
+        window.daftarIklanSamping = [];
+        window.dataOrganisasiGlobal = {};
+        window.dataTentangGlobal = {};
+        window.dataRedaksiGlobal = [];
+        window.pedomanMediaGlobal = "";
+
+        // 1. DENGARKAN WARNA WEB
+        onSnapshot(doc(db, "settings", "warna"), (docSnap) => {
+            if (docSnap.exists()) {
+                let w = docSnap.data();
+                let root = document.documentElement;
+                root.style.setProperty('--web-menu-latar', w.web_menu_latar || '#34495e');
+                root.style.setProperty('--web-menu-teks', w.web_menu_teks || '#ffffff');
+                root.style.setProperty('--web-header-latar', w.web_header_latar || '#2c3e50');
+                root.style.setProperty('--web-header-teks', w.web_header_teks || '#ffffff');
+                root.style.setProperty('--web-running-latar', w.web_running_latar || '#f1c40f');
+                root.style.setProperty('--web-running-teks', w.web_running_teks || '#222222');
+                root.style.setProperty('--web-footer-latar', w.web_footer_latar || '#2c3e50');
+                root.style.setProperty('--web-footer-teks', w.web_footer_teks || '#ffffff');
+            }
+        });
+
+        // 2. DENGARKAN BERITA REALTIME
+        onSnapshot(collection(db, "news"), (snapshot) => {
+            window.daftarBerita = [];
+            snapshot.forEach((docSnap) => {
+                let data = docSnap.data();
+                data.id = docSnap.id;
+                window.daftarBerita.push(data);
+            });
+            let beritaAktif = window.daftarBerita.filter(b => b.tampilkanDiWeb !== false);
+            tampilDaftarBerita(beritaAktif);
+            muatSliderBeritaUtama();
+        });
+
+        // 3. DENGARKAN RUNNING TEXT REALTIME
+        onSnapshot(collection(db, "running_text"), (snapshot) => {
+            let itemTeks = [];
+            snapshot.forEach((docSnap) => {
+                let item = docSnap.data();
+                let teks = "" + (item.teks || '');
+                if (item.link && item.link.trim() !== '') {
+                    let urlValid = formatUrl(item.link);
+                    itemTeks.push(`<a href="${urlValid}" target="_blank" style="display:inline; text-decoration:none; color:inherit; cursor:pointer;">${teks}</a>`);
+                } else {
+                    itemTeks.push(`<span style="display:inline;">${teks}</span>`);
+                }
+            });
+            let wadahMarquee = document.querySelector('.running marquee');
+            if (wadahMarquee && itemTeks.length > 0) {
+                wadahMarquee.style.whiteSpace = 'nowrap';
+                let pemisah = '<span style="display:inline; margin: 0 25px; opacity:0.7;">✦</span>';
+                wadahMarquee.innerHTML = itemTeks.join(pemisah);
+            }
+        });
+
+        // 4. DENGARKAN IKLAN HEADER REALTIME
+        let timerIklanHeader = null;
+        onSnapshot(collection(db, "iklan_header"), (snapshot) => {
+            let wadahIklan = document.getElementById('iklan-header-tempat');
+            if (!wadahIklan) return;
+
+            let daftarIklan = [];
+            snapshot.forEach((docSnap) => daftarIklan.push(docSnap.data()));
+
+            if (daftarIklan.length === 0) {
+                wadahIklan.innerHTML = '<em style="color:#ccc; font-size:12px;">Iklan Header</em>';
+                return;
+            }
+
+            let sekarang = new Date().toISOString().slice(0, 10);
+            let daftarAktif = daftarIklan.filter(item => {
+                let mulaiPas = !item.mulai || item.mulai <= sekarang;
+                let akhirPas = !item.akhir || item.akhir >= sekarang;
+                return mulaiPas && akhirPas;
+            });
+            if (daftarAktif.length === 0) daftarAktif = daftarIklan;
+
+            wadahIklan.innerHTML = daftarAktif.map((iklan, index) => {
+                let htmlGambar = `<img src="${iklan.gambar}" alt="${iklan.judul || 'Iklan Header'}" style="width:100%; height:100%; object-fit:cover; display:block;">`;
+                let isi = iklan.link ? `<a href="${iklan.link}" target="_blank" style="display:block; width:100%; height:100%;">${htmlGambar}</a>` : htmlGambar;
+                return `<div class="item-slide-header" style="display: ${index === 0 ? 'block' : 'none'}; width:100%; height:100%;">${isi}</div>`;
+            }).join('');
+
+            if (daftarAktif.length > 1) {
+                let indexSekarang = 0;
+                if (timerIklanHeader) clearInterval(timerIklanHeader);
+                timerIklanHeader = setInterval(() => {
+                    let slides = wadahIklan.querySelectorAll('.item-slide-header');
+                    if (slides.length === 0) return;
+                    slides[indexSekarang].style.display = 'none';
+                    indexSekarang = (indexSekarang + 1) % slides.length;
+                    slides[indexSekarang].style.display = 'block';
+                }, 4000);
+            }
+        });
+
+        // 5. DENGARKAN IKLAN SAMPING REALTIME
+        onSnapshot(collection(db, "iklan_samping"), (snapshot) => {
+            let semuaIklan = [];
+            snapshot.forEach((docSnap) => semuaIklan.push(docSnap.data()));
+            let sekarang = new Date().toISOString().slice(0, 10);
+            window.daftarIklanSamping = semuaIklan.filter(item => {
+                let jenisPas = !item.jenis || item.jenis === 'samping' || item.posisi === 'samping';
+                let mulaiPas = !item.mulai || item.mulai <= sekarang;
+                let akhirPas = !item.akhir || item.akhir >= sekarang;
+                return jenisPas && mulaiPas && akhirPas;
+            });
+            indeksIklanSamping = 0;
+            tampilkanIklanSampingAktif();
+            mulaiTimerIklanSamping();
+        });
+
+        // 6. DENGARKAN AFILIASI REALTIME
+        onSnapshot(collection(db, "iklan_afiliasi"), (snapshot) => {
+            let wadah = document.getElementById('slider-afiliasi');
+            if (!wadah) return;
+            let data = [];
+            snapshot.forEach((docSnap) => data.push(docSnap.data()));
+
+            if (data.length > 0) {
+                wadah.innerHTML = data.map(item => `
+                    <a href="${item.link}" target="_blank" style="min-width:100%; box-sizing:border-box; display:block;">
+                        <img src="${item.gambar}" alt="${item.nama}" style="width:100%; height:auto; max-height:250px; object-fit:cover; display:block; border-radius:4px;">
+                    </a>
+                `).join('');
+                mulaiAutoSlideAfiliasi(data.length);
+            } else {
+                wadah.innerHTML = '<p style="padding:10px; color:#888; font-size:12px; text-align:center;">Belum ada iklan</p>';
+            }
+        });
+
+        // 7. DENGARKAN VIDEO REALTIME
+        onSnapshot(collection(db, "video_berita"), (snapshot) => {
+            let wadah = document.getElementById('wadah-video-berita');
+            if (!wadah) return;
+            let dataVideo = [];
+            snapshot.forEach((docSnap) => dataVideo.push(docSnap.data()));
+
+            if (dataVideo.length === 0) {
+                wadah.innerHTML = '<span style="color:#888;">Belum ada video</span>';
+                return;
+            }
+            wadah.innerHTML = dataVideo.map(v => {
+                let embedUrl = v.link ? v.link.replace("watch?v=", "embed/") : "";
+                return `
+                    <div style="margin-bottom:12px;">
+                        <iframe width="100%" height="180" src="${embedUrl}" frameborder="0" allowfullscreen style="border-radius:4px;"></iframe>
+                        <p style="font-size:12px; font-weight:bold; margin-top:4px;">${v.judul || ''}</p>
+                    </div>
+                `;
+            }).join('');
+        });
+
+        // 8. DENGARKAN PENGATURAN LOGO, PIMRED, ORG, TENTANG & FOOTER
+        onSnapshot(doc(db, "settings", "utama"), (docSnap) => {
+            if (docSnap.exists()) {
+                let setting = docSnap.data();
+                if (setting.logoWebsite) {
+                    let elLogo = document.getElementById('logo-website');
+                    if (elLogo) elLogo.src = setting.logoWebsite;
+                }
+                let elNama = document.getElementById('footer-nama-perusahaan');
+                if (elNama) elNama.textContent = setting.namaPerusahaan || 'Tribuana Putra News';
+                let elAlamat = document.getElementById('footer-alamat-perusahaan');
+                if (elAlamat) elAlamat.textContent = setting.alamatPerusahaan || 'Priangan Timur, Jawa Barat';
+                let elTelp = document.getElementById('footer-telp');
+                if (elTelp) elTelp.textContent = setting.telp || '-';
+                let elEmail = document.getElementById('footer-email');
+                if (elEmail) elEmail.textContent = setting.emailKontak || '-';
+
+                let elemFb = document.getElementById('link-fb');
+                if (elemFb) {
+                    if (setting.fbLink && setting.fbLink.trim() !== '') {
+                        elemFb.href = formatUrl(setting.fbLink);
+                        elemFb.style.display = 'inline-flex';
+                    } else { elemFb.style.display = 'none'; }
+                }
+                let elemIg = document.getElementById('link-ig');
+                if (elemIg) {
+                    if (setting.igLink && setting.igLink.trim() !== '') {
+                        elemIg.href = formatUrl(setting.igLink);
+                        elemIg.style.display = 'inline-flex';
+                    } else { elemIg.style.display = 'none'; }
+                }
+                let elemYt = document.getElementById('link-yt');
+                if (elemYt) {
+                    if (setting.ytLink && setting.ytLink.trim() !== '') {
+                        elemYt.href = formatUrl(setting.ytLink);
+                        elemYt.style.display = 'inline-flex';
+                    } else { elemYt.style.display = 'none'; }
+                }
+                let elCopyright = document.getElementById('copyright-nama-perusahaan');
+                if (elCopyright) elCopyright.innerText = setting.namaPerusahaan || 'Tribuana Putra News';
+            }
+        });
+
+        onSnapshot(doc(db, "settings", "tentang_perusahaan"), (docSnap) => {
+            if (docSnap.exists()) {
+                window.dataTentangGlobal = docSnap.data();
+                if (window.dataTentangGlobal.namaPemimpinRedaksi) {
+                    let elPimred = document.getElementById('pemimpin-redaksi');
+                    if (elPimred) {
+                        elPimred.innerHTML = `
+                            ${window.dataTentangGlobal.foto ? `<img src="${window.dataTentangGlobal.foto}" style="max-width:100%; border-radius:4px;"><br>` : ''}
+                            <b>${window.dataTentangGlobal.namaPemimpinRedaksi}</b>
+                        `;
+                    }
+                }
+            }
+        });
+
+        onSnapshot(doc(db, "settings", "organisasi"), (docSnap) => {
+            if (docSnap.exists()) {
+                window.dataOrganisasiGlobal = docSnap.data();
+                if (window.dataOrganisasiGlobal.logoOrganisasi) {
+                    let elOrg = document.getElementById('logo-induk-organisasi');
+                    if (elOrg) elOrg.innerHTML = `<img src="${window.dataOrganisasiGlobal.logoOrganisasi}" style="max-width:100%; height:auto;" alt="Logo Induk Organisasi">`;
+                }
+            }
+        });
+
+        onSnapshot(collection(db, "redaksi"), (snapshot) => {
+            window.dataRedaksiGlobal = [];
+            snapshot.forEach((docSnap) => window.dataRedaksiGlobal.push(docSnap.data()));
+        });
+
+        onSnapshot(doc(db, "settings", "pedoman_media"), (docSnap) => {
+            if (docSnap.exists()) {
+                window.pedomanMediaGlobal = docSnap.data().isi || '';
+            }
+        });
+
+        // 9. UPDATE VIEWER BERITA KE FIREBASE
+        window.tambahViewerFirebase = async function(idBerita) {
+            if (!idBerita) return;
+            try {
+                let docRef = doc(db, "news", idBerita);
+                await updateDoc(docRef, { viewer: increment(1) });
+            } catch(e) { console.error("Gagal update viewer:", e); }
+        }
+
+        // 10. SIMPAN KOMENTAR & KEMITRAAN KE FIREBASE
+        window.simpanKomentar = async function(e) {
+            e.preventDefault();
+            let nama = document.getElementById('kom_nama').value;
+            let email = document.getElementById('kom_email').value;
+            let wa = document.getElementById('kom_wa').value;
+            let isi = document.getElementById('kom_isi').value;
+            let tgl = new Date().toLocaleString('id-ID');
+
+            try {
+                await addDoc(collection(db, "komentar"), {
+                    Tanggal: tgl, Nama: nama, Email: email, WhatsApp: wa, Komentar: isi, created_at: Date.now()
+                });
+                alert("✅ Komentar Anda berhasil dikirim!");
+                document.getElementById('form-komentar').reset();
+            } catch (err) {
+                alert("Gagal mengirim komentar: " + err.message);
+            }
+        }
+
+        window.simpanLanggananIklan = async function(e) {
+            e.preventDefault();
+            let instansi = document.getElementById('iklan_instansi').value;
+            let email = document.getElementById('iklan_email').value;
+            let wa = document.getElementById('iklan_wa').value;
+            let ket = document.getElementById('iklan_keterangan').value;
+            let tgl = new Date().toLocaleString('id-ID');
+
+            try {
+                await addDoc(collection(db, "pelanggan_iklan"), {
+                    Tanggal: tgl, Nama_Instansi: instansi, Email: email, WhatsApp: wa, Keterangan: ket, created_at: Date.now()
+                });
+                alert("✅ Pengajuan iklan berhasil disimpan!");
+                document.getElementById('form-iklan-langganan').reset();
+            } catch(err) {
+                alert("Gagal mengirim pengajuan: " + err.message);
+            }
+        }
+    </script>
+
+    <!-- UI DOM CONTROLLER -->
     <script>
         function toggleMenu() {
             let menu = document.getElementById('menu-list');
@@ -781,43 +1087,20 @@
             document.getElementById('tombol-mode').textContent = modeGelap ? "☀️ Mode Terang" : "🌙 Mode Gelap";
         }
 
-        let daftarBerita = JSON.parse(localStorage.getItem('daftarBerita') || '[]');
-        let daftarAktifDiLayar = [];
-
-        function terapkanWarnaWeb() {
-            let w = JSON.parse(localStorage.getItem('pengaturanWarna') || '{}');
-            let root = document.documentElement;
-
-            root.style.setProperty('--web-menu-latar', w.web_menu_latar || '#34495e');
-            root.style.setProperty('--web-menu-teks', w.web_menu_teks || '#ffffff');
-            root.style.setProperty('--web-header-latar', w.web_header_latar || '#2c3e50');
-            root.style.setProperty('--web-header-teks', w.web_header_teks || '#ffffff');
-            root.style.setProperty('--web-running-latar', w.web_running_latar || '#f1c40f');
-            root.style.setProperty('--web-running-teks', w.web_running_teks || '#222222');
-            root.style.setProperty('--web-footer-latar', w.web_footer_latar || '#2c3e50');
-            root.style.setProperty('--web-footer-teks', w.web_footer_teks || '#ffffff');
-        }
-
-        function muatBerita() {
-            let beritaAktif = daftarBerita.filter(b => b.tampilkanDiWeb !== false);
-            tampilDaftarBerita(beritaAktif);
-            muatSliderBeritaUtama();
-        }
-
         function tampilDaftarBerita(list) {
             let area = document.getElementById('daftar-berita');
             if (!area) return;
 
             area.innerHTML = "";
-            daftarAktifDiLayar = list || [];
+            window.daftarAktifDiLayar = list || [];
 
-            if (!daftarAktifDiLayar || daftarAktifDiLayar.length === 0) {
+            if (!window.daftarAktifDiLayar || window.daftarAktifDiLayar.length === 0) {
                 area.innerHTML = '<p style="color:#888; padding:10px;">Belum ada berita pada kategori ini.</p>';
                 return;
             }
 
             let terkelompok = {};
-            daftarAktifDiLayar.forEach((b) => {
+            window.daftarAktifDiLayar.forEach((b) => {
                 let katList = Array.isArray(b.kategori) ? b.kategori : [b.kategori || 'Umum'];
                 katList.forEach(kat => {
                     let k = kat || 'Umum';
@@ -838,7 +1121,7 @@
                 wadahGrup.appendChild(headerGrup);
 
                 terkelompok[namaKat].forEach((b) => {
-                    let idxSistem = daftarAktifDiLayar.indexOf(b);
+                    let idxSistem = window.daftarAktifDiLayar.indexOf(b);
                     let div = document.createElement('div');
                     div.className = "berita-item";
 
@@ -862,11 +1145,13 @@
         }
 
         function bacaBerita(indeks) {
-            let b = daftarAktifDiLayar[indeks];
+            let b = window.daftarAktifDiLayar[indeks];
             if (!b) return;
 
             b.viewer = (b.viewer || b.view || 0) + 1;
-            localStorage.setItem('daftarBerita', JSON.stringify(daftarBerita));
+            if (typeof window.tambahViewerFirebase === 'function' && b.id) {
+                window.tambahViewerFirebase(b.id);
+            }
 
             let isiPenuh = b.isiBerita || b.isi || '<p style="color:red;">Isi berita kosong.</p>';
             let kategoriBerita = Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || 'Umum');
@@ -893,11 +1178,11 @@
             let beritaSaatIni = daftarSliderBerita[indeksSliderBerita];
             if (!beritaSaatIni) return;
 
-            let idx = daftarAktifDiLayar.findIndex(b => b.judul === beritaSaatIni.judul);
+            let idx = window.daftarAktifDiLayar.findIndex(b => b.judul === beritaSaatIni.judul);
             if (idx !== -1) {
                 bacaBerita(idx);
             } else {
-                daftarAktifDiLayar = [beritaSaatIni];
+                window.daftarAktifDiLayar = [beritaSaatIni];
                 bacaBerita(0);
             }
         }
@@ -909,7 +1194,7 @@
         }
 
         function filterKategori(kat) {
-            let hasil = daftarBerita.filter(b => b.tampilkanDiWeb !== false && (Array.isArray(b.kategori) ? b.kategori.includes(kat) : b.kategori === kat));
+            let hasil = (window.daftarBerita || []).filter(b => b.tampilkanDiWeb !== false && (Array.isArray(b.kategori) ? b.kategori.includes(kat) : b.kategori === kat));
             tampilDaftarBerita(hasil);
             kembaliKeSlider();
 
@@ -918,21 +1203,21 @@
         }
 
         function tampilSemua() {
-            let beritaAktif = daftarBerita.filter(b => b.tampilkanDiWeb !== false);
+            let beritaAktif = (window.daftarBerita || []).filter(b => b.tampilkanDiWeb !== false);
             tampilDaftarBerita(beritaAktif);
             kembaliKeSlider();
         }
 
         function cariBerita(k) {
-            let beritaAktif = daftarBerita.filter(b => b.tampilkanDiWeb !== false);
+            let beritaAktif = (window.daftarBerita || []).filter(b => b.tampilkanDiWeb !== false);
             let hasil = beritaAktif.filter(b => (b.judul || '').toLowerCase().includes(k.toLowerCase()));
             tampilDaftarBerita(hasil);
         }
 
         function bukaTentangOrganisasi() {
-            let dataOrg = JSON.parse(localStorage.getItem('dataOrganisasi') || '{}');
-            let isi = dataOrg.isi || localStorage.getItem('isiIndukOrganisasi') || '<p style="color:#888;">Belum ada keterangan organisasi yang diinputkan dari Panel Admin.</p>';
-            let logo = dataOrg.logoOrganisasi || localStorage.getItem('logoOrganisasi') || '';
+            let dataOrg = window.dataOrganisasiGlobal || {};
+            let isi = dataOrg.isi || '<p style="color:#888;">Belum ada keterangan organisasi yang diinputkan dari Panel Admin.</p>';
+            let logo = dataOrg.logoOrganisasi || '';
 
             let areaIsi = document.getElementById('isi-berita-penuh');
             if (areaIsi) {
@@ -955,10 +1240,10 @@
         let timerSliderBerita = null;
 
         function muatSliderBeritaUtama() {
-            if (typeof daftarBerita !== 'undefined' && daftarBerita.length > 0) {
-                daftarSliderBerita = daftarBerita.filter(b => b.tampilkanDiWeb !== false && (b.beritaUtama || b.isUtama));
+            if (typeof window.daftarBerita !== 'undefined' && window.daftarBerita.length > 0) {
+                daftarSliderBerita = window.daftarBerita.filter(b => b.tampilkanDiWeb !== false && (b.beritaUtama || b.isUtama));
                 if (daftarSliderBerita.length === 0) {
-                    daftarSliderBerita = daftarBerita.filter(b => b.tampilkanDiWeb !== false);
+                    daftarSliderBerita = window.daftarBerita.filter(b => b.tampilkanDiWeb !== false);
                 }
             } else {
                 daftarSliderBerita = [];
@@ -1039,26 +1324,8 @@
             mulaiTimerSliderBerita();
         }
 
-        let daftarIklanSamping = [];
         let indeksIklanSamping = 0;
         let timerIklanSamping = null;
-
-        function muatIklanSampingWeb() {
-            let rawData = localStorage.getItem('daftarIklanSamping') || localStorage.getItem('daftarIklan') || '[]';
-            let semuaIklan = JSON.parse(rawData);
-
-            let sekarang = new Date().toISOString().slice(0, 10);
-            daftarIklanSamping = semuaIklan.filter(item => {
-                let jenisPas = !item.jenis || item.jenis === 'samping' || item.posisi === 'samping';
-                let mulaiPas = !item.mulai || item.mulai <= sekarang;
-                let akhirPas = !item.akhir || item.akhir >= sekarang;
-                return jenisPas && mulaiPas && akhirPas;
-            });
-
-            indeksIklanSamping = 0;
-            tampilkanIklanSampingAktif();
-            mulaiTimerIklanSamping();
-        }
 
         function tampilkanIklanSampingAktif() {
             let wadah = document.getElementById('konten-iklan-samping');
@@ -1066,14 +1333,16 @@
             let btnKanan = document.getElementById('btn-iklan-kanan');
             if (!wadah) return;
 
-            if (daftarIklanSamping.length === 0) {
+            let list = window.daftarIklanSamping || [];
+
+            if (list.length === 0) {
                 wadah.innerHTML = '<span style="color:#888;">Belum ada iklan</span>';
                 if (btnKiri) btnKiri.style.display = 'none';
                 if (btnKanan) btnKanan.style.display = 'none';
                 return;
             }
 
-            if (daftarIklanSamping.length > 1) {
+            if (list.length > 1) {
                 if (btnKiri) btnKiri.style.display = 'block';
                 if (btnKanan) btnKanan.style.display = 'block';
             } else {
@@ -1081,7 +1350,9 @@
                 if (btnKanan) btnKanan.style.display = 'none';
             }
 
-            let iklan = daftarIklanSamping[indeksIklanSamping];
+            let iklan = list[indeksIklanSamping];
+            if (!iklan) return;
+
             let htmlGambar = `<img src="${iklan.gambar}" alt="${iklan.judul || 'Iklan Samping'}" style="max-width:100%; height:auto; display:block; margin:0 auto; border-radius:4px;">`;
 
             if (iklan.link) {
@@ -1093,7 +1364,8 @@
 
         function mulaiTimerIklanSamping() {
             hentikanTimerIklanSamping();
-            if (daftarIklanSamping.length > 1) {
+            let list = window.daftarIklanSamping || [];
+            if (list.length > 1) {
                 timerIklanSamping = setInterval(() => {
                     geserIklanSamping(1);
                 }, 10000);
@@ -1108,10 +1380,11 @@
         }
 
         function geserIklanSamping(arah) {
-            if (daftarIklanSamping.length === 0) return;
+            let list = window.daftarIklanSamping || [];
+            if (list.length === 0) return;
             indeksIklanSamping += arah;
-            if (indeksIklanSamping < 0) indeksIklanSamping = daftarIklanSamping.length - 1;
-            if (indeksIklanSamping >= daftarIklanSamping.length) indeksIklanSamping = 0;
+            if (indeksIklanSamping < 0) indeksIklanSamping = list.length - 1;
+            if (indeksIklanSamping >= list.length) indeksIklanSamping = 0;
             tampilkanIklanSampingAktif();
         }
 
@@ -1128,34 +1401,6 @@
         let indeksAfiliasi = 0;
         let timerAutoSlideAfiliasi = null;
 
-        function muatAfiliasiWeb() {
-            let rawData = localStorage.getItem('daftarAfiliasi');
-            let wadah = document.getElementById('slider-afiliasi');
-            if (!wadah) return;
-
-            if (!rawData) {
-                wadah.innerHTML = '<p style="padding:10px; color:#888; font-size:12px; text-align:center;">Belum ada iklan</p>';
-                return;
-            }
-
-            try {
-                let data = JSON.parse(rawData);
-                if (Array.isArray(data) && data.length > 0) {
-                    wadah.innerHTML = data.map(item => `
-                        <a href="${item.link}" target="_blank" style="min-width:100%; box-sizing:border-box; display:block;">
-                            <img src="${item.gambar}" alt="${item.nama}" style="width:100%; height:auto; max-height:250px; object-fit:cover; display:block; border-radius:4px;">
-                        </a>
-                    `).join('');
-
-                    mulaiAutoSlideAfiliasi(data.length);
-                } else {
-                    wadah.innerHTML = '<p style="padding:10px; color:#888; font-size:12px; text-align:center;">Belum ada iklan</p>';
-                }
-            } catch (e) {
-                console.error("Gagal memuat iklan afiliasi:", e);
-            }
-        }
-
         function updatePosisiSliderAfiliasi() {
             let wadah = document.getElementById('slider-afiliasi');
             if (wadah) {
@@ -1164,20 +1409,20 @@
         }
 
         function slideAfiliasiNext() {
-            let rawData = localStorage.getItem('daftarAfiliasi');
-            let data = rawData ? JSON.parse(rawData) : [];
-            if (data.length <= 1) return;
+            let container = document.getElementById('slider-afiliasi');
+            let total = container ? container.children.length : 0;
+            if (total <= 1) return;
 
-            indeksAfiliasi = (indeksAfiliasi + 1) % data.length;
+            indeksAfiliasi = (indeksAfiliasi + 1) % total;
             updatePosisiSliderAfiliasi();
         }
 
         function slideAfiliasiPrev() {
-            let rawData = localStorage.getItem('daftarAfiliasi');
-            let data = rawData ? JSON.parse(rawData) : [];
-            if (data.length <= 1) return;
+            let container = document.getElementById('slider-afiliasi');
+            let total = container ? container.children.length : 0;
+            if (total <= 1) return;
 
-            indeksAfiliasi = (indeksAfiliasi - 1 + data.length) % data.length;
+            indeksAfiliasi = (indeksAfiliasi - 1 + total) % total;
             updatePosisiSliderAfiliasi();
         }
 
@@ -1190,228 +1435,21 @@
             }
         }
 
-        let timerIklanHeader = null;
-
-        function muatIklanHeaderWeb() {
-            let wadahIklan = document.getElementById('iklan-header-tempat');
-            if (!wadahIklan) return;
-
-            let daftarIklan = JSON.parse(localStorage.getItem('daftarIklanHeader') || '[]');
-            if (!daftarIklan || daftarIklan.length === 0) {
-                wadahIklan.innerHTML = '<em style="color:#ccc; font-size:12px;">Iklan Header</em>';
-                return;
-            }
-
-            let sekarang = new Date().toISOString().slice(0, 10);
-
-            let daftarAktif = daftarIklan.filter(item => {
-                let mulaiPas = !item.mulai || item.mulai <= sekarang;
-                let akhirPas = !item.akhir || item.akhir >= sekarang;
-                return mulaiPas && akhirPas;
-            });
-
-            if (daftarAktif.length === 0) {
-                daftarAktif = daftarIklan;
-            }
-
-            wadahIklan.innerHTML = daftarAktif.map((iklan, index) => {
-                let htmlGambar = `<img src="${iklan.gambar}" alt="${iklan.judul || 'Iklan Header'}" style="width:100%; height:100%; object-fit:cover; display:block;">`;
-                let isi = iklan.link ? `<a href="${iklan.link}" target="_blank" style="display:block; width:100%; height:100%;">${htmlGambar}</a>` : htmlGambar;
-
-                return `<div class="item-slide-header" style="display: ${index === 0 ? 'block' : 'none'}; width:100%; height:100%;">${isi}</div>`;
-            }).join('');
-
-            if (daftarAktif.length > 1) {
-                let indexSekarang = 0;
-
-                if (timerIklanHeader) clearInterval(timerIklanHeader);
-
-                timerIklanHeader = setInterval(() => {
-                    let slides = wadahIklan.querySelectorAll('.item-slide-header');
-                    if (slides.length === 0) return;
-
-                    slides[indexSekarang].style.display = 'none';
-                    indexSekarang = (indexSekarang + 1) % slides.length;
-                    slides[indexSekarang].style.display = 'block';
-                }, 4000);
-            }
-        }
-
-        function muatVideoBeritaWeb() {
-            let wadah = document.getElementById('wadah-video-berita');
-            let dataVideo = JSON.parse(localStorage.getItem('daftarVideoBerita') || '[]');
-            if (!wadah) return;
-
-            if (dataVideo.length === 0) {
-                wadah.innerHTML = '<span style="color:#888;">Belum ada video</span>';
-                return;
-            }
-
-            wadah.innerHTML = dataVideo.map(v => {
-                let embedUrl = v.link ? v.link.replace("watch?v=", "embed/") : "";
-                return `
-                    <div style="margin-bottom:12px;">
-                        <iframe width="100%" height="180" src="${embedUrl}" frameborder="0" allowfullscreen style="border-radius:4px;"></iframe>
-                        <p style="font-size:12px; font-weight:bold; margin-top:4px;">${v.judul || ''}</p>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function muatPengaturanAdmin() {
-            let logo = localStorage.getItem('logoWebsite');
-            if (logo) {
-                let elLogo = document.getElementById('logo-website');
-                if (elLogo) elLogo.src = logo;
-            }
-
-            let pimred = JSON.parse(localStorage.getItem('tentangPerusahaan') || '{}');
-            if (pimred.namaPemimpinRedaksi) {
-                let elPimred = document.getElementById('pemimpin-redaksi');
-                if (elPimred) {
-                    elPimred.innerHTML = `
-                        ${pimred.foto ? `<img src="${pimred.foto}" style="max-width:100%; border-radius:4px;"><br>` : ''}
-                        <b>${pimred.namaPemimpinRedaksi}</b>
-                    `;
-                }
-            }
-
-            let logoOrg = localStorage.getItem('logoOrganisasi');
-            if (logoOrg) {
-                let elOrg = document.getElementById('logo-induk-organisasi');
-                if (elOrg) elOrg.innerHTML = `<img src="${logoOrg}" style="max-width:100%; height:auto;" alt="Logo Induk Organisasi">`;
-            }
-
-            let pengumuman = JSON.parse(localStorage.getItem('daftarPengumuman') || '[]');
-            if (pengumuman.length) {
-                let elTeks = document.getElementById('teks-pengumuman');
-                if (elTeks) elTeks.textContent = pengumuman.join(' — ');
-            }
-        }
-
-        function muatSettingUtamaFooter() {
-            let setting = JSON.parse(localStorage.getItem('settingUtama') || '{}');
-
-            let elNama = document.getElementById('footer-nama-perusahaan');
-            if (elNama) elNama.textContent = setting.namaPerusahaan || 'Tribuana Putra News';
-
-            let elAlamat = document.getElementById('footer-alamat-perusahaan');
-            if (elAlamat) elAlamat.textContent = setting.alamatPerusahaan || 'Priangan Timur, Jawa Barat';
-
-            let elTelp = document.getElementById('footer-telp');
-            if (elTelp) elTelp.textContent = setting.telp || '-';
-
-            let elEmail = document.getElementById('footer-email');
-            if (elEmail) elEmail.textContent = setting.emailKontak || '-';
-
-            let elemFb = document.getElementById('link-fb');
-            if (elemFb) {
-                if (setting.fbLink && setting.fbLink.trim() !== '') {
-                    elemFb.href = formatUrl(setting.fbLink);
-                    elemFb.style.display = 'inline-flex';
-                } else {
-                    elemFb.style.display = 'none';
-                }
-            }
-
-            let elemIg = document.getElementById('link-ig');
-            if (elemIg) {
-                if (setting.igLink && setting.igLink.trim() !== '') {
-                    elemIg.href = formatUrl(setting.igLink);
-                    elemIg.style.display = 'inline-flex';
-                } else {
-                    elemIg.style.display = 'none';
-                }
-            }
-
-            let elemYt = document.getElementById('link-yt');
-            if (elemYt) {
-                if (setting.ytLink && setting.ytLink.trim() !== '') {
-                    elemYt.href = formatUrl(setting.ytLink);
-                    elemYt.style.display = 'inline-flex';
-                } else {
-                    elemYt.style.display = 'none';
-                }
-            }
-
-            let elTahun = document.getElementById('tahun-copyright');
-            if (elTahun) elTahun.innerText = new Date().getFullYear();
-
-            let elCopyright = document.getElementById('copyright-nama-perusahaan');
-            if (elCopyright) elCopyright.innerText = setting.namaPerusahaan || 'Tribuana Putra News';
-        }
-
         const PASSWORD_ADMIN = "admin123";
-
-        function simpanKomentar(e) {
-            e.preventDefault();
-            let nama = document.getElementById('kom_nama').value;
-            let email = document.getElementById('kom_email').value;
-            let wa = document.getElementById('kom_wa').value;
-            let isi = document.getElementById('kom_isi').value;
-            let tgl = new Date().toLocaleString('id-ID');
-
-            let daftarKomentar = JSON.parse(localStorage.getItem('daftarKomentar') || '[]');
-            daftarKomentar.push({Tanggal: tgl, Nama: nama, Email: email, WhatsApp: wa, Komentar: isi});
-
-            localStorage.setItem('daftarKomentar', JSON.stringify(daftarKomentar));
-            alert("✅ Komentar Anda berhasil dikirim!");
-            document.getElementById('form-komentar').reset();
-        }
 
         function bukaKomentarAdmin() {
             let pwd = prompt("Masukkan Password Admin untuk melihat Komentar:");
             if (pwd === PASSWORD_ADMIN) {
-                let data = JSON.parse(localStorage.getItem('daftarKomentar') || '[]');
-                if (data.length === 0) {
-                    alert("Belum ada data komentar.");
-                    return;
-                }
-
-                let konfirmasi = confirm(`Terdapat ${data.length} komentar.\n\nKlik OK untuk mendownload file Excel data komentar.`);
-                if (konfirmasi) {
-                    unduhExcel(data, "Data_Komentar_Web.xlsx", "Komentar");
-                }
+                alert("Pemberitahuan: Seluruh komentar pengguna sekarang otomatis dikirim dan tersimpan di database Firebase Firestore.");
             } else if (pwd !== null) {
                 alert("❌ Password Salah!");
             }
         }
 
-        function simpanLanggananIklan(e) {
-            e.preventDefault();
-            let instansi = document.getElementById('iklan_instansi').value;
-            let email = document.getElementById('iklan_email').value;
-            let wa = document.getElementById('iklan_wa').value;
-            let ket = document.getElementById('iklan_keterangan').value;
-            let tgl = new Date().toLocaleString('id-ID');
-
-            let daftarPelanggan = JSON.parse(localStorage.getItem('daftarPelangganIklan') || '[]');
-            daftarPelanggan.push({
-                Tanggal: tgl,
-                Nama_Instansi: instansi,
-                Email: email,
-                WhatsApp: wa,
-                Keterangan: ket
-            });
-
-            localStorage.setItem('daftarPelangganIklan', JSON.stringify(daftarPelanggan));
-            alert("✅ Pengajuan iklan berhasil disimpan!");
-            document.getElementById('form-iklan-langganan').reset();
-        }
-
         function bukaPelangganAdmin() {
             let pwd = prompt("Masukkan Password Admin untuk melihat Data Pelanggan Iklan:");
             if (pwd === PASSWORD_ADMIN) {
-                let data = JSON.parse(localStorage.getItem('daftarPelangganIklan') || '[]');
-                if (data.length === 0) {
-                    alert("Belum ada data pelanggan berlangganan iklan.");
-                    return;
-                }
-
-                let konfirmasi = confirm(`Terdapat ${data.length} pengajuan pelanggan iklan.\n\nKlik OK untuk mendownload file Excel data pelanggan.`);
-                if (konfirmasi) {
-                    unduhExcel(data, "Data_Pelanggan_Iklan.xlsx", "Pelanggan_Iklan");
-                }
+                alert("Pemberitahuan: Seluruh data pengajuan iklan sekarang otomatis dikirim dan tersimpan di database Firebase Firestore.");
             } else if (pwd !== null) {
                 alert("❌ Password Salah!");
             }
@@ -1433,14 +1471,14 @@
 
             if (jenis === 'tentang') {
                 judul = "Tentang Perusahaan";
-                let data = JSON.parse(localStorage.getItem('tentangPerusahaan') || '{}');
+                let data = window.dataTentangGlobal || {};
                 let fotoHtml = data.foto ? `<img src="${data.foto}" style="max-width:200px; float:left; margin:0 15px 15px 0; border-radius:6px;">` : '';
                 let pimredHtml = data.namaPemimpinRedaksi ? `<p><b>Pemimpin Redaksi:</b> ${data.namaPemimpinRedaksi}</p><br>` : '';
                 kontenHtml = fotoHtml + pimredHtml + (data.isi || '<p>Data belum diisi.</p>');
 
             } else if (jenis === 'redaksi') {
                 judul = "Data Redaksi";
-                let redaksi = JSON.parse(localStorage.getItem('daftarRedaksi') || '[]');
+                let redaksi = window.dataRedaksiGlobal || [];
                 if (redaksi.length > 0) {
                     kontenHtml = `<table style="width:100%; border-collapse:collapse;" border="1">
                 <thead><tr style="background:#f4f4f4;"><th style="padding:8px;">No</th><th style="padding:8px;">Jabatan</th><th style="padding:8px;">Nama</th></tr></thead>
@@ -1459,13 +1497,13 @@
 
             } else if (jenis === 'organisasi') {
                 judul = "Induk Organisasi";
-                let data = JSON.parse(localStorage.getItem('dataOrganisasi') || '{}');
+                let data = window.dataOrganisasiGlobal || {};
                 let logoHtml = data.logoOrganisasi ? `<img src="${data.logoOrganisasi}" style="max-width:180px; display:block; margin-bottom:15px;">` : '';
                 kontenHtml = logoHtml + (data.isi || '<p>Data organisasi belum diisi.</p>');
 
             } else if (jenis === 'pedoman') {
                 judul = "Pedoman Media Siber";
-                kontenHtml = localStorage.getItem('pedomanMediaSiber') || '<p>Pedoman Media Siber belum diisi.</p>';
+                kontenHtml = window.pedomanMediaGlobal || '<p>Pedoman Media Siber belum diisi.</p>';
             }
 
             document.getElementById('judul-halaman-statis').innerHTML = judul;
@@ -1480,38 +1518,6 @@
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        function muatRunningTextWeb() {
-            let rawData = localStorage.getItem('runningTextData');
-            let wadahMarquee = document.querySelector('.running marquee');
-
-            if (!rawData || !wadahMarquee) return;
-
-            wadahMarquee.style.whiteSpace = 'nowrap';
-
-            try {
-                let data = JSON.parse(rawData);
-                if (Array.isArray(data) && data.length > 0) {
-                    let itemTeks = [];
-
-                    data.forEach((item) => {
-                        let teks = "" + item.teks;
-
-                        if (item.link && item.link.trim() !== '') {
-                            let urlValid = formatUrl(item.link);
-                            itemTeks.push(`<a href="${urlValid}" target="_blank" style="display:inline; text-decoration:none; color:inherit; cursor:pointer;">${teks}</a>`);
-                        } else {
-                            itemTeks.push(`<span style="display:inline;">${teks}</span>`);
-                        }
-                    });
-
-                    let pemisah = '<span style="display:inline; margin: 0 25px; opacity:0.7;">✦</span>';
-                    wadahMarquee.innerHTML = itemTeks.join(pemisah);
-                }
-            } catch (e) {
-                console.error("Gagal memuat running text:", e);
-            }
-        }
-
         function formatUrl(url) {
             if (!url) return '#';
             url = url.trim();
@@ -1522,15 +1528,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            terapkanWarnaWeb();
-            muatBerita();
-            muatPengaturanAdmin();
-            muatIklanHeaderWeb();
-            muatIklanSampingWeb();
-            muatAfiliasiWeb();
-            muatVideoBeritaWeb();
-            muatSettingUtamaFooter();
-            muatRunningTextWeb();
+            let elTahun = document.getElementById('tahun-copyright');
+            if (elTahun) elTahun.innerText = new Date().getFullYear();
 
             let areaIklanSamping = document.getElementById('wadah-iklan-samping');
             if (areaIklanSamping) {

@@ -778,7 +778,7 @@ function bacaBerita(idx) {
     metaPenuh.textContent = `📂 ${kat} | 📅 ${b.tglPublish || '-'} ${b.jamPublish || ''}`;
   }
   if (isiPenuh) {
-    isiPenuh.innerHTML = (b.gambarSampul ? `<img src="${b.gambarSampul}" alt="Gambar Utama">`) + (b.isiBerita || '');
+    isiPenuh.innerHTML = (b.gambarSampul ? `<img src="${b.gambarSampul}" alt="Gambar Utama">`:'') + (b.isiBerita || '');
   }
   window.scrollTo(0, 0);
 }

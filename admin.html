@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin - Tribuana Putra News</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- FIREBASE SDK VERSI 9 COMPAT (cocok & stabil) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        :root {
+            --kiri-bg: #2c3e50;
+            --kiri-text: #fff;
+            --kiri-aktif: #34495e;
+            --utama-bg: #ecf0f1;
+            --kartu: #fff;
+            --teks: #333;
+            --batas: #ddd;
+            --tombol: #27ae60;
+            --tombol-batal: #e74c3c;
+            --tombol-teks: #fff;
+        }
+
+        body.gelap {
+            --utama-bg: #1a1a1a;
+            --kartu: #2d2d2d;
+            --teks: #e0e0e0;
+            --batas: #444;
+        }
+
+        body {
+            background: var(--utama-bg);
+            color: var(--teks);
+            transition: all 0.3s;
+        }
+
+        .wadah-layar {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .panel-kiri {
+            width: 260px;
+            background: var(--kiri-bg);
+            color: var(--kiri-text);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo-kiri {
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-kiri h2 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .logo-kiri p {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .menu-kiri {
+            padding: 15px 0;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+        }
+
+        .menu-item:hover,
+        .menu-item.aktif {
+            background: var(--kiri-aktif);
+        }
+
+        .panel-utama {
+            flex: 1;
+            margin-left: 260px;
+            padding: 25px;
+        }
+
+        .halaman {
+            display: none;
+        }
+
+        .halaman.aktif {
+            display: block;
+        }
+
+        .judul-section {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--kiri-bg);
+        }
+
+        .card {
+            background: var(--kartu);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        }
+
+        label {
+            display: block;
+            margin: 12px 0 5px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--batas);
+            border-radius: 4px;
+            font-size: 14px;
+            background: transparent;
+            color: inherit;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 5px;
+        }
+
+        .tombol-utama {
+            background: var(--tombol);
+            color: var(--tombol-teks);
+        }
+
+        .tombol-batal {
+            background: var(--tombol-batal);
+            color: var(--tombol-teks);
+        }
+
+        .tombol-kecil {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .baris-tombol {
+            margin: 15px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .daftar-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--batas);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .pratinjau-gambar {
+            max-width: 200px;
+            max-height: 150px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 2px dashed var(--batas);
+            padding: 10px;
+        }
+
+        .baris-dua {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .baris-dua>div {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .pesan-sukses {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .pesan-error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .tombol-mode {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+
+        @media(max-width: 768px) {
+            .panel-kiri {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .panel-utama {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .wadah-layar {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wadah-layar">
+        <!-- KIRI: MENU -->
+        <aside class="panel-kiri">
+            <div class="logo-kiri">
+                <h2>📰 Panel Admin</h2>
+                <p id="nama-admin-tampil">—</p>
+                <button class="tombol-mode" onclick="ubahMode()">🌙</button>
+            </div>
+            <nav class="menu-kiri">
+                <div class="menu-item aktif" data-halaman="konten-berita">📝 Konten Berita</div>
+                <div class="menu-item" data-halaman="daftar-berita">📋 Daftar Berita</div>
+                <div class="menu-item" data-halaman="pengaturan-umum">⚙️ Pengaturan</div>
+                <div class="menu-item" data-halaman="pengaturan-tampilan">🎨 Tampilan Web</div>
+                <div class="menu-item" data-halaman="pengumuman">📢 Pengumuman</div>
+                <div class="menu-item" data-halaman="organisasi">🏛️ Organisasi</div>
+                <div class="menu-item" data-halaman="iklan">📰 Iklan</div>
+                <div class="menu-item" data-halaman="data-pengguna">👥 Data Masuk</div>
+                <div class="menu-item" onclick="if(confirm('Keluar dari panel?')){window.location.href='index.html';}">
+                    🚪 Keluar</div>
+            </nav>
+        </aside>
+
+        <!-- UTAMA: ISI SETIAP MENU -->
+        <main class="panel-utama">
+            <!-- KONTEN BERITA -->
+            <div id="konten-berita" class="halaman aktif">
+                <div class="judul-section">📝 Tulis / Edit Berita</div>
+                <div class="card">
+                    <label>Judul Berita *</label>
+                    <input type="text" id="judul-berita" placeholder="Tulis judul berita..." required>
+
+                    <label>📂 Kategori Berita <small>(Tekan Ctrl + klik untuk pilih lebih dari satu)</small></label>
+                    <select id="kategori-berita" multiple style="width:100%; height:100px;">
+                        <option value="Priangan Timur">Priangan Timur</option>
+                        <option value="Tasikmalaya">Tasikmalaya</option>
+                        <option value="Kabupaten">Kabupaten</option>
+                        <option value="Pendidikan">Pendidikan</option>
+                        <option value="Kesehatan">Kesehatan</option>
+                        <option value="Ekonomi">Ekonomi</option>
+                        <option value="Budaya">Budaya</option>
+                        <option value="Sosial">Sosial</option>
+                        <option value="Hukum">Hukum</option>
+                        <option value="Nasional">Nasional</option>
+                    </select>
+
+                    <label>📅 Tanggal & Jam Terbit</label>
+                    <div class="baris-dua">
+                        <div>
+                            <input type="date" id="tgl-publish">
+                        </div>
+                        <div>
+                            <input type="time" id="jam-publish">
+                        </div>
+                    </div>
+
+                    <label>🖼️ Gambar Sampul</label>
+                    <input type="file" id="gambar-sampul-file" accept="image/*" onchange="pratinjauGambarSampul(this)">
+                    <div id="pratinjau-sampul" class="pratinjau-gambar" style="display:none;"></div>
+
+                    <label>📄 Isi Berita *</label>
+                    <textarea id="isi-berita" rows="12"
+                        placeholder="Tulis isi berita... Anda bisa menyisipkan gambar dari tombol di bawah ini"></textarea>
+
+                    <div class="baris-tombol">
+                        <button type="button" onclick="sisipkanGambarKeIsi()">🖼️ Sisipkan Gambar ke Isi</button>
+                    </div>
+
+                    <label style="margin-top:15px;">
+                        <input type="checkbox" id="tampilkan-di-web" checked> Tampilkan di Halaman Utama
+                    </label>
+
+                    <div class="baris-tombol">
+                        <button class="tombol-utama" onclick="simpanBerita()">💾 Simpan Berita</button>
+                        <button class="tombol-batal" onclick="batalTulis()">🗑️ Kosongkan</button>
+                    </div>
+
+                    <div id="pesan-sukses-berita" class="pesan-sukses">✅ Berita berhasil disimpan!</div>
+                    <div id="pesan-error-berita" class="pesan-error"></div>
+                </div>
+            </div>
+
+            <!-- DAFTAR BERITA -->
+            <div id="daftar-berita" class="halaman">
+                <div class="judul-section">📋 Daftar Semua Berita</div>
+                <div style="margin-bottom:15px;">
+                    <input type="text" id="cari-berita-admin" placeholder="🔍 Cari berita..."
+                        oninput="filterDaftarBerita()">
+                </div>
+                <div id="wadah-daftar-berita"></div>
+            </div>
+
+            <!-- PENGATURAN UMUM -->
+            <div id="pengaturan-umum" class="halaman">
+                <div class="judul-section">⚙️ Pengaturan Umum</div>
+                <div class="card">
+                    <label>Nama Admin</label>
+                    <input type="text" id="nama-admin" placeholder="Nama Anda">
+                    <label>Nama Portal / Perusahaan</label>
+                    <input type="text" id="nama-perusahaan" value="Tribuana Putra News">
+                    <label>Alamat Lengkap</label>
+                    <textarea id="alamat-perusahaan" rows="2">Priangan Timur, Jawa Barat</textarea>
+                    <label>Telepon / WhatsApp</label>
+                    <input type="tel" id="telp" placeholder="08xx-xxxx-xxxx">
+                    <label>Email Kontak</label>
+                    <input type="email" id="email-kontak" placeholder="email@domain.com">
+                    <label>Facebook Link</label>
+                    <input type="url" id="fb-link" placeholder="https://facebook.com/...">
+                    <label>Instagram Link</label>
+                    <input type="url" id="ig-link" placeholder="https://instagram.com/...">
+                    <label>YouTube Link</label>
+                    <input type="url" id="yt-link" placeholder="https://youtube.com/...">
+                    <label>Logo Website (Unggah Gambar)</label>
+                    <input type="file" id="logo-file" accept="image/*" onchange="pratinjauLogo(this)">
+                    <div id="pratinjau-logo" class="pratinjau-gambar" style="display:none;"></div>
+                    <div class="baris-tombol">
+                        <button class="tombol-utama" onclick="simpanSettingUtama()">💾 Simpan Pengaturan</button>
+                    </div>
+                    <div id="pesan-sukses-setting" class="pesan-sukses">✅ Pengaturan tersimpan!</div>
+                </div>
+            </div>
+
+            <!-- PENGATURAN TAMPILAN -->
+            <div id="pengaturan-tampilan" class="halaman">
+                <div class="judul-section">🎨 Pengaturan Warna Web</div>
+                <div class="card">
+                    <div class="baris-dua">
+                        <div>
+                            <label>Warna Header Latar</label>
+                            <input type="color" id="web-header-latar" value="#2c3e50">
+                        </div>
+                        <div>
+                            <label>Warna Header Teks</label>
+                            <input type="color" id="web-header-teks" value="#ffffff">
+                        </div>
+                    </div>
+                    <div class="baris-dua">
+                        <div>
+                            <label>Warna Menu Latar</label>
+                            <input type="color" id="web-menu-latar" value="#34495e">
+                        </div>
+                        <div>
+                            <label>Warna Menu Teks</label>
+                            <input type="color" id="web-menu-teks" value="#ffffff">
+                        </div>
+                    </div>
+                    <div class="baris-dua">
+                        <div>
+                            <label>Warna Running Teks Latar</label>
+                            <input type="color" id="web-running-latar" value="#f1c40f">
+                        </div>
+                        <div>
+                            <label>Warna Running Teks</label>
+                            <input type="color" id="web-running-teks" value="#222222">
+                        </div>
+                    </div>
+                    <div class="baris-dua">
+                        <div>
+                            <label>Warna Footer Latar</label>
+                            <input type="color" id="web-footer-latar" value="#2c3e50">
+                        </div>
+                        <div>
+                            <label>Warna Footer Teks</label>
+                            <input type="color" id="web-footer-teks" value="#ffffff">
+                        </div>
+                    </div>
+                    <div class="baris-tombol">
+                        <button class="tombol-utama" onclick="simpanWarnaWeb()">🎨 Terapkan Warna</button>
+                    </div>
+                    <div id="pesan-sukses-warna" class="pesan-sukses">✅ Warna diterapkan!</div>
+                </div>
+            </div>
+
+            <!-- PENGUMUMAN -->
+            <div id="pengumuman" class="halaman">
+                <div class="judul-section">📢 Pengaturan Teks Berjalan</div>
+                <div class="card">
+                    <p style="font-size:13px; opacity:0.7; margin-bottom:15px;">Tambahkan teks yang berjalan di bagian
+                        atas halaman web. Bisa lebih dari satu.</p>
+                    <div id="daftar-pengumuman"></div>
+                    <button class="tombol-utama" onclick="tambahBarisPengumuman()">➕ Tambah Pengumuman</button>
+                    <div class="baris-tombol" style="margin-top:15px;">
+                        <button class="tombol-utama" onclick="simpanPengumuman()">💾 Simpan Semua Pengumuman</button>
+                    </div>
+                    <div id="pesan-sukses-pengumuman" class="pesan-sukses">✅ Pengumuman tersimpan!</div>
+                </div>
+            </div>
+
+            <!-- ORGANISASI -->
+            <div id="organisasi" class="halaman">
+                <div class="judul-section">🏛️ Tentang Organisasi</div>
+                <div class="card">
+                    <label>Logo Organisasi</label>
+                    <input type="file" id="logo-organisasi-file" accept="image/*"
+                        onchange="pratinjauLogoOrganisasi(this)">
+                    <div id="pratinjau-logo-organisasi" class="pratinjau-gambar" style="display:none;"></div>
+                    <label>Isi Keterangan / Sejarah</label>
+                    <textarea id="isi-organisasi" rows="10" placeholder="Tulis tentang organisasi..."></textarea>
+                    <div class="baris-tombol">
+                        <button class="tombol-utama" onclick="simpanOrganisasi()">💾 Simpan Halaman</button>
+                    </div>
+                    <div id="pesan-sukses-organisasi" class="pesan-sukses">✅ Halaman tersimpan!</div>
+                </div>
+            </div>
+
+            <!-- IKLAN -->
+            <div id="iklan" class="halaman">
+                <div class="judul-section">📰 Pengaturan Iklan</div>
+                <h3 style="margin:15px 0 10px;">Iklan Header</h3>
+                <div class="card">
+                    <div id="daftar-iklan-header"></div>
+                    <button class="tombol-utama" onclick="tambahIklanHeader()">➕ Tambah Iklan Header</button>
+                    <div class="baris-tombol" style="margin-top:15px;">
+                        <button class="tombol-utama" onclick="simpanSemuaIklanHeader()">💾 Simpan Iklan Header</button>
+                    </div>
+                </div>
+                <h3 style="margin:25px 0 10px;">Iklan Samping</h3>
+                <div class="card">
+                    <div id="daftar-iklan-samping"></div>
+                    <button class="tombol-utama" onclick="tambahIklanSamping()">➕ Tambah Iklan Samping</button>
+                    <div class="baris-tombol" style="margin-top:15px;">
+                        <button class="tombol-utama" onclick="simpanSemuaIklanSamping()">💾 Simpan Iklan
+                            Samping</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DATA PENGGUNA -->
+            <div id="data-pengguna" class="halaman">
+                <div class="judul-section">👥 Data Masuk dari Pengunjung</div>
+                <h3 style="margin:15px 0 10px;">💬 Komentar</h3>
+                <div class="card">
+                    <div id="daftar-komentar"></div>
+                    <button class="tombol-utama" onclick="eksporKomentarExcel()">📊 Ekspor ke Excel</button>
+                </div>
+                <h3 style="margin:25px 0 10px;">📰 Pengajuan Iklan</h3>
+                <div class="card">
+                    <div id="daftar-pelanggan-iklan"></div>
+                    <button class="tombol-utama" onclick="eksporPelangganExcel()">📊 Ekspor ke Excel</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ==============================================
+        // KONFIGURASI FIREBASE — MILIK ANDA SENDIRI
+        // ==============================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyCc1rUgdchrZ8vxk3HF6-yQKMZze-dNwzE",
+            authDomain: "tribuanaputra-1968.firebaseapp.com",
+            projectId: "tribuanaputra-1968",
+            databaseURL: "https://tribuanaputra-1968-default-rtdb.asia-southeast1.firebasedatabase.app",
+            storageBucket: "tribuanaputra-1968.firebasestorage.app",
+            messagingSenderId: "772922168211",
+            appId: "1:772922168211:web:5bb280501e3d3e6fc50e66"
+        };
+
+        // INISIALISASI
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // ==============================================
+        // FUNGSI BANTUAN — GAMBAR KE DATA URL (TANPA STORAGE!)
+        // ==============================================
+        function gambarKeDataUrl(file, callback) {
+            const pembaca = new FileReader();
+            pembaca.onload = function (e) {
+                callback(e.target.result);
+            };
+            pembaca.readAsDataURL(file);
+        }
+
+        // ==============================================
+        // NAVIGASI & MODE
+        // ==============================================
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function () {
+                const halamanId = this.getAttribute('data-halaman');
+                if (!halamanId) return;
+                document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('aktif'));
+                document.querySelectorAll('.halaman').forEach(h => h.classList.remove('aktif'));
+                this.classList.add('aktif');
+                document.getElementById(halamanId).classList.add('aktif');
+                if (halamanId === 'daftar-berita') muatDaftarBerita();
+                if (halamanId === 'pengaturan-umum') muatPengaturanUmum();
+                if (halamanId === 'pengaturan-tampilan') muatPengaturanWarna();
+                if (halamanId === 'pengumuman') muatPengumuman();
+                if (halamanId === 'organisasi') muatOrganisasi();
+                if (halamanId === 'iklan') {muatIklanHeader(); muatIklanSamping();}
+                if (halamanId === 'data-pengguna') {muatKomentar(); muatPelangganIklan();}
+            });
+        });
+
+        let modeGelap = false;
+        function ubahMode() {
+            modeGelap = !modeGelap;
+            document.body.classList.toggle('gelap', modeGelap);
+        }
+
+        // ==============================================
+        // BERITA
+        // ==============================================
+        let idEditBerita = null;
+        let gambarSampulDataUrl = '';
+
+        function pratinjauGambarSampul(input) {
+            if (!input.files || !input.files[0]) return;
+            gambarKeDataUrl(input.files[0], function (dataUrl) {
+                gambarSampulDataUrl = dataUrl;
+                const wadah = document.getElementById('pratinjau-sampul');
+                wadah.style.display = 'block';
+                wadah.innerHTML = `<img src="${dataUrl}" style="max-width:100%; max-height:120px; border-radius:4px;">`;
+            });
+        }
+
+        function sisipkanGambarKeIsi() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                gambarKeDataUrl(file, function (dataUrl) {
+                    const ta = document.getElementById('isi-berita');
+                    // Masukkan di posisi kursor, bukan di akhir
+                    const mulai = ta.selectionStart;
+                    const akhir = ta.selectionEnd;
+                    const teksDepan = ta.value.substring(0, mulai);
+                    const teksBelakang = ta.value.substring(akhir);
+                    const gambarTeks = `<img src="${dataUrl}" alt="Gambar Berita" style="max-width:100%; border-radius:6px; margin:10px 0;">\n`;
+                    ta.value = teksDepan + gambarTeks + teksBelakang;
+                    // Kembalikan kursor setelah gambar
+                    ta.selectionStart = ta.selectionEnd = mulai + gambarTeks.length;
+                    ta.focus();
+                });
+            };
+            input.click();
+        }
+
+        function simpanBerita() {
+            const judul = document.getElementById('judul-berita').value.trim();
+            const isi = document.getElementById('isi-berita').value.trim();
+
+            if (!judul || !isi) {
+                const elErr = document.getElementById('pesan-error-berita');
+                elErr.textContent = 'Judul dan Isi Berita wajib diisi!';
+                elErr.style.display = 'block';
+                setTimeout(() => elErr.style.display = 'none', 3000);
+                return;
+            }
+
+            const katSelect = document.getElementById('kategori-berita');
+            const kategori = Array.from(katSelect.selectedOptions).map(o => o.value);
+            const tglPublish = document.getElementById('tgl-publish').value || new Date().toISOString().slice(0, 10);
+            const jamPublish = document.getElementById('jam-publish').value || '';
+            const tampilkanDiWeb = document.getElementById('tampilkan-di-web').checked;
+
+            const dataBerita = {
+                judul,
+                isiBerita: isi,
+                kategori,
+                tglPublish,
+                jamPublish,
+                tampilkanDiWeb,
+                viewer: 0,
+                gambarSampul: gambarSampulDataUrl || '',
+                tanggalDibuat: new Date().toLocaleString('id-ID')
+            };
+
+            const ref = idEditBerita ? db.ref('berita/' + idEditBerita) : db.ref('berita').push();
+            dataBerita.id = idEditBerita || ref.key;
+
+            ref.set(dataBerita)
+                .then(() => {
+                    const elSukses = document.getElementById('pesan-sukses-berita');
+                    elSukses.style.display = 'block';
+                    setTimeout(() => elSukses.style.display = 'none', 3000);
+                    batalTulis();
+                    alert('✅ Berita berhasil disimpan!');
+                })
+                .catch(err => {
+                    const elErr = document.getElementById('pesan-error-berita');
+                    elErr.textContent = 'Kesalahan: ' + err.message;
+                    elErr.style.display = 'block';
+                    setTimeout(() => elErr.style.display = 'none', 4000);
+                });
+        }
+        function batalTulis() {
+            idEditBerita = null;
+            gambarSampulDataUrl = '';
+            document.getElementById('judul-berita').value = '';
+            document.getElementById('kategori-berita').selectedIndex = -1;
+            document.getElementById('tgl-publish').value = '';
+            document.getElementById('jam-publish').value = '';
+            document.getElementById('isi-berita').value = '';
+            document.getElementById('tampilkan-di-web').checked = true;
+            document.getElementById('pratinjau-sampul').style.display = 'none';
+        }
+
+        function muatDaftarBerita() {
+            db.ref('berita').once('value').then(snap => {
+                const semua = snap.val() ? Object.entries(snap.val()).reverse() : [];
+                tampilDaftarBerita(semua);
+            });
+        }
+
+        function tampilDaftarBerita(semua) {
+            const wadah = document.getElementById('wadah-daftar-berita');
+            if (!semua.length) {
+                wadah.innerHTML = '<p style="color:#888; padding:20px;">Belum ada berita.</p>';
+                return;
+            }
+            wadah.innerHTML = semua.map(([id, b]) => `
+        <div class="daftar-item">
+            <div>
+                <strong>${b.judul || '(Tanpa Judul)'}</strong><br>
+                <small style="opacity:0.7;">📅 ${b.tglPublish || '-'} | 👁️ ${b.viewer || 0} kali dibaca</small>
+            </div>
+            <div>
+                <button class="tombol-kecil" onclick="editBerita('${id}')">✏️ Edit</button>
+                <button class="tombol-kecil" style="background:var(--tombol-batal); color:white;" onclick="hapusBerita('${id}')">🗑️ Hapus</button>
+                <button class="tombol-kecil" onclick="lihatBerita('${id}')">👁️ Lihat</button>
+            </div>
+        </div>
+    `).join('');
+        }
+
+        function filterDaftarBerita() {
+            const kata = document.getElementById('cari-berita-admin').value.toLowerCase();
+            db.ref('berita').once('value').then(snap => {
+                const semua = snap.val() ? Object.entries(snap.val()).reverse() : [];
+                const hasil = semua.filter(([_, b]) => (b.judul || '').toLowerCase().includes(kata));
+                tampilDaftarBerita(hasil);
+            });
+        }
+
+        function editBerita(id) {
+            idEditBerita = id;
+            db.ref('berita/' + id).once('value').then(snap => {
+                const b = snap.val();
+                document.getElementById('judul-berita').value = b.judul || '';
+                document.getElementById('isi-berita').value = b.isiBerita || '';
+                document.getElementById('tgl-publish').value = b.tglPublish || '';
+                document.getElementById('jam-publish').value = b.jamPublish || '';
+                document.getElementById('tampilkan-di-web').checked = b.tampilkanDiWeb !== false;
+                gambarSampulDataUrl = b.gambarSampul || '';
+                if (gambarSampulDataUrl) {
+                    const wadah = document.getElementById('pratinjau-sampul');
+                    wadah.style.display = 'block';
+                    wadah.innerHTML = `<img src="${gambarSampulDataUrl}" style="max-width:100%; max-height:120px;">`;
+                }
+                // Pilih kategori
+                const katSelect = document.getElementById('kategori-berita');
+                const daftarKat = Array.isArray(b.kategori) ? b.kategori : [b.kategori];
+                Array.from(katSelect.options).forEach(opt => {
+                    opt.selected = daftarKat.includes(opt.value);
+                });
+                // Pindah ke halaman tulis
+                document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('aktif'));
+                document.querySelectorAll('.halaman').forEach(h => h.classList.remove('aktif'));
+                document.querySelector('[data-halaman="konten-berita"]').classList.add('aktif');
+                document.getElementById('konten-berita').classList.add('aktif');
+            });
+        }
+
+        function hapusBerita(id) {
+            if (!confirm('Yakin menghapus berita ini?')) return;
+            db.ref('berita/' + id).remove().then(() => {
+                muatDaftarBerita();
+            });
+        }
+
+        function lihatBerita(id) {
+            window.open(`index.html?lihat=${id}`, '_blank');
+        }
+
+        // ==============================================
+        // PENGATURAN UMUM
+        // ==============================================
+        function muatPengaturanUmum() {
+            db.ref('pengaturan/umum').once('value').then(snap => {
+                const d = snap.val() || {};
+                document.getElementById('nama-admin').value = d.namaAdmin || '';
+                document.getElementById('nama-perusahaan').value = d.namaPerusahaan || 'Tribuana Putra News';
+                document.getElementById('alamat-perusahaan').value = d.alamatPerusahaan || 'Priangan Timur, Jawa Barat';
+                document.getElementById('telp').value = d.telp || '';
+                document.getElementById('email-kontak').value = d.emailKontak || '';
+                document.getElementById('fb-link').value = d.fbLink || '';
+                document.getElementById('ig-link').value = d.igLink || '';
+                document.getElementById('yt-link').value = d.ytLink || '';
+                document.getElementById('nama-admin-tampil').textContent = d.namaAdmin || 'Admin';
+                if (d.logoWebsite) {
+                    const wadah = document.getElementById('pratinjau-logo');
+                    wadah.style.display = 'block';
+                    wadah.innerHTML = `<img src="${d.logoWebsite}" style="max-width:150px;">`;
+                }
+            });
+        }
+
+        function pratinjauLogo(input) {
+            if (!input.files || !input.files[0]) return;
+            gambarKeDataUrl(input.files[0], dataUrl => {
+                const wadah = document.getElementById('pratinjau-logo');
+                wadah.style.display = 'block';
+                wadah.innerHTML = `<img src="${dataUrl}" style="max-width:150px;">`;
+            });
+        }
+
+        function simpanSettingUtama() {
+            const inputLogo = document.getElementById('logo-file');
+            const simpan = (logoData) => {
+                const data = {
+                    namaAdmin: document.getElementById('nama-admin').value.trim(),
+                    namaPerusahaan: document.getElementById('nama-perusahaan').value.trim(),
+                    alamatPerusahaan: document.getElementById('alamat-perusahaan').value.trim(),
+                    telp: document.getElementById('telp').value.trim(),
+                    emailKontak: document.getElementById('email-kontak').value.trim(),
+                    fbLink: document.getElementById('fb-link').value.trim(),
+                    igLink: document.getElementById('ig-link').value.trim(),
+                    ytLink: document.getElementById('yt-link').value.trim()
+                };
+                if (logoData) data.logoWebsite = logoData;
+                db.ref('pengaturan/umum').update(data).then(() => {
+                    tampilPesan('pesan-sukses-setting');
+                    document.getElementById('nama-admin-tampil').textContent = data.namaAdmin || 'Admin';
+                });
+            };
+            if (inputLogo.files && inputLogo.files[0]) {
+                gambarKeDataUrl(inputLogo.files[0], simpan);
+            } else {
+                simpan(null);
+            }
+        }
+
+        // ==============================================
+        // PENGATURAN WARNA
+        // ==============================================
+        function muatPengaturanWarna() {
+            db.ref('pengaturan/warna').once('value').then(snap => {
+                const w = snap.val() || {};
+                if (w.web_header_latar) document.getElementById('web-header-latar').value = w.web_header_latar;
+                if (w.web_header_teks) document.getElementById('web-header-teks').value = w.web_header_teks;
+                if (w.web_menu_latar) document.getElementById('web-menu-latar').value = w.web_menu_latar;
+                if (w.web_menu_teks) document.getElementById('web-menu-teks').value = w.web_menu_teks;
+                if (w.web_running_latar) document.getElementById('web-running-latar').value = w.web_running_latar;
+                if (w.web_running_teks) document.getElementById('web-running-teks').value = w.web_running_teks;
+                if (w.web_footer_latar) document.getElementById('web-footer-latar').value = w.web_footer_latar;
+                if (w.web_footer_teks) document.getElementById('web-footer-teks').value = w.web_footer_teks;
+            });
+        }
+
+        function simpanWarnaWeb() {
+            const data = {
+                web_header_latar: document.getElementById('web-header-latar').value,
+                web_header_teks: document.getElementById('web-header-teks').value,
+                web_menu_latar: document.getElementById('web-menu-latar').value,
+                web_menu_teks: document.getElementById('web-menu-teks').value,
+                web_running_latar: document.getElementById('web-running-latar').value,
+                web_running_teks: document.getElementById('web-running-teks').value,
+                web_footer_latar: document.getElementById('web-footer-latar').value,
+                web_footer_teks: document.getElementById('web-footer-teks').value
+            };
+            db.ref('pengaturan/warna').set(data).then(() => {
+                tampilPesan('pesan-sukses-warna');
+            });
+        }
+
+        // ==============================================
+        // PENGUMUMAN
+        // ==============================================
+        let daftarPengumuman = [];
+
+        function muatPengumuman() {
+            db.ref('pengumuman/runningText').once('value').then(snap => {
+                daftarPengumuman = snap.val() || [];
+                renderPengumuman();
+            });
+        }
+
+        function tambahBarisPengumuman() {
+            daftarPengumuman.push({teks: '', link: ''});
+            renderPengumuman();
+        }
+
+        function hapusBarisPengumuman(idx) {
+            daftarPengumuman.splice(idx, 1);
+            renderPengumuman();
+        }
+
+        function renderPengumuman() {
+            const wadah = document.getElementById('daftar-pengumuman');
+            wadah.innerHTML = daftarPengumuman.map((p, i) => `
+        <div style="padding:10px; border-bottom:1px solid var(--batas);">
+            <label>Teks Pengumuman ${i + 1}</label>
+            <input type="text" value="${p.teks || ''}" onchange="daftarPengumuman[${i}].teks = this.value">
+            <label>Link (Opsional)</label>
+            <input type="url" value="${p.link || ''}" onchange="daftarPengumuman[${i}].link = this.value">
+            <button class="tombol-kecil tombol-batal" onclick="hapusBarisPengumuman(${i})">🗑️ Hapus</button>
+        </div>
+    `).join('');
+        }
+
+        function simpanPengumuman() {
+            db.ref('pengumuman/runningText').set(daftarPengumuman).then(() => {
+                tampilPesan('pesan-sukses-pengumuman');
+            });
+        }
+
+        // ==============================================
+        // ORGANISASI
+        // ==============================================
+        function pratinjauLogoOrganisasi(input) {
+            if (!input.files || !input.files[0]) return;
+            gambarKeDataUrl(input.files[0], dataUrl => {
+                const wadah = document.getElementById('pratinjau-logo-organisasi');
+                wadah.style.display = 'block';
+                wadah.innerHTML = `<img src="${dataUrl}" style="max-width:200px;">`;
+                wadah.dataset.logoBaru = dataUrl;
+            });
+        }
+
+        function muatOrganisasi() {
+            db.ref('organisasi').once('value').then(snap => {
+                const d = snap.val() || {};
+                document.getElementById('isi-organisasi').value = d.isi || '';
+                if (d.logoOrganisasi) {
+                    const wadah = document.getElementById('pratinjau-logo-organisasi');
+                    wadah.style.display = 'block';
+                    wadah.innerHTML = `<img src="${d.logoOrganisasi}" style="max-width:200px;">`;
+                }
+            });
+        }
+
+        function simpanOrganisasi() {
+            const logoBaru = document.getElementById('pratinjau-logo-organisasi').dataset.logoBaru;
+            const data = {isi: document.getElementById('isi-organisasi').value.trim()};
+            if (logoBaru) data.logoOrganisasi = logoBaru;
+            db.ref('organisasi').update(data).then(() => {
+                tampilPesan('pesan-sukses-organisasi');
+            });
+        }
+
+        // ==============================================
+        // IKLAN HEADER
+        // ==============================================
+        let daftarIklanHeader = [];
+
+        function muatIklanHeader() {
+            db.ref('iklan_header').once('value').then(snap => {
+                daftarIklanHeader = snap.val() || [];
+                renderIklanHeader();
+            });
+        }
+
+        function tambahIklanHeader() {
+            daftarIklanHeader.push({gambar: '', link: '', mulai: '', akhir: ''});
+            renderIklanHeader();
+        }
+
+        function hapusIklanHeader(idx) {
+            daftarIklanHeader.splice(idx, 1);
+            renderIklanHeader();
+        }
+
+        function renderIklanHeader() {
+            const wadah = document.getElementById('daftar-iklan-header');
+            wadah.innerHTML = daftarIklanHeader.map((ik, i) => `
+        <div style="padding:12px; border-bottom:1px solid var(--batas);">
+            <h4>Iklan Header ${i + 1}</h4>
+            <label>Unggah Gambar</label>
+            <input type="file" accept="image/*" onchange="unggahGambarIklanHeader(${i}, this)">
+            ${ik.gambar ? `<img src="${ik.gambar}" style="max-width:200px; margin:8px 0; border-radius:4px;">` : ''}
+            <label>Link Tujuan</label>
+            <input type="url" value="${ik.link || ''}" onchange="daftarIklanHeader[${i}].link = this.value">
+            <div class="baris-dua">
+                <div><label>Tanggal Mulai</label><input type="date" value="${ik.mulai || ''}" onchange="daftarIklanHeader[${i}].mulai = this.value"></div>
+                <div><label>Tanggal Berakhir</label><input type="date" value="${ik.akhir || ''}" onchange="daftarIklanHeader[${i}].akhir = this.value"></div>
+            </div>
+            <button class="tombol-kecil tombol-batal" onclick="hapusIklanHeader(${i})">🗑️ Hapus</button>
+        </div>
+    `).join('');
+        }
+
+        function unggahGambarIklanHeader(idx, input) {
+            if (!input.files || !input.files[0]) return;
+            gambarKeDataUrl(input.files[0], dataUrl => {
+                daftarIklanHeader[idx].gambar = dataUrl;
+                renderIklanHeader();
+            });
+        }
+
+        function simpanSemuaIklanHeader() {
+            db.ref('iklan_header').set(daftarIklanHeader).then(() => {
+                alert('✅ Iklan Header Tersimpan!');
+            });
+        }
+
+        // ==============================================
+        // IKLAN SAMPING
+        // ==============================================
+        let daftarIklanSamping = [];
+
+        function muatIklanSamping() {
+            db.ref('iklan_samping').once('value').then(snap => {
+                daftarIklanSamping = snap.val() || [];
+                renderIklanSamping();
+            });
+        }
+
+        function tambahIklanSamping() {
+            daftarIklanSamping.push({judul: '', gambar: '', link: '', mulai: '', akhir: ''});
+            renderIklanSamping();
+        }
+
+        function hapusIklanSamping(idx) {
+            daftarIklanSamping.splice(idx, 1);
+            renderIklanSamping();
+        }
+
+        function renderIklanSamping() {
+            const wadah = document.getElementById('daftar-iklan-samping');
+            wadah.innerHTML = daftarIklanSamping.map((ik, i) => `
+        <div style="padding:12px; border-bottom:1px solid var(--batas);">
+            <h4>Iklan Samping ${i + 1}</h4>
+            <label>Judul Iklan</label>
+            <input type="text" value="${ik.judul || ''}" onchange="daftarIklanSamping[${i}].judul = this.value">
+            <label>Unggah Gambar</label>
+            <input type="file" accept="image/*" onchange="unggahGambarIklanSamping(${i}, this)">
+            ${ik.gambar ? `<img src="${ik.gambar}" style="max-width:200px; margin:8px 0; border-radius:4px;">` : ''}
+            <label>Link Tujuan</label>
+            <input type="url" value="${ik.link || ''}" onchange="daftarIklanSamping[${i}].link = this.value">
+            <div class="baris-dua">
+                <div><label>Tanggal Mulai</label><input type="date" value="${ik.mulai || ''}" onchange="daftarIklanSamping[${i}].mulai = this.value"></div>
+                <div><label>Tanggal Berakhir</label><input type="date" value="${ik.akhir || ''}" onchange="daftarIklanSamping[${i}].akhir = this.value"></div>
+            </div>
+            <button class="tombol-kecil tombol-batal" onclick="hapusIklanSamping(${i})">🗑️ Hapus</button>
+        </div>
+    `).join('');
+        }
+
+        function unggahGambarIklanSamping(idx, input) {
+            if (!input.files || !input.files[0]) return;
+            gambarKeDataUrl(input.files[0], dataUrl => {
+                daftarIklanSamping[idx].gambar = dataUrl;
+                renderIklanSamping();
+            });
+        }
+
+        function simpanSemuaIklanSamping() {
+            db.ref('iklan_samping').set(daftarIklanSamping).then(() => {
+                alert('✅ Iklan Samping Tersimpan!');
+            });
+        }
+
+        // ==============================================
+        // DATA KOMENTAR & PELANGGAN
+        // ==============================================
+        function muatKomentar() {
+            db.ref('komentar').once('value').then(snap => {
+                const semua = snap.val() ? Object.values(snap.val()).reverse() : [];
+                const wadah = document.getElementById('daftar-komentar');
+                if (!semua.length) {
+                    wadah.innerHTML = '<p style="color:#888; padding:10px;">Belum ada komentar.</p>';
+                    return;
+                }
+                wadah.innerHTML = semua.map(k => `
+            <div style="padding:10px; border-bottom:1px solid var(--batas);">
+                <strong>${k.Nama || 'Anonim'}</strong> &lt;${k.Email || ''}&gt; — ${k.Tanggal || '-'}<br>
+                <small>WA: ${k.WhatsApp || '-'}</small><br>
+                <p style="margin-top:5px;">${k.Komentar || ''}</p>
+            </div>
+        `).join('');
+            });
+        }
+
+        function muatPelangganIklan() {
+            db.ref('pelanggan_iklan').once('value').then(snap => {
+                const semua = snap.val() ? Object.values(snap.val()).reverse() : [];
+                const wadah = document.getElementById('daftar-pelanggan-iklan');
+                if (!semua.length) {
+                    wadah.innerHTML = '<p style="color:#888; padding:10px;">Belum ada pengajuan iklan.</p>';
+                    return;
+                }
+                wadah.innerHTML = semua.map(p => `
+            <div style="padding:10px; border-bottom:1px solid var(--batas);">
+                <strong>${p.Instansi || '-'}</strong> — ${p.Tanggal || '-'}<br>
+                📧 ${p.Email || '-'} | 📱 ${p.WhatsApp || '-'}<br>
+                <p style="margin-top:5px;">${p.Keterangan || ''}</p>
+            </div>
+        `).join('');
+            });
+        }
+
+        function eksporKomentarExcel() {
+            db.ref('komentar').once('value').then(snap => {
+                const semua = snap.val() ? Object.values(snap.val()) : [];
+                const ws = XLSX.utils.json_to_sheet(semua);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Komentar');
+                XLSX.writeFile(wb, 'Data_Komentar_' + new Date().toISOString().slice(0, 10) + '.xlsx');
+            });
+        }
+
+        function eksporPelangganExcel() {
+            db.ref('pelanggan_iklan').once('value').then(snap => {
+                const semua = snap.val() ? Object.values(snap.val()) : [];
+                const ws = XLSX.utils.json_to_sheet(semua);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Pelanggan_Iklan');
+                XLSX.writeFile(wb, 'Data_Pelanggan_Iklan_' + new Date().toISOString().slice(0, 10) + '.xlsx');
+            });
+        }
+
+        // ==============================================
+        // PESAN BANTUAN
+        // ==============================================
+        function tampilPesan(id, teks) {
+            const el = document.getElementById(id);
+            el.style.display = 'block';
+            if (teks) el.textContent = teks;
+            setTimeout(() => {el.style.display = 'none';}, 3000);
+        }
+
+        // ==============================================
+        // SAAT PERTAMA DIBUKA
+        // ==============================================
+        window.onload = function () {
+            const tgl = new Date().toLocaleDateString('id-ID', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
+            console.log('📰 Tribuana Putra News — Panel Admin');
+        };
+    </script>
+
+</body>
+
+</html>

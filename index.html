@@ -783,21 +783,27 @@ function bacaBerita(idx) {
         metaPenuh.textContent = `📂 ${kat} | 📅 ${b.tglPublish || '-'} ${b.jamPublish || ''}`;
     }
     
- if (isiPenuh) {
+if (isiPenuh) {
     let tampilAkhir = '';
     
+    // 1. Tampilkan Gambar Sampul — berdiri sendiri, penuh lebar
     if (b.gambarSampul) {
-        tampilAkhir += `<div style="width:100%; display:block; margin-bottom:15px; overflow:hidden;">
-            <img src="${b.gambarSampul}" alt="Gambar Utama" style="width:100%; height:auto; object-fit:cover; display:block;">
+        tampilAkhir += `<div style="width:100%; float:none; clear:both; margin:0 0 15px 0;">
+            <img src="${b.gambarSampul}" alt="Gambar Utama" style="width:100%; height:auto; display:block; margin:0; padding:0;">
         </div>`;
     }
     
+    // 2. Bersihkan isi berita: hapus gambar yang ikut, paksa teks turun ke bawah
     let isiBersih = b.isiBerita || '';
+    // Hapus semua tag gambar dari isi berita
     isiBersih = isiBersih.replace(/<img[^>]*>/gi, '');
+    // Hapus gaya "float" yang bikin teks menyamping
+    isiBersih = isiBersih.replace(/style\s*=\s*["'][^"']*float\s*:[^"']*["']/gi, '');
+    // Bungkus teks agar tidak naik ke samping
+    tampilAkhir += `<div style="clear:both; display:block; width:100%; margin:0; padding:0;">${isiBersih}</div>`;
     
-    tampilAkhir += `<div style="clear:both;">${isiBersih}</div>`;
     isiPenuh.innerHTML = tampilAkhir;
-}   
+}
   
     window.scrollTo(0, 0);
 }

@@ -762,25 +762,37 @@ function bukaKategori(namaKat) {
 }
 
 function bacaBerita(idx) {
-  const b = daftarAktifDiLayar[idx];
-  if (!b) return;
-  db.ref('berita/' + b.id + '/viewer').transaction(s => (s || 0) + 1);
-  const halamanBeranda = document.getElementById('halaman-beranda');
-  const halamanBeritaPenuh = document.getElementById('halaman-berita-penuh');
-  if (halamanBeranda) halamanBeranda.style.display = 'none';
-  if (halamanBeritaPenuh) halamanBeritaPenuh.classList.add('tampil');
-  const judulPenuh = document.getElementById('judul-berita-penuh');
-  const metaPenuh = document.getElementById('meta-berita-penuh');
-  const isiPenuh = document.getElementById('isi-berita-penuh');
-  if (judulPenuh) judulPenuh.textContent = b.judul || '(Tanpa Judul)';
-  if (metaPenuh) {
-    const kat = Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || 'Nasional');
-    metaPenuh.textContent = `📂 ${kat} | 📅 ${b.tglPublish || '-'} ${b.jamPublish || ''}`;
-  }
-  if (isiPenuh) {
-    isiPenuh.innerHTML = (b.gambarSampul ? `<img src="${b.gambarSampul}" alt="Gambar Utama">`:'') + (b.isiBerita || '');
-  }
-  window.scrollTo(0, 0);
+    const b = daftarAktifDiLayar[idx];
+    if (!b) return;
+    
+    db.ref('berita/' + b.id + '/viewer').transaction(s => (s || 0) + 1);
+    
+    const halamanBeranda = document.getElementById('halaman-beranda');
+    const halamanBeritaPenuh = document.getElementById('halaman-berita-penuh');
+    if (halamanBeranda) halamanBeranda.style.display = 'none';
+    if (halamanBeritaPenuh) halamanBeritaPenuh.classList.add('tampil');
+    
+    const judulPenuh = document.getElementById('judul-berita-penuh');
+    const metaPenuh = document.getElementById('meta-berita-penuh');
+    const isiPenuh = document.getElementById('isi-berita-penuh');
+    
+    if (judulPenuh) judulPenuh.textContent = b.judul || '(Tanpa Judul)';
+    
+    if (metaPenuh) {
+        const kat = Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || 'Nasional');
+        metaPenuh.textContent = `📂 ${kat} | 📅 ${b.tglPublish || '-'} ${b.jamPublish || ''}`;
+    }
+    
+    // ✅ Sudah dibetulkan di bawah ini
+    if (isiPenuh) {
+        let bagianGambar = '';
+        if (b.gambarSampul) {
+            bagianGambar = `<img src="${b.gambarSampul}" alt="Gambar Utama">`;
+        }
+        isiPenuh.innerHTML = bagianGambar + (b.isiBerita || '');
+    }
+    
+    window.scrollTo(0, 0);
 }
 
 function bukaTentang() {

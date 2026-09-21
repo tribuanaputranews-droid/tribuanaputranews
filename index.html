@@ -783,26 +783,22 @@ function bacaBerita(idx) {
         metaPenuh.textContent = `📂 ${kat} | 📅 ${b.tglPublish || '-'} ${b.jamPublish || ''}`;
     }
     
-    // ✅ Logika BARU: Gambar Sampul tampil SATU kali di atas, tidak berulang
-    if (isiPenuh) {
-        let tampilAkhir = '';
-        
-        // Langkah 1: Tampilkan Gambar Sampul di bagian atas
-        if (b.gambarSampul) {
-            tampilAkhir += `<img src="${b.gambarSampul}" alt="Gambar Utama" style="max-width:100%; height:auto; margin-bottom:15px; border-radius:6px;">`;
-        }
-        
-        // Langkah 2: Ambil isi berita, HAPUS tag gambar kalau ada duplikat
-        let isiBersih = b.isiBerita || '';
-        // Hapus semua <img> dari isi berita agar tidak berulang
-        isiBersih = isiBersih.replace(/<img[^>]*>/gi, '');
-        
-        // Langkah 3: Gabungkan → Gambar Sampul di atas, lalu isi teksnya
-        tampilAkhir += isiBersih;
-        
-        isiPenuh.innerHTML = tampilAkhir;
+ if (isiPenuh) {
+    let tampilAkhir = '';
+    
+    if (b.gambarSampul) {
+        tampilAkhir += `<div style="width:100%; display:block; margin-bottom:15px; overflow:hidden;">
+            <img src="${b.gambarSampul}" alt="Gambar Utama" style="width:100%; height:auto; object-fit:cover; display:block;">
+        </div>`;
     }
     
+    let isiBersih = b.isiBerita || '';
+    isiBersih = isiBersih.replace(/<img[^>]*>/gi, '');
+    
+    tampilAkhir += `<div style="clear:both;">${isiBersih}</div>`;
+    isiPenuh.innerHTML = tampilAkhir;
+}   
+  
     window.scrollTo(0, 0);
 }
 function bukaTentang() {

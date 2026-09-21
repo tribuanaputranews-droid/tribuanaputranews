@@ -783,18 +783,28 @@ function bacaBerita(idx) {
         metaPenuh.textContent = `📂 ${kat} | 📅 ${b.tglPublish || '-'} ${b.jamPublish || ''}`;
     }
     
-    // ✅ Sudah dibetulkan di bawah ini
+    // ✅ Logika BARU: Gambar Sampul tampil SATU kali di atas, tidak berulang
     if (isiPenuh) {
-        let bagianGambar = '';
+        let tampilAkhir = '';
+        
+        // Langkah 1: Tampilkan Gambar Sampul di bagian atas
         if (b.gambarSampul) {
-            bagianGambar = `<img src="${b.gambarSampul}" alt="Gambar Utama">`;
+            tampilAkhir += `<img src="${b.gambarSampul}" alt="Gambar Utama" style="max-width:100%; height:auto; margin-bottom:15px; border-radius:6px;">`;
         }
-        isiPenuh.innerHTML = bagianGambar + (b.isiBerita || '');
+        
+        // Langkah 2: Ambil isi berita, HAPUS tag gambar kalau ada duplikat
+        let isiBersih = b.isiBerita || '';
+        // Hapus semua <img> dari isi berita agar tidak berulang
+        isiBersih = isiBersih.replace(/<img[^>]*>/gi, '');
+        
+        // Langkah 3: Gabungkan → Gambar Sampul di atas, lalu isi teksnya
+        tampilAkhir += isiBersih;
+        
+        isiPenuh.innerHTML = tampilAkhir;
     }
     
     window.scrollTo(0, 0);
 }
-
 function bukaTentang() {
   const halamanBeranda = document.getElementById('halaman-beranda');
   const halamanBeritaPenuh = document.getElementById('halaman-berita-penuh');

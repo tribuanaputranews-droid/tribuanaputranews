@@ -7,38 +7,38 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { background: #f4f6f8; color: #333; line-height: 1.6; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        body { background: #f4f4f4; color: #333; }
 
         /* === HEADER === */
-        .atas {
+        header {
             background: #2c3e50;
-            color: white;
+            color: #fff;
             padding: 20px;
             text-align: center;
         }
-        .atas h1 { font-size: 22px; margin-bottom: 5px; }
+        header h1 { font-size: 22px; }
 
         /* === MENU === */
-        .menu {
+        nav {
             background: #34495e;
             padding: 10px;
             text-align: center;
         }
-        .menu a {
-            color: white;
+        nav a {
+            color: #fff;
             margin: 0 10px;
             text-decoration: none;
         }
 
         /* === RUNNING TEXT === */
-        .jalan {
+        .running {
             background: #f1c40f;
             padding: 8px;
             overflow: hidden;
             white-space: nowrap;
         }
-        .jalan-teks {
+        .run-text {
             display: inline-block;
             animation: geser 20s linear infinite;
         }
@@ -48,111 +48,100 @@
         }
 
         /* === KONTEN === */
-        .isi {
-            max-width: 1000px;
+        .container {
+            max-width: 800px;
             margin: 20px auto;
             padding: 0 15px;
         }
-        .judul-bagian {
-            font-size: 20px;
+        h2 {
             margin-bottom: 15px;
             padding-bottom: 8px;
             border-bottom: 2px solid #2c3e50;
         }
 
-        /* === BERITA === */
-        .daftar-berita {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-        .kartu {
-            background: white;
+        /* === DAFTAR BERITA === */
+        .news-item {
+            background: #fff;
             padding: 15px;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            border-radius: 5px;
             cursor: pointer;
         }
-        .kartu:hover { background: #f9f9f9; }
-        .kartu h3 { font-size: 18px; margin-bottom: 5px; color: #2c3e50; }
-        .kartu .tgl { font-size: 13px; color: #777; margin-bottom: 8px; }
-        .kartu .ringkas { color: #555; }
+        .news-item:hover { background: #f9f9f9; }
+        .news-item h3 { margin-bottom: 5px; color: #2c3e50; }
+        .date { font-size: 13px; color: #888; margin-bottom: 8px; }
+        .excerpt { color: #555; }
 
         /* === BACA BERITA === */
-        .baca-penuh {
-            background: white;
+        .full-news {
+            background: #fff;
             padding: 20px;
-            border-radius: 6px;
+            border-radius: 5px;
             display: none;
         }
-        .baca-penuh.tampil { display: block; }
-        .kembali {
+        .full-news.show { display: block; }
+        .back {
             color: #2980b9;
             cursor: pointer;
             margin-bottom: 15px;
             display: inline-block;
         }
-        .baca-penuh h2 { font-size: 24px; margin-bottom: 10px; color: #2c3e50; }
-        .meta { color: #777; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
-        .gambar-utama { max-width: 100%; height: auto; margin-bottom: 20px; border-radius: 4px; }
-        .isi-berita { font-size: 16px; }
+        .full-news h2 { border: none; padding: 0; }
+        .full-img { max-width: 100%; margin: 15px 0; border-radius: 5px; }
+        .content { line-height: 1.8; margin-top: 15px; }
 
         /* === FOOTER === */
-        .bawah {
+        footer {
             background: #2c3e50;
-            color: white;
+            color: #fff;
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             margin-top: 30px;
             font-size: 14px;
-        }
-
-        /* === LAYAR BESAR === */
-        @media (min-width: 768px) {
-            .daftar-berita { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
 
-<header class="atas">
+<header>
     <h1>Tribuana Putra News</h1>
     <p>Portal Berita — Wilayah Priangan Timur</p>
 </header>
 
-<nav class="menu">
-    <a href="#" onclick="tampilDaftar()">Beranda</a>
-    <a href="admin.html">Panel Admin</a>
+<nav>
+    <a href="#" onclick="showList()">Beranda</a>
+    <a href="admin.html">Admin</a>
 </nav>
 
-<div class="jalan">
-    <span class="jalan-teks" id="jalan-teks">Memuat...</span>
+<div class="running">
+    <span class="run-text" id="run-text">Memuat pengumuman...</span>
 </div>
 
-<div class="isi">
+<div class="container">
     <!-- DAFTAR BERITA -->
-    <div id="daftar">
-        <h2 class="judul-bagian">Berita Terbaru</h2>
-        <div class="daftar-berita" id="kotak-berita">
-            <p style="color:#777;">Memuat berita...</p>
+    <div id="list-section">
+        <h2>Berita Terbaru</h2>
+        <div id="news-list">
+            <p>Memuat berita...</p>
         </div>
     </div>
 
-    <!-- BACA BERITA -->
-    <div class="baca-penuh" id="baca">
-        <span class="kembali" onclick="tampilDaftar()">← Kembali</span>
-        <h2 id="judul-penuh"></h2>
-        <div class="meta" id="meta-penuh"></div>
-        <img class="gambar-utama" id="gambar-penuh" style="display:none;">
-        <div class="isi-berita" id="isi-penuh"></div>
+    <!-- BACA BERITA PENUH -->
+    <div class="full-news" id="full-section">
+        <span class="back" onclick="showList()">← Kembali ke daftar</span>
+        <h2 id="full-title"></h2>
+        <p class="date" id="full-date"></p>
+        <img id="full-img" class="full-img" style="display:none;">
+        <div id="full-content" class="content"></div>
     </div>
 </div>
 
-<footer class="bawah">
+<footer>
     <p>&copy; 2026 Tribuana Putra News — Semua Hak Dilindungi</p>
 </footer>
 
 <script>
+// === FIREBASE KONFIGURASI ===
 const firebaseConfig = {
     apiKey: "AIzaSyB9S_WQPGai5H3wEVHVWqBlGTWo6lFCFmA",
     authDomain: "tribuanaputranews-1968-f7677.firebaseapp.com",
@@ -165,66 +154,75 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-let daftar = [];
+let newsData = [];
 
+// === SAAT HALAMAN DIBUKA ===
 document.addEventListener('DOMContentLoaded', async function() {
-    await muatRunning();
-    await muatBerita();
+    await loadRunningText();
+    await loadNews();
 });
 
-async function muatRunning() {
+// === RUNNING TEXT ===
+async function loadRunningText() {
     const snap = await db.ref('pengaturan/pengumuman').once('value');
-    const d = snap.val();
-    if (Array.isArray(d) && d.length > 0) {
-        document.getElementById('jalan-teks').textContent = d.map(i => i.teks).join('   📰   ');
+    const data = snap.val();
+    if (Array.isArray(data) && data.length > 0) {
+        document.getElementById('run-text').textContent = data.map(item => item.teks).join('   📰   ');
     } else {
-        document.getElementById('jalan-teks').textContent = 'Selamat datang di Tribuana Putra News';
+        document.getElementById('run-text').textContent = 'Selamat datang di Tribuana Putra News';
     }
 }
 
-async function muatBerita() {
+// === MUAT BERITA DARI FIREBASE ===
+async function loadNews() {
     const snap = await db.ref('berita').orderByChild('dibuatPada').once('value');
-    const data = snap.val() || {};
-    daftar = Object.entries(data).map(([id, b]) => ({ id, ...b })).reverse();
-    tampilDaftarBerita();
+    const all = snap.val() || {};
+    newsData = Object.entries(all).map(([id, b]) => ({ id, ...b })).reverse();
+    renderList();
 }
 
-function tampilDaftarBerita() {
-    const kotak = document.getElementById('kotak-berita');
-    if (daftar.length === 0) {
-        kotak.innerHTML = '<p style="color:#777; grid-column:1/-1;">Belum ada berita.</p>';
+// === TAMPIL DAFTAR ===
+function renderList() {
+    const list = document.getElementById('news-list');
+    if (newsData.length === 0) {
+        list.innerHTML = '<p style="color:#777;">Belum ada berita. Silakan tulis di halaman Admin.</p>';
         return;
     }
-    kotak.innerHTML = daftar.map(b => `
-        <div class="kartu" onclick="bukaBerita('${b.id}')">
+    list.innerHTML = newsData.map(b => `
+        <div class="news-item" onclick="openNews('${b.id}')">
             <h3>${b.judul}</h3>
-            <p class="tgl">📅 ${b.tglPublish || '-'}</p>
-            <p class="ringkas">${(b.isiBerita || '').replace(/<[^>]+>/g, '').slice(0, 80)}...</p>
+            <p class="date">📅 ${b.tglPublish || '-'}</p>
+            <p class="excerpt">${(b.isiBerita || '').replace(/<[^>]+>/g, '').slice(0, 100)}...</p>
         </div>
     `).join('');
 }
 
-function tampilDaftar() {
-    document.getElementById('daftar').style.display = 'block';
-    document.getElementById('baca').classList.remove('tampil');
+// === KEMBALI KE DAFTAR ===
+function showList() {
+    document.getElementById('list-section').style.display = 'block';
+    document.getElementById('full-section').classList.remove('show');
 }
 
-function bukaBerita(id) {
-    const b = daftar.find(x => x.id === id);
+// === BUKA BERITA PENUH ===
+function openNews(id) {
+    const b = newsData.find(item => item.id === id);
     if (!b) return;
-    document.getElementById('daftar').style.display = 'none';
-    document.getElementById('baca').classList.add('tampil');
-    document.getElementById('judul-penuh').textContent = b.judul;
-    document.getElementById('meta-penuh').textContent = `📅 ${b.tglPublish || '-'} ${b.jamPublish || ''}`;
     
-    const img = document.getElementById('gambar-penuh');
+    document.getElementById('list-section').style.display = 'none';
+    document.getElementById('full-section').classList.add('show');
+    
+    document.getElementById('full-title').textContent = b.judul;
+    document.getElementById('full-date').textContent = `📅 ${b.tglPublish || '-'} ${b.jamPublish || ''}`;
+    
+    const img = document.getElementById('full-img');
     if (b.gambarUtama) {
         img.src = b.gambarUtama;
         img.style.display = 'block';
     } else {
         img.style.display = 'none';
     }
-    document.getElementById('isi-penuh').innerHTML = b.isiBerita;
+    
+    document.getElementById('full-content').innerHTML = b.isiBerita || '<p>Isi berita belum tersedia.</p>';
     window.scrollTo(0, 0);
 }
 </script>

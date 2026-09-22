@@ -3,94 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Berita Utama</title>
+    <title>Tribuana Putra News - Portal Berita Terkini</title>
     <style>
         :root {
-            --warna-utama: #2c3e50;
-            --warna-sekunder: #27ae60;
-            --warna-bg: #f8f9fa;
-            --warna-teks: #333333;
+            --warna-utama: #1a365d;
+            --warna-sekunder: #2b6cb0;
+            --warna-aksen: #27ae60;
+            --warna-bg: #f7fafc;
+            --warna-teks: #2d3748;
             --warna-kartu: #ffffff;
+            --warna-border: #e2e8f0;
         }
 
         body.gelap {
-            --warna-bg: #121212;
-            --warna-teks: #e0e0e0;
-            --warna-kartu: #1e1e1e;
+            --warna-bg: #1a202c;
+            --warna-teks: #edf2f7;
+            --warna-kartu: #2d3748;
+            --warna-border: #4a5568;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--warna-bg); color: var(--warna-teks); line-height: 1.6; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: var(--warna-bg); color: var(--warna-teks); line-height: 1.6; }
 
         /* Header & Navigasi */
-        header { background: var(--warna-utama); color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .logo h1 { font-size: 22px; }
+        header { background: var(--warna-utama); color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .logo h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.5px; }
         .header-actions { display: flex; gap: 10px; align-items: center; }
         
         .btn-login-admin {
-            background-color: #e74c3c;
+            background-color: #e53e3e;
             color: #fff;
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: 4px;
             text-decoration: none;
             font-size: 13px;
-            font-weight: bold;
-            transition: background 0.3s;
+            font-weight: 600;
+            transition: background 0.2s;
         }
-        .btn-login-admin:hover { background-color: #c0392b; }
+        .btn-login-admin:hover { background-color: #c53030; }
 
-        nav { background: #34495e; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-        .menu-list { display: flex; list-style: none; gap: 15px; }
-        .menu-list a { color: #fff; text-decoration: none; font-size: 14px; }
+        nav { background: var(--warna-sekunder); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .menu-list { display: flex; list-style: none; gap: 15px; align-items: center; }
+        .menu-list a { color: #fff; text-decoration: none; font-size: 14px; font-weight: 500; padding: 5px 8px; border-radius: 4px; transition: background 0.2s; }
+        .menu-list a:hover { background: rgba(255,255,255,0.15); }
         
-        /* Dropdown */
+        /* Dropdown Navigasi */
         .dropdown { position: relative; }
-        .dropdown-menu { display: none; position: absolute; background: #34495e; min-width: 160px; z-index: 100; list-style: none; padding: 5px 0; }
+        .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: var(--warna-sekunder); min-width: 160px; z-index: 1000; list-style: none; padding: 5px 0; border-radius: 0 0 6px 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
         .dropdown:hover .dropdown-menu { display: block; }
-        .dropdown-menu a { padding: 8px 12px; display: block; }
+        .dropdown-menu a { padding: 8px 15px; display: block; }
 
         /* Container Layout */
         .container { display: flex; gap: 20px; padding: 20px; max-width: 1200px; margin: auto; }
-        .main-content { flex: 3; }
-        .sidebar { flex: 1; background: var(--warna-kartu); padding: 15px; border-radius: 6px; }
+        .main-content { flex: 3; min-width: 0; }
+        .sidebar { flex: 1; background: var(--warna-kartu); padding: 18px; border-radius: 8px; border: 1px solid var(--warna-border); height: fit-content; }
 
-        /* Slider Berita */
-        .slider-box { position: relative; width: 100%; height: 350px; background: #000; overflow: hidden; border-radius: 8px; margin-bottom: 20px; }
-        .slider-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
-        .slider-caption { position: absolute; bottom: 0; background: rgba(0,0,0,0.7); color: #fff; width: 100%; padding: 15px; }
+        /* Slider Berita Utama */
+        .slider-box { position: relative; width: 100%; height: 360px; background: #000; overflow: hidden; border-radius: 8px; margin-bottom: 25px; }
+        .slider-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: opacity 0.5s ease; }
+        .slider-caption { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.85)); color: #fff; padding: 20px 15px 15px; }
+        .slider-caption small { color: #cbd5e0; font-size: 12px; }
+        .slider-caption h3 { font-size: 20px; margin-top: 5px; line-height: 1.3; }
 
-        /* Item Berita */
-        .grup-kategori { margin-bottom: 25px; }
-        .judul-grup-kategori { background: var(--warna-utama); color: #fff; padding: 8px 12px; font-weight: bold; border-radius: 4px; margin-bottom: 10px; display: flex; justify-content: space-between; }
-        .berita-item { display: flex; gap: 12px; background: var(--warna-kartu); padding: 10px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .berita-item img { width: 100px; height: 70px; object-fit: cover; border-radius: 4px; }
+        /* Listing Berita per Kategori */
+        .grup-kategori { margin-bottom: 30px; }
+        .judul-grup-kategori { background: var(--warna-utama); color: #fff; padding: 10px 15px; font-weight: 600; border-radius: 6px 6px 0 0; display: flex; justify-content: space-between; align-items: center; }
+        .berita-item { display: flex; gap: 15px; background: var(--warna-kartu); padding: 12px; border: 1px solid var(--warna-border); border-top: none; transition: background 0.2s; }
+        .berita-item:last-child { border-radius: 0 0 6px 6px; }
+        .berita-item:hover { background: rgba(0,0,0,0.02); }
+        .berita-item img { width: 110px; height: 80px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
 
-        footer { background: var(--warna-utama); color: #fff; text-align: center; padding: 15px; margin-top: 30px; font-size: 13px; }
+        /* Sidebar Widgets */
+        .widget-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid var(--warna-sekunder); }
+        .iklan-container { position: relative; display: flex; align-items: center; justify-content: center; min-height: 180px; background: #edf2f7; border-radius: 6px; overflow: hidden; }
+        .iklan-container img { max-width: 100%; height: auto; display: block; }
+
+        /* Form Pengajuan Iklan */
+        .form-iklan { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .form-iklan input, .form-iklan textarea { width: 100%; padding: 8px 10px; border: 1px solid var(--warna-border); border-radius: 4px; font-size: 13px; background: var(--warna-kartu); color: var(--warna-teks); }
+        .form-iklan button { background: var(--warna-aksen); color: #fff; padding: 9px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .form-iklan button:hover { background: #219653; }
+
+        footer { background: var(--warna-utama); color: #cbd5e0; text-align: center; padding: 20px; margin-top: 40px; font-size: 13px; }
 
         @media (max-width: 768px) {
             .container { flex-direction: column; }
-            .menu-list { display: none; width: 100%; flex-direction: column; }
+            .menu-list { display: none; width: 100%; flex-direction: column; align-items: flex-start; }
             .menu-list.aktif { display: flex; }
+            .slider-box { height: 240px; }
+            .slider-caption h3 { font-size: 16px; }
         }
     </style>
-    <!-- SheetJS (Excel) -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
     <header>
         <div class="logo">
-            <h1 id="nama-portal">Portal Berita</h1>
+            <h1 id="nama-portal">Tribuana Putra News</h1>
         </div>
         <div class="header-actions">
-            <button id="tombol-mode" onclick="ubahMode()" style="padding: 5px 10px; cursor: pointer;">🌙 Mode Gelap</button>
-            <!-- Tombol Log In Admin -->
+            <button id="tombol-mode" onclick="ubahMode()" style="padding: 6px 12px; cursor: pointer; border: none; border-radius: 4px; background: #2d3748; color: #fff; font-size: 12px;">🌙 Mode Gelap</button>
             <a href="admin.html" class="btn-login-admin">🔑 Log In Admin</a>
         </div>
     </header>
 
     <nav>
-        <button onclick="toggleMenu()" style="display: none;" id="btn-toggle">☰ Menu</button>
+        <button onclick="toggleMenu()" style="display: none; background: transparent; border: 1px solid #fff; color: #fff; padding: 4px 8px; border-radius: 4px;" id="btn-toggle">☰ Menu</button>
         <ul class="menu-list" id="menu-list">
             <li><a href="#" onclick="tampilSemua()">Beranda</a></li>
             <li class="dropdown">
@@ -101,21 +119,22 @@
                     <li><a href="#" onclick="filterKategori('Desa')">Desa</a></li>
                 </ul>
             </li>
+            <li><a href="#" onclick="filterKategori('Nasional')">Nasional</a></li>
             <li><a href="#" onclick="bukaHalamanStatis('tentang')">Tentang Kami</a></li>
             <li><a href="#" onclick="bukaHalamanStatis('redaksi')">Redaksi</a></li>
             <li><a href="#" onclick="bukaHalamanStatis('pedoman')">Pedoman Media</a></li>
         </ul>
-        <input type="text" placeholder="Cari berita..." onkeyup="cariBerita(this.value)" style="padding: 5px 10px; border-radius: 4px; border: none;">
+        <input type="text" placeholder="Cari berita..." onkeyup="cariBerita(this.value)" style="padding: 6px 12px; border-radius: 4px; border: 1px solid #ccc; font-size: 13px; outline: none;">
     </nav>
 
     <div class="container">
-        <!-- Area Konten Utama -->
+        <!-- Main Content Area -->
         <div class="main-content">
             
-            <!-- Halaman Berita Utama -->
+            <!-- Halaman Utama (Slider & Listing Berita) -->
             <div id="halaman-berita-utama">
                 <div id="area-slider-berita" class="slider-box">
-                    <img id="gambar-slider-berita" src="" alt="Berita Utama">
+                    <img id="gambar-slider-berita" src="https://via.placeholder.com/800x360?text=Memuat+Berita..." alt="Berita Utama">
                     <div class="slider-caption">
                         <small id="kategori-slider-berita"></small>
                         <h3 id="judul-slider-berita" style="cursor: pointer;" onclick="bukaBeritaDariSlider()"></h3>
@@ -123,21 +142,21 @@
                 </div>
 
                 <div id="daftar-berita">
-                    <!-- Daftar berita dinamis akan dimuat di sini -->
+                    <!-- Berita Terkelompok Kategori Dimuat Secara Dinamis -->
                 </div>
             </div>
 
-            <!-- Area Baca Berita Penuh -->
-            <div id="area-berita-penuh" style="display: none; background: var(--warna-kartu); padding: 20px; border-radius: 6px;">
-                <button onclick="kembaliKeSlider()" style="margin-bottom: 15px; padding: 5px 10px; cursor: pointer;">← Kembali</button>
+            <!-- Halaman Baca Detail Berita -->
+            <div id="area-berita-penuh" style="display: none; background: var(--warna-kartu); padding: 25px; border-radius: 8px; border: 1px solid var(--warna-border);">
+                <button onclick="kembaliKeSlider()" style="margin-bottom: 20px; padding: 6px 14px; cursor: pointer; background: var(--warna-sekunder); color: #fff; border: none; border-radius: 4px;">← Kembali ke Beranda</button>
                 <div id="isi-berita-penuh"></div>
             </div>
 
             <!-- Halaman Statis -->
-            <div id="halaman-statis" style="display: none; background: var(--warna-kartu); padding: 20px; border-radius: 6px;">
-                <button onclick="bukaBeritaUtama()" style="margin-bottom: 15px; padding: 5px 10px; cursor: pointer;">← Kembali ke Beranda</button>
-                <h2 id="judul-halaman-statis"></h2>
-                <hr style="margin: 10px 0;">
+            <div id="halaman-statis" style="display: none; background: var(--warna-kartu); padding: 25px; border-radius: 8px; border: 1px solid var(--warna-border);">
+                <button onclick="bukaBeritaUtama()" style="margin-bottom: 20px; padding: 6px 14px; cursor: pointer; background: var(--warna-sekunder); color: #fff; border: none; border-radius: 4px;">← Kembali ke Beranda</button>
+                <h2 id="judul-halaman-statis" style="margin-bottom: 10px;"></h2>
+                <hr style="border: none; border-top: 1px solid var(--warna-border); margin-bottom: 15px;">
                 <div id="isi-halaman-statis"></div>
             </div>
 
@@ -145,36 +164,36 @@
 
         <!-- Sidebar Samping -->
         <div class="sidebar">
-            <h3>Iklan Samping</h3>
-            <div id="wadah-iklan-samping" style="margin-top: 10px; text-align: center;">
-                <button id="btn-iklan-kiri" onclick="tombolIklanKiri()" style="display:none;">◀</button>
+            <h3 class="widget-title">Iklan / Sponsor</h3>
+            <div class="iklan-container" onmouseenter="hentikanTimerIklanSamping()" onmouseleave="mulaiTimerIklanSamping()">
+                <button id="btn-iklan-kiri" onclick="tombolIklanKiri()" style="position: absolute; left: 5px; background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 5px 8px; cursor: pointer; border-radius: 3px; z-index: 2;">◀</button>
                 <div id="konten-iklan-samping"></div>
-                <button id="btn-iklan-kanan" onclick="tombolIklanKanan()" style="display:none;">▶</button>
+                <button id="btn-iklan-kanan" onclick="tombolIklanKanan()" style="position: absolute; right: 5px; background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 5px 8px; cursor: pointer; border-radius: 3px; z-index: 2;">▶</button>
             </div>
 
-            <hr style="margin: 20px 0;">
+            <hr style="border: none; border-top: 1px solid var(--warna-border); margin: 25px 0;">
 
-            <h3>Pengajuan Iklan</h3>
-            <form id="form-iklan-langganan" onsubmit="window.simpanLanggananIklan(event)" style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
-                <input type="text" id="iklan_instansi" placeholder="Nama Instansi/Perusahaan" required style="padding: 6px;">
-                <input type="email" id="iklan_email" placeholder="Email" required style="padding: 6px;">
-                <input type="text" id="iklan_wa" placeholder="No WhatsApp" required style="padding: 6px;">
-                <textarea id="iklan_keterangan" placeholder="Keterangan Iklan" style="padding: 6px;"></textarea>
-                <button type="submit" style="background: var(--warna-sekunder); color: #fff; padding: 8px; border: none; cursor: pointer; border-radius: 4px;">Kirim Pengajuan</button>
+            <h3 class="widget-title">Pengajuan Iklan</h3>
+            <form id="form-iklan-langganan" class="form-iklan" onsubmit="window.simpanLanggananIklan(event)">
+                <input type="text" id="iklan_instansi" placeholder="Nama Instansi / Perusahaan" required>
+                <input type="email" id="iklan_email" placeholder="Alamat Email" required>
+                <input type="text" id="iklan_wa" placeholder="Nomor WhatsApp" required>
+                <textarea id="iklan_keterangan" rows="3" placeholder="Keterangan / Rincian Iklan"></textarea>
+                <button type="submit">Kirim Pengajuan</button>
             </form>
         </div>
     </div>
 
     <footer>
-        <p>&copy; <span id="tahun-copyright"></span> <span id="footer-portal-nama">Portal Berita</span>. All Rights Reserved.</p>
+        <p>&copy; <span id="tahun-copyright"></span> <b>Tribuana Putra News</b>. All Rights Reserved.</p>
     </footer>
 
-    <!-- Firebase SDK (v9 Modul) -->
+    <!-- Firebase App & Firestore SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
-
-        // Konfigurasi Firebase Project Anda
+        import { getFirestore, collection, addDoc, doc, updateDoc, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+        
+        // Konfigurasi Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCc1rUgdchrZ8vxk3HF6-yQKMZze-dNwzE",
   authDomain: "tribuanaputra-1968.firebaseapp.com",
@@ -185,10 +204,10 @@ const firebaseConfig = {
   appId: "1:772922168211:web:5bb280501e3d3e6fc50e66",
   measurementId: "G-5Z8E2GWDHZ"
 };
-        const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Expose simpanLanggananIklan ke Global Scope
+        // Pengajuan Iklan Ke Firestore
         window.simpanLanggananIklan = async function(e) {
             e.preventDefault();
             let instansi = document.getElementById('iklan_instansi').value;
@@ -199,23 +218,39 @@ const firebaseConfig = {
 
             try {
                 await addDoc(collection(db, "pelanggan_iklan"), {
-                    Tanggal: tgl, Nama_Instansi: instansi, Email: email, WhatsApp: wa, Keterangan: ket, created_at: Date.now()
+                    Tanggal: tgl,
+                    Nama_Instansi: instansi,
+                    Email: email,
+                    WhatsApp: wa,
+                    Keterangan: ket,
+                    created_at: Date.now()
                 });
-                alert("✅ Pengajuan iklan berhasil disimpan!");
+                alert("✅ Pengajuan iklan berhasil terkirim!");
                 document.getElementById('form-iklan-langganan').reset();
             } catch(err) {
                 alert("Gagal mengirim pengajuan: " + err.message);
             }
-        }
+        };
 
-        // Listener Data Berita
+        // Update Viewer Counter Ke Firebase
+        window.tambahViewerFirebase = async function(idBerita) {
+            if (!idBerita) return;
+            try {
+                const ref = doc(db, "berita", idBerita);
+                await updateDoc(ref, { viewer: increment(1) });
+            } catch(e) {
+                console.log("Gagal memperbarui viewer:", e);
+            }
+        };
+
+        // Sync Data Berita Realtime
         onSnapshot(collection(db, "berita"), (snapshot) => {
             window.daftarBerita = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             window.tampilSemua();
             window.muatSliderBeritaUtama();
         });
 
-        // Listener Data Iklan Samping
+        // Sync Data Iklan Samping Realtime
         onSnapshot(collection(db, "iklan_samping"), (snapshot) => {
             window.daftarIklanSamping = snapshot.docs.map(doc => doc.data());
             window.tampilkanIklanSampingAktif();
@@ -223,11 +258,10 @@ const firebaseConfig = {
         });
     </script>
 
-    <!-- UI Controller Script -->
+    <!-- Script UI & Pengendali Tampilan -->
     <script>
         function toggleMenu() {
-            let menu = document.getElementById('menu-list');
-            menu.classList.toggle('aktif');
+            document.getElementById('menu-list').classList.toggle('aktif');
         }
 
         let modeGelap = false;
@@ -245,7 +279,7 @@ const firebaseConfig = {
             window.daftarAktifDiLayar = list || [];
 
             if (!window.daftarAktifDiLayar || window.daftarAktifDiLayar.length === 0) {
-                area.innerHTML = '<p style="color:#888; padding:10px;">Belum ada berita pada kategori ini.</p>';
+                area.innerHTML = '<p style="color:#888; padding:15px; text-align:center;">Belum ada berita pada kategori ini.</p>';
                 return;
             }
 
@@ -265,7 +299,7 @@ const firebaseConfig = {
 
                 let headerGrup = document.createElement('div');
                 headerGrup.className = 'judul-grup-kategori';
-                headerGrup.innerHTML = `<span>📂 ${namaKat}</span><small style="font-size:12px; font-weight:normal;">${terkelompok[namaKat].length} Berita</small>`;
+                headerGrup.innerHTML = `<span>📂 ${namaKat}</span><small style="font-weight:normal; font-size:12px;">${terkelompok[namaKat].length} Berita</small>`;
                 wadahGrup.appendChild(headerGrup);
 
                 terkelompok[namaKat].forEach((b) => {
@@ -275,14 +309,14 @@ const firebaseConfig = {
 
                     let gmb = b.isiBerita?.match(/src=["']([^"']+)["']/i)?.[1] ||
                         b.isi?.match(/src=["']([^"']+)["']/i)?.[1] ||
-                        'https://via.placeholder.com/100x70?text=No+Image';
+                        'https://via.placeholder.com/110x80?text=No+Image';
 
                     div.innerHTML = `
                         <img src="${gmb}" alt="Gambar Berita">
                         <div style="flex:1;">
-                            <h4 style="font-size:15px; margin-bottom:4px;">${b.judul || 'Tanpa Judul'}</h4>
-                            <small style="color:#666;">📅 ${b.tglPublish || b.tanggal || '-'} | 👁️ ${b.viewer || b.view || 0} kali dibaca</small><br>
-                            <button onclick="bacaBerita(${idxSistem})" style="padding:4px 10px; font-size:12px; margin-top:6px; cursor:pointer; background:#27ae60; color:#fff; border:none; border-radius:3px;">Baca Berita</button>
+                            <h4 style="font-size:15px; margin-bottom:4px; line-height:1.3;">${b.judul || 'Tanpa Judul'}</h4>
+                            <small style="color:#718096;">📅 ${b.tglPublish || b.tanggal || '-'} | 👁️ ${b.viewer || 0} kali dibaca</small><br>
+                            <button onclick="bacaBerita(${idxSistem})" style="padding:4px 10px; font-size:12px; margin-top:8px; cursor:pointer; background:var(--warna-aksen); color:#fff; border:none; border-radius:3px;">Baca Berita Selengkapnya</button>
                         </div>
                     `;
                     wadahGrup.appendChild(div);
@@ -296,22 +330,27 @@ const firebaseConfig = {
             let b = window.daftarAktifDiLayar[indeks];
             if (!b) return;
 
-            let isiPenuh = b.isiBerita || b.isi || '<p style="color:red;">Isi berita kosong.</p>';
+            if (typeof window.tambahViewerFirebase === 'function' && b.id) {
+                window.tambahViewerFirebase(b.id);
+            }
+
+            let isiPenuh = b.isiBerita || b.isi || '<p style="color:red;">Isi berita tidak tersedia.</p>';
             let kategoriBerita = Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || 'Umum');
             let tanggalBerita = b.tglPublish || b.tanggal || '-';
 
             let areaIsi = document.getElementById('isi-berita-penuh');
             if (areaIsi) {
                 areaIsi.innerHTML = `
-                    <h2 style="margin-bottom:6px;">${b.judul || 'Tanpa Judul'}</h2>
-                    <div style="font-size:13px; color:#666; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #eee;">
+                    <h1 style="font-size:24px; margin-bottom:8px; line-height:1.3;">${b.judul || 'Tanpa Judul'}</h1>
+                    <div style="font-size:13px; color:#718096; margin-bottom:15px; padding-bottom:10px; border-bottom:1px solid var(--warna-border);">
                         📂 Kategori: <b>${kategoriBerita}</b> | 👁️ Dibaca <b>${(b.viewer || 0) + 1}</b> kali | 📅 ${tanggalBerita}
                     </div>
-                    <div class="isi-berita-konten" style="font-size:15px; line-height:1.7;">${isiPenuh}</div>
+                    <div class="isi-berita-konten" style="font-size:15px; line-height:1.8;">${isiPenuh}</div>
                 `;
             }
 
             document.getElementById('area-slider-berita').style.display = 'none';
+            document.getElementById('daftar-berita').style.display = 'none';
             document.getElementById('area-berita-penuh').style.display = 'block';
             hentikanTimerSliderBerita();
             window.scrollTo({top: 0, behavior: 'smooth'});
@@ -332,6 +371,7 @@ const firebaseConfig = {
 
         function kembaliKeSlider() {
             document.getElementById('area-slider-berita').style.display = 'block';
+            document.getElementById('daftar-berita').style.display = 'block';
             document.getElementById('area-berita-penuh').style.display = 'none';
             mulaiTimerSliderBerita();
         }
@@ -354,6 +394,7 @@ const firebaseConfig = {
             tampilDaftarBerita(hasil);
         }
 
+        /* Logic Slider Berita Utama */
         let indeksSliderBerita = 0;
         let daftarSliderBerita = [];
         let timerSliderBerita = null;
@@ -380,7 +421,7 @@ const firebaseConfig = {
             if (!elGambar || !elJudul) return;
 
             if (daftarSliderBerita.length === 0) {
-                elGambar.src = 'https://via.placeholder.com/800x350?text=Belum+Ada+Berita';
+                elGambar.src = 'https://via.placeholder.com/800x360?text=Belum+Ada+Berita';
                 elJudul.textContent = 'Belum Ada Berita Utama';
                 if (elKategori) elKategori.textContent = '';
                 return;
@@ -390,7 +431,7 @@ const firebaseConfig = {
             let isiPenuh = b.isiBerita || b.isi || '';
             let cocok = isiPenuh.match(/src=["']([^"']+)["']/i);
             
-            elGambar.src = cocok ? cocok[1] : 'https://via.placeholder.com/800x350?text=Gambar+Berita';
+            elGambar.src = cocok ? cocok[1] : 'https://via.placeholder.com/800x360?text=Tribuana+News';
             elJudul.textContent = b.judul || '(Tanpa Judul)';
 
             let kategoriStr = Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || 'Nasional');
@@ -412,6 +453,7 @@ const firebaseConfig = {
             if (timerSliderBerita) clearInterval(timerSliderBerita);
         }
 
+        /* Logic Iklan Samping Rotasi */
         let indeksIklanSamping = 0;
         let timerIklanSamping = null;
 
@@ -421,7 +463,7 @@ const firebaseConfig = {
             let list = window.daftarIklanSamping || [];
 
             if (list.length === 0) {
-                wadah.innerHTML = '<span style="color:#888;">Belum ada iklan</span>';
+                wadah.innerHTML = '<span style="color:#888; font-size:12px;">Iklan Samping Ruang Kosong</span>';
                 return;
             }
 
@@ -437,7 +479,7 @@ const firebaseConfig = {
                 timerIklanSamping = setInterval(() => {
                     indeksIklanSamping = (indeksIklanSamping + 1) % list.length;
                     tampilkanIklanSampingAktif();
-                }, 10000);
+                }, 8000);
             }
         }
 
@@ -445,16 +487,48 @@ const firebaseConfig = {
             if (timerIklanSamping) clearInterval(timerIklanSamping);
         }
 
+        function tombolIklanKiri() {
+            let list = window.daftarIklanSamping || [];
+            if (list.length > 0) {
+                indeksIklanSamping = (indeksIklanSamping - 1 + list.length) % list.length;
+                tampilkanIklanSampingAktif();
+            }
+        }
+
+        function tombolIklanKanan() {
+            let list = window.daftarIklanSamping || [];
+            if (list.length > 0) {
+                indeksIklanSamping = (indeksIklanSamping + 1) % list.length;
+                tampilkanIklanSampingAktif();
+            }
+        }
+
+        /* Halaman Statis */
         function bukaHalamanStatis(jenis) {
             document.getElementById('halaman-berita-utama').style.display = 'none';
+            document.getElementById('area-berita-penuh').style.display = 'none';
             document.getElementById('halaman-statis').style.display = 'block';
 
             let judul = "";
-            let konten = "<p>Data belum diisi dari panel admin.</p>";
+            let konten = "";
 
-            if (jenis === 'tentang') judul = "Tentang Perusahaan";
-            else if (jenis === 'redaksi') judul = "Data Redaksi";
-            else if (jenis === 'pedoman') judul = "Pedoman Media Siber";
+            if (jenis === 'tentang') {
+                judul = "Tentang Perusahaan";
+                konten = "<p><b>Tribuana Putra News</b> adalah media portal berita independen yang menyajikan informasi terkini seputar berita daerah, nasional, dan dinamika kemasyarakatan secara akurat dan terpercaya.</p>";
+            } else if (jenis === 'redaksi') {
+                judul = "Data Redaksi";
+                konten = `
+                    <table style="width:100%; border-collapse:collapse; font-size:14px;">
+                        <tr style="border-bottom:1px solid #ccc; text-align:left;"><th style="padding:8px;">Jabatan</th><th style="padding:8px;">Nama</th></tr>
+                        <tr style="border-bottom:1px solid #eee;"><td style="padding:8px;">Pembina / Penasihat</td><td style="padding:8px;">Tim Redaksi Utama</td></tr>
+                        <tr style="border-bottom:1px solid #eee;"><td style="padding:8px;">Pemimpin Redaksi</td><td style="padding:8px;">Dede Yudi Wahyudi</td></tr>
+                        <tr style="border-bottom:1px solid #eee;"><td style="padding:8px;">Redaktur Pelaksana</td><td style="padding:8px;">Tim Redaksi</td></tr>
+                    </table>
+                `;
+            } else if (jenis === 'pedoman') {
+                judul = "Pedoman Media Siber";
+                konten = "<p>Tribuana Putra News tunduk pada Undang-Undang Pers No. 40 Tahun 1999 dan Pedoman Pemberitaan Media Siber yang ditetapkan oleh Dewan Pers dalam menyajikan setiap informasi.</p>";
+            }
 
             document.getElementById('judul-halaman-statis').innerText = judul;
             document.getElementById('isi-halaman-statis').innerHTML = konten;

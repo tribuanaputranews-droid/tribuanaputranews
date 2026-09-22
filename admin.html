@@ -3,94 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Admin - Kelola Berita & Konten</title>
+    <title>Panel Pengelola - Tribuana Putra News</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; color: #333; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f0f2f5; color: #1c1e21; }
         
-        /* Modal Login Overlay */
+        /* Modal Overlay Login Layar Penuh */
         #login-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: rgba(15, 23, 42, 0.9);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 99999;
         }
         .login-card {
-            background: #fff;
-            padding: 30px;
+            background: #ffffff;
+            padding: 35px 30px;
             border-radius: 8px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 380px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             text-align: center;
         }
-        .login-card h2 { margin-bottom: 20px; color: #2c3e50; }
+        .login-card h2 { margin-bottom: 20px; color: #1a365d; font-size: 22px; }
         .login-card input {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 11px;
+            margin-bottom: 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
         }
+        .login-card input:focus { border-color: #2b6cb0; }
         .login-card button {
             width: 100%;
-            padding: 10px;
+            padding: 11px;
             background: #27ae60;
             color: #fff;
             border: none;
-            border-radius: 4px;
-            font-size: 16px;
+            border-radius: 5px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
+            transition: background 0.2s;
         }
+        .login-card button:hover { background: #219653; }
 
-        /* Layout Admin */
-        header { background: #2c3e50; color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .container { max-width: 1000px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        .btn-submit { background: #2980b9; color: #fff; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
-        .btn-logout { background: #e74c3c; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        /* Dashboard UI */
+        header { background: #1a365d; color: #fff; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 950px; margin: 30px auto; padding: 25px; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; color: #2d3748; }
+        .form-group input[type="text"], .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; font-size: 14px; outline: none; }
+        .form-group textarea { resize: vertical; }
+        .btn-submit { background: #2b6cb0; color: #fff; padding: 11px 20px; border: none; border-radius: 5px; font-weight: 600; font-size: 14px; cursor: pointer; }
+        .btn-submit:hover { background: #2c5282; }
+        .btn-logout { background: #e53e3e; color: #fff; border: none; padding: 7px 14px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .btn-logout:hover { background: #c53030; }
     </style>
 </head>
 <body>
 
-    <!-- Modal Login Layar Penuh -->
+    <!-- Overlay Login Layar Penuh (Tampil Jika Belum Auth) -->
     <div id="login-overlay">
         <div class="login-card">
-            <h2>🔑 Login Admin</h2>
+            <h2>🔑 Akses Admin</h2>
             <form id="form-login-admin" onsubmit="window.prosesLoginAdmin(event)">
                 <input type="email" id="admin_email" placeholder="Email Admin" required>
                 <input type="password" id="admin_password" placeholder="Password" required>
-                <button type="submit">Masuk Ke Panel Admin</button>
+                <button type="submit">Masuk Ke Panel</button>
             </form>
-            <p id="login-error" style="color: red; font-size: 13px; margin-top: 10px; display: none;"></p>
+            <p id="login-error" style="color: #e53e3e; font-size: 12px; margin-top: 12px; display: none;"></p>
         </div>
     </div>
 
-    <!-- Dashboard Admin (Hanya Tampil Jika Sudah Login) -->
+    <!-- Dashboard Pengelolaan (Muncul Hanya Setelah Terautentikasi) -->
     <div id="admin-dashboard" style="display: none;">
         <header>
-            <h2>Panel Admin Portal Berita</h2>
+            <h2 style="font-size: 18px;">Panel Administrasi - Tribuana Putra News</h2>
             <div>
-                <span id="user-email-display" style="margin-right: 15px; font-size: 14px;"></span>
-                <button class="btn-logout" onclick="window.prosesLogoutAdmin()">Keluar (Logout)</button>
+                <span id="user-email-display" style="margin-right: 15px; font-size: 13px; color: #e2e8f0;"></span>
+                <button class="btn-logout" onclick="window.prosesLogoutAdmin()">Keluar</button>
             </div>
         </header>
 
         <div class="container">
-            <h3>📝 Input Artikel Berita Baru</h3>
-            <hr style="margin: 15px 0;">
+            <h3 style="color: #1a365d; font-size: 18px; margin-bottom: 5px;">✍️ Publikasi Artikel Berita Baru</h3>
+            <p style="font-size: 13px; color: #718096; margin-bottom: 20px;">Isi formulir di bawah ini untuk menambahkan artikel berita langsung ke situs utama.</p>
+            
             <form id="form-berita" onsubmit="window.simpanBerita(event)">
                 <div class="form-group">
-                    <label>Judul Berita</label>
-                    <input type="text" id="berita_judul" required>
+                    <label for="berita_judul">Judul Berita</label>
+                    <input type="text" id="berita_judul" placeholder="Masukkan judul berita utama..." required>
                 </div>
                 <div class="form-group">
-                    <label>Kategori</label>
+                    <label for="berita_kategori">Kategori Utama</label>
                     <select id="berita_kategori">
                         <option value="Nasional">Nasional</option>
                         <option value="Kabupaten">Kabupaten</option>
@@ -99,26 +109,25 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Isi Berita (HTML Didukung)</label>
-                    <textarea id="berita_isi" rows="8" placeholder="Gunakan tag HTML jika memasukkan gambar, e.g. <img src='url_gambar'>" required></textarea>
+                    <label for="berita_isi">Isi Berita (Mendukung Tag HTML)</label>
+                    <textarea id="berita_isi" rows="10" placeholder="Tulis isi berita di sini. Sertakan tag gambar jika ada, misal: <img src='https://link-gambar.com/foto.jpg'>" required></textarea>
                 </div>
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" id="berita_utama"> Bikin Jadi Berita Utama (Slider)
-                    </label>
+                <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="berita_utama" style="width: 16px; height: 16px;">
+                    <label for="berita_utama" style="margin-bottom: 0; cursor: pointer;">Jadikan Berita Utama (Ditampilkan di Slider)</label>
                 </div>
-                <button type="submit" class="btn-submit">🔒 Publikasikan Berita</button>
+                <button type="submit" class="btn-submit">🔒 Publikasikan Sekarang</button>
             </form>
         </div>
     </div>
 
-    <!-- Firebase Auth & Firestore SDK -->
+    <!-- Firebase Auth & Firestore SDK Modul -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
-        // Konfigurasi Firebase (Harus sama dengan index.html)
+        // Konfigurasi Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCc1rUgdchrZ8vxk3HF6-yQKMZze-dNwzE",
   authDomain: "tribuanaputra-1968.firebaseapp.com",
@@ -129,11 +138,11 @@ const firebaseConfig = {
   appId: "1:772922168211:web:5bb280501e3d3e6fc50e66",
   measurementId: "G-5Z8E2GWDHZ"
 };
-        const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Cek Status Autentikasi Pengguna
+        // Pantau Status Login Admin
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('login-overlay').style.display = 'none';
@@ -145,7 +154,7 @@ const firebaseConfig = {
             }
         });
 
-        // Handler Login Admin
+        // Autentikasi Login
         window.prosesLoginAdmin = async function(e) {
             e.preventDefault();
             const email = document.getElementById('admin_email').value;
@@ -157,16 +166,16 @@ const firebaseConfig = {
                 await signInWithEmailAndPassword(auth, email, password);
             } catch (err) {
                 errBox.style.display = 'block';
-                errBox.innerText = "Login Gagal: " + err.message;
+                errBox.innerText = "Gagal Login: Periksa Email/Password Anda.";
             }
-        }
+        };
 
-        // Handler Logout
+        // Logout Admin
         window.prosesLogoutAdmin = function() {
             signOut(auth);
-        }
+        };
 
-        // Handler Simpan Berita
+        // Simpan Berita Baru ke Firestore
         window.simpanBerita = async function(e) {
             e.preventDefault();
             let judul = document.getElementById('berita_judul').value;
@@ -186,12 +195,12 @@ const firebaseConfig = {
                     tampilkanDiWeb: true,
                     created_at: Date.now()
                 });
-                alert("✅ Berita berhasil diunggah!");
+                alert("✅ Artikel berita berhasil dipublikasikan!");
                 document.getElementById('form-berita').reset();
             } catch (err) {
                 alert("Gagal mengunggah berita: " + err.message);
             }
-        }
+        };
     </script>
 </body>
 </html>

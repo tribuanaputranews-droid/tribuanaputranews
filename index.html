@@ -175,15 +175,16 @@
         import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
         // Konfigurasi Firebase Project Anda
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
+const firebaseConfig = {
+  apiKey: "AIzaSyCc1rUgdchrZ8vxk3HF6-yQKMZze-dNwzE",
+  authDomain: "tribuanaputra-1968.firebaseapp.com",
+  databaseURL: "https://tribuanaputra-1968-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tribuanaputra-1968",
+  storageBucket: "tribuanaputra-1968.firebasestorage.app",
+  messagingSenderId: "772922168211",
+  appId: "1:772922168211:web:5bb280501e3d3e6fc50e66",
+  measurementId: "G-5Z8E2GWDHZ"
+};
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 

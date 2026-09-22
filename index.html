@@ -4,282 +4,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tribuana Putra News — Portal Berita Online Priangan Timur</title>
+    <title>Tribuana Putra News</title>
+
+    <!-- SheetJS CDN untuk Ekspor Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <style>
-        /* === VARIABEL WARNA DENGAN FALLBACK === */
         :root {
-            --web-header-latar: #2c3e50;
-            --web-header-teks: #ffffff;
-            --web-menu-latar: #34495e;
-            --web-menu-teks: #ffffff;
-            --web-running-latar: #f1c40f;
-            --web-running-teks: #222222;
-            --web-footer-latar: #2c3e50;
-            --web-footer-teks: #ffffff;
+            --bg-header: #ffffff;
+            --bg-menu: #2c3e50;
+            --bg-running: #f1f1f1;
+            --bg-footer: #1a252f;
+            --text-header: #333333;
+            --text-menu: #ffffff;
+            --text-running: #333333;
+            --text-footer: #ffffff;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
         }
 
         body {
-            font-family: Arial, Helvetica, sans-serif;
             background-color: #f4f6f9;
             color: #333;
-            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
         }
 
-        ul,
-        ol {
-            padding-left: 1.5rem;
-            margin-top: 8px;
-            margin-bottom: 12px;
+        body.gelap {
+            background-color: #121212;
+            color: #e0e0e0;
         }
 
-        li {
-            margin-bottom: 4px;
-            line-height: 1.6;
-            text-align: left;
+        body.gelap .container,
+        body.gelap .grup-kategori,
+        body.gelap aside.kanan .widget {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
         }
 
-        .isi-berita-konten ul,
-        .isi-berita-konten ol,
-        #isi-halaman-statis ul,
-        #isi-halaman-statis ol {
-            padding-left: 20px;
-            margin-left: 5px;
-        }
-
-        .isi-berita-konten li,
-        #isi-halaman-statis li {
-            list-style-position: inside;
-            text-indent: -1em;
-            padding-left: 1em;
-        }
-
-        /* HEADER */
-        header {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 15px;
-            background-color: var(--web-header-latar);
-            color: var(--web-header-teks);
-        }
-
-        #logo-area,
-        .logo-area {
-            flex: 0 0 auto;
-            max-width: 300px;
-        }
-
-        .logo-area img,
-        #logo-area img {
-            max-height: 80px;
-            width: auto;
-            max-width: 100%;
-            object-fit: contain;
-            display: block;
-        }
-
-        #iklan-header-tempat {
-            flex: 1 1 300px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            max-height: 90px;
-            overflow: hidden;
-        }
-
-        #iklan-header-tempat a {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-
-        #iklan-header-tempat img {
-            width: 100%;
-            height: 100%;
-            max-height: 80px;
-            object-fit: contain;
-            border-radius: 4px;
-            display: block;
-        }
-
-        /* MENU BAR */
-        .menu-bar {
-            background-color: var(--web-menu-latar);
-            position: relative;
-        }
-
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--web-menu-teks);
-            font-size: 20px;
-            padding: 10px 15px;
-            cursor: pointer;
-            width: 100%;
-            text-align: left;
-        }
-
-        .menu-bar ul {
-            max-width: 1200px;
-            margin: 0 auto;
-            list-style: none;
-            padding-left: 0;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .menu-bar li {
-            position: relative;
-            margin-bottom: 0;
-        }
-
-        .menu-bar a {
-            color: var(--web-menu-teks);
-            padding: 10px 15px;
-            display: block;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .menu-bar a:hover {
-            background-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .menu-bar .sub-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: var(--web-menu-latar) !important;
-            min-width: 180px;
-            display: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 9999;
-            padding-left: 0;
-        }
-
-        .menu-bar .sub-menu a {
-            padding: 10px 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--web-menu-teks);
-        }
-
-        .menu-bar li:hover>.sub-menu {
-            display: block !important;
-        }
-
-        .pencarian {
-            margin-left: auto;
-            padding: 6px 12px;
-        }
-
-        .pencarian input {
-            padding: 6px 10px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            width: 180px;
-            outline: none;
-        }
-
-        /* RUNNING TEXT */
-        .running {
-            background-color: var(--web-running-latar);
-            color: var(--web-running-teks);
-            padding: 6px 15px;
-            font-size: 13px;
-            overflow: hidden;
+        body.gelap .berita-item h4 {
+            color: #ffffff !important;
         }
 
         .sticky-top {
             position: sticky;
             top: 0;
             z-index: 1000;
-            background-color: #ffffff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* LAYOUT CONTAINER */
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 15px;
+        header {
+            background-color: var(--bg-header);
+            color: var(--text-header);
+            padding: 10px 20px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .kiri {
-            flex: 1 1 65%;
-            min-width: 0;
+        header img.logo {
+            max-height: 50px;
         }
 
-        aside.kanan {
-            flex: 1 1 30%;
-            min-width: 0;
-        }
-
-        .kotak {
-            background: #ffffff;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border: 1px solid #e1e8ed;
-        }
-
-        .kotak h3 {
-            display: block !important;
-            width: 100% !important;
-            border-bottom: 2px solid #2c3e50;
-            padding-bottom: 8px;
-            margin-top: 0;
-            margin-bottom: 12px;
-            color: #2c3e50;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        /* GAYA KATEGORI BERITA */
-        .grup-kategori {
-            margin-bottom: 20px;
-            border: 1px solid #e1e8ed;
-            border-radius: 6px;
+        #iklan-header-tempat {
+            width: 468px;
+            height: 60px;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
-            background: #fff;
         }
 
-        .judul-grup-kategori {
-            background-color: #2c3e50;
-            color: #ffffff;
-            padding: 8px 12px;
-            font-size: 15px;
-            font-weight: bold;
+        nav {
+            background-color: var(--bg-menu);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        nav ul li {
+            position: relative;
+        }
+
+        nav ul li a {
+            color: var(--text-menu);
+            text-decoration: none;
+            padding: 12px 15px;
+            display: block;
+            font-size: 14px;
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        /* Dropdown Menu */
+        nav ul li ul.dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--bg-menu);
+            min-width: 160px;
+            z-index: 100;
+        }
+
+        nav ul li:hover ul.dropdown {
+            display: block;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 20px;
+            color: var(--text-menu);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .running {
+            background-color: var(--bg-running);
+            color: var(--text-running);
+            padding: 6px 15px;
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 15px auto;
+            display: flex;
+            gap: 20px;
+            padding: 0 15px;
+        }
+
+        .kiri {
+            flex: 3;
+        }
+
+        aside.kanan {
+            flex: 1;
+        }
+
+        .widget {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .widget h3 {
+            font-size: 15px;
+            border-bottom: 2px solid var(--bg-menu);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .slider-container {
+            position: relative;
+            background: #000;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .slider-container img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            display: block;
+            opacity: 0.85;
+        }
+
+        .slider-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .slider-btn.left { left: 10px; }
+        .slider-btn.right { right: 10px; }
+
+        .grup-kategori {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .judul-grup-kategori {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
 
         .berita-item {
             display: flex;
             gap: 12px;
-            padding: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
             border-bottom: 1px solid #eee;
-            align-items: center;
-        }
-
-        .berita-item:last-child {
-            border-bottom: none;
         }
 
         .berita-item img {
@@ -287,532 +243,288 @@
             height: 70px;
             object-fit: cover;
             border-radius: 4px;
-            flex-shrink: 0;
         }
 
-        /* MODE GELAP */
-        .gelap {
-            background: #1a1a1a;
-            color: #ddd;
-        }
-
-        .gelap .kotak,
-        .gelap .grup-kategori {
-            background: #2b2b2b;
-            color: #ddd;
-            border-color: #444;
-        }
-
-        .gelap .berita-item {
-            border-bottom-color: #444;
-        }
-
-        .gelap header,
-        .gelap footer {
-            background: #111 !important;
-            color: #fff !important;
-        }
-
-        .card-statis {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .btn-kembali {
-            background: #2c3e50;
-            color: #fff;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .btn-kembali:hover {
-            background: #34495e;
-        }
-
-        /* FOOTER UTAMA */
-        footer,
-        .footer-utama {
-            background-color: var(--web-footer-latar);
-            color: var(--web-footer-teks);
+        footer {
+            background-color: var(--bg-footer);
+            color: var(--text-footer);
+            padding: 30px 20px 15px 20px;
             margin-top: 30px;
-            padding: 30px 15px 15px 15px;
         }
 
-        .footer-container {
-            max-width: 1200px;
+        .footer-content {
+            max-width: 1100px;
             margin: 0 auto;
             display: flex;
             flex-wrap: wrap;
-            gap: 30px;
+            gap: 20px;
             justify-content: space-between;
         }
 
-        .footer-info,
-        .footer-sosmed {
-            flex: 1 1 280px;
+        .footer-col {
+            flex: 1;
+            min-width: 220px;
         }
 
-        .footer-info h4,
-        .footer-sosmed h4 {
-            color: var(--web-footer-teks) !important;
-            margin-bottom: 12px;
-            font-size: 18px;
-            border-bottom: 2px solid var(--web-footer-teks);
-            display: inline-block;
-            padding-bottom: 4px;
+        .footer-col h4 {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
         }
 
-        .footer-info p {
-            margin: 6px 0;
-            font-size: 14px;
-            line-height: 1.5;
-            color: var(--web-footer-teks) !important;
-            opacity: 0.9;
+        .footer-col ul {
+            list-style: none;
         }
 
-        .sosmed-links {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .sosmed-links a,
-        .footer-links a {
-            color: var(--web-footer-teks) !important;
+        .footer-col ul li a {
+            color: #ccc;
             text-decoration: none;
+            line-height: 2;
+            font-size: 13px;
+        }
+
+        .social-links a {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            opacity: 0.9;
-            transition: opacity 0.2s ease;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: #333;
+            color: #fff;
+            border-radius: 50%;
+            margin-right: 5px;
+            text-decoration: none;
         }
 
-        .sosmed-links a:hover,
-        .footer-links a:hover {
-            opacity: 1;
-            text-decoration: underline;
-        }
-
-        .icon-sosmed {
-            width: 20px;
-            height: 20px;
-        }
-
-        .footer-copyright {
-            max-width: 1200px;
-            margin: 20px auto 0 auto;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        .copyright {
             text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
             font-size: 12px;
-            color: var(--web-footer-teks);
-            opacity: 0.8;
+            color: #888;
         }
 
-        #logo-induk-organisasi img {
-            width: 100% !important;
-            max-width: 100% !important;
-            height: auto !important;
-            display: block;
-            margin: 0 auto;
-            border-radius: 4px;
-            object-fit: contain;
-        }
-
-        /* RESPONSIVE DESAIN KHUSUS HP (MOBILE) */
         @media screen and (max-width: 768px) {
-            header {
-                justify-content: center;
-                text-align: center;
-            }
-
-            #logo-area,
-            .logo-area {
-                max-width: 100%;
-            }
-
-            #iklan-header-tempat {
-                justify-content: center;
-                flex: 1 1 100%;
-            }
-
-            .menu-toggle {
-                display: block;
-            }
-
-            .menu-bar ul {
-                display: none;
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .menu-bar ul.aktif {
-                display: flex;
-            }
-
-            .menu-bar li {
-                width: 100%;
-            }
-
-            .menu-bar .sub-menu {
-                position: static;
-                box-shadow: none;
-                width: 100%;
-                background-color: rgba(0, 0, 0, 0.1) !important;
-            }
-
-            .pencarian {
-                width: 100%;
-                margin-left: 0;
-                padding: 10px 15px;
-            }
-
-            .pencarian input {
-                width: 100%;
-            }
-
-            .container {
-                flex-direction: column;
-                padding: 0 10px;
-            }
-
-            .kiri,
-            aside.kanan {
-                flex: 1 1 100%;
-                width: 100%;
-            }
-
-            .berita-item {
-                flex-direction: row;
-                align-items: flex-start;
-            }
-
-            .berita-item img {
-                width: 80px;
-                height: 60px;
-            }
-
-            img,
-            iframe,
-            video {
-                max-width: 100% !important;
-                height: auto !important;
-            }
+            .container { flex-direction: column; }
+            header { flex-direction: column; gap: 10px; text-align: center; }
+            #iklan-header-tempat { width: 100%; height: auto; }
+            .hamburger { display: block; }
+            nav ul { display: none; flex-direction: column; width: 100%; }
+            nav ul.aktif { display: flex; }
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 
 <body>
+
     <div class="sticky-top">
-        <header id="header-utama">
-            <div class="logo-area">
-                <img src="" alt="Logo Tribuana Putra News" id="logo-website">
-            </div>
+        <header>
+            <img id="logo-website" src="https://via.placeholder.com/200x50?text=Logo+Portal" class="logo" alt="Logo">
             <div id="iklan-header-tempat">
                 <em style="color:#ccc; font-size:12px;">Iklan Header</em>
             </div>
-            <div>
-                <button onclick="ubahMode()" id="tombol-mode" style="padding:4px 8px; cursor:pointer;">🌙 Mode
-                    Gelap</button>
-                <div id="hari-ini" style="font-size:12px; margin-top:4px;"></div>
-            </div>
         </header>
 
-        <nav class="menu-bar">
-            <button class="menu-toggle" onclick="toggleMenu()">☰ Menu Navigasi</button>
+        <nav>
+            <button class="hamburger" onclick="toggleMenu()">☰ Menu</button>
             <ul id="menu-list">
-                <li><a href="#" onclick="tampilSemua(); return false;">🏠 Home</a></li>
-                <li><a href="#">Kabar Daerah ▼</a>
-                    <div class="sub-menu">
-                        <a href="#" onclick="filterKategori('Tasikmalaya'); return false;">Tasikmalaya</a>
-                        <a href="#" onclick="filterKategori('Kota Tasikmalaya'); return false;">Kota Tasikmalaya</a>
-                        <a href="#" onclick="filterKategori('Ciamis'); return false;">Ciamis</a>
-                        <a href="#" onclick="filterKategori('Banjar'); return false;">Banjar</a>
-                        <a href="#" onclick="filterKategori('Garut'); return false;">Garut</a>
-                        <a href="#" onclick="filterKategori('Pangandaran'); return false;">Pangandaran</a>
-                        <a href="#" onclick="filterKategori('Jawa Barat'); return false;">Jawa Barat</a>
-                    </div>
+                <li><a href="#" onclick="tampilSemua()">Beranda</a></li>
+                <li>
+                    <a href="#">Kabar Daerah ▾</a>
+                    <ul class="dropdown">
+                        <li><a href="#" onclick="filterKategori('Kab. Tasikmalaya')">Kab. Tasikmalaya</a></li>
+                        <li><a href="#" onclick="filterKategori('Kota Tasikmalaya')">Kota Tasikmalaya</a></li>
+                        <li><a href="#" onclick="filterKategori('Ciamis')">Ciamis</a></li>
+                        <li><a href="#" onclick="filterKategori('Banjar')">Banjar</a></li>
+                        <li><a href="#" onclick="filterKategori('Pangandaran')">Pangandaran</a></li>
+                        <li><a href="#" onclick="filterKategori('Garut')">Garut</a></li>
+                    </ul>
                 </li>
-                <li><a href="#" onclick="filterKategori('Nasional'); return false;">Nasional</a></li>
-                <li><a href="#" onclick="filterKategori('Keagamaan'); return false;">Keagamaan</a></li>
-                <li><a href="#" onclick="filterKategori('Pendidikan'); return false;">Pendidikan</a></li>
-                <li><a href="#" onclick="filterKategori('Hukum'); return false;">Hukum</a></li>
-                <li><a href="#" onclick="filterKategori('Kuliner'); return false;">Kuliner</a></li>
-                <li><a href="#" onclick="filterKategori('Hiburan'); return false;">Hiburan</a></li>
-                <li><a href="#" onclick="filterKategori('Artikel'); return false;">Artikel</a></li>
-
-                <li class="pencarian">
-                    <input type="text" id="kata-kunci" placeholder="🔍 Cari berita..." oninput="cariBerita(this.value)">
-                </li>
+                <li><a href="#" onclick="filterKategori('Nasional')">Nasional</a></li>
+                <li><a href="#" onclick="filterKategori('Pendidikan')">Pendidikan</a></li>
+                <li><a href="#" onclick="filterKategori('Ekonomi')">Ekonomi</a></li>
+                <li><a href="#" onclick="bukaHalamanStatis('redaksi')">Redaksi</a></li>
             </ul>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <input type="text" id="input-cari" placeholder="Cari berita..." onkeyup="cariBerita(this.value)" style="padding:4px 8px; font-size:12px; border-radius:3px; border:none;">
+                <button id="tombol-mode" onclick="ubahMode()" style="padding:4px 8px; font-size:12px; cursor:pointer; background:#fff; border:none; border-radius:3px;">🌙 Mode Gelap</button>
+            </div>
         </nav>
 
         <div class="running">
-            <marquee onmouseover="this.stop();" onmouseout="this.start();">
-                <a id="link-pengumuman" href="#" target="_blank"
-                    style="text-decoration: none; color: inherit; display: inline-block;">
-                    <span id="teks-pengumuman">📢 Selamat datang di Tribuana Putra News</span>
-                </a>
-            </marquee>
+            <marquee behavior="scroll" direction="left" scrollamount="4">Memuat running text...</marquee>
         </div>
     </div>
 
     <div class="container">
+        <!-- AREA KIRI (KONTEN UTAMA) -->
         <main class="kiri">
             <div id="halaman-berita-utama">
-                <div class="kotak">
-                    <h3>📖 Baca Berita Utama</h3>
-                    <div id="area-slider-berita"
-                        style="position:relative; background:#000; color:#fff; border-radius:6px; overflow:hidden;">
-                        <img id="gambar-slider-berita" src=""
-                            style="width:100%; height:auto; object-fit:cover; opacity:0.8;">
-                        <div
-                            style="position:absolute; bottom:0; padding:15px; background:linear-gradient(transparent, rgba(0,0,0,0.8)); width:100%;">
-                            <h4 id="judul-slider-berita" style="font-size:18px; cursor:pointer;"
-                                onclick="bukaBeritaDariSlider()"></h4>
-                            <small id="kategori-slider-berita"></small>
-                        </div>
-                        <button onclick="tombolPanahKiri()"
-                            style="position:absolute; left:10px; top:45%; padding:5px 10px; cursor:pointer; background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:3px;">◀</button>
-                        <button onclick="tombolPanahKanan()"
-                            style="position:absolute; right:10px; top:45%; padding:5px 10px; cursor:pointer; background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:3px;">▶</button>
-                    </div>
-
-                    <div id="area-berita-penuh" style="display:none; margin-top:15px;">
-                        <button onclick="kembaliKeSlider()"
-                            style="padding:4px 10px; cursor:pointer; margin-bottom:10px;">← Kembali</button>
-                        <div id="isi-berita-penuh"></div>
+                <!-- Slider Berita Utama -->
+                <div id="area-slider-berita" class="slider-container">
+                    <img id="gambar-slider-berita" src="" alt="Slider Berita">
+                    <button class="slider-btn left" onclick="tombolPanahKiri()">❮</button>
+                    <button class="slider-btn right" onclick="tombolPanahKanan()">❯</button>
+                    <div class="slider-caption" onclick="bukaBeritaDariSlider()">
+                        <small id="kategori-slider-berita" style="color:#2ec4b6; font-weight:bold;"></small>
+                        <h3 id="judul-slider-berita" style="margin-top:4px;">Memuat Berita...</h3>
                     </div>
                 </div>
 
-                <div class="kotak">
-                    <h3>📰 Daftar Berita Per Kategori</h3>
-                    <div id="daftar-berita"></div>
+                <!-- Tampilan Pembaca Berita Penuh -->
+                <div id="area-berita-penuh" style="display:none; background:#fff; padding:20px; border-radius:5px; margin-bottom:20px;">
+                    <button onclick="kembaliKeSlider()" style="margin-bottom:15px; padding:6px 12px; cursor:pointer; background:#34495e; color:#fff; border:none; border-radius:3px;">← Kembali</button>
+                    <div id="isi-berita-penuh"></div>
                 </div>
+
+                <!-- List Daftar Berita -->
+                <div id="daftar-berita"></div>
             </div>
 
-            <div id="halaman-statis" class="kotak" style="display: none;">
-                <h3 id="judul-halaman-statis">Judul Halaman</h3>
-                <div id="isi-halaman-statis" style="margin-top: 15px; line-height: 1.6;"></div>
-                <button class="btn-kembali" onclick="bukaBeritaUtama()"
-                    style="margin-top: 15px; padding: 6px 12px; cursor: pointer;">← Kembali ke Berita Utama</button>
+            <!-- Kontainer Halaman Statis -->
+            <div id="halaman-statis" style="display:none; background:#fff; padding:20px; border-radius:5px;">
+                <button onclick="bukaBeritaUtama()" style="margin-bottom:15px; padding:6px 12px; cursor:pointer; background:#34495e; color:#fff; border:none; border-radius:3px;">← Kembali ke Beranda</button>
+                <h2 id="judul-halaman-statis" style="margin-bottom:15px; color:#2c3e50;"></h2>
+                <div id="isi-halaman-statis" style="font-size:15px; line-height:1.7;"></div>
             </div>
         </main>
 
+        <!-- AREA KANAN (SIDEBAR) -->
         <aside class="kanan">
-            <div class="kotak">
-                <h3>👤 Pemimpin Redaksi</h3>
-                <div id="pemimpin-redaksi" style="text-align:center;">
-                    <p style="color:#888;">Data belum diisi</p>
+            <div class="widget">
+                <h3>Pemimpin Redaksi</h3>
+                <div id="pemimpin-redaksi" style="text-align:center;">-</div>
+            </div>
+
+            <div class="widget">
+                <h3>Induk Organisasi</h3>
+                <div id="logo-induk-organisasi" onclick="bukaTentangOrganisasi()" style="cursor:pointer; text-align:center;">-</div>
+            </div>
+
+            <div class="widget" id="wadah-iklan-samping">
+                <h3>Iklan Samping</h3>
+                <div id="konten-iklan-samping" style="text-align:center;">
+                    <span style="color:#888;">Belum ada iklan</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-top:8px;">
+                    <button id="btn-iklan-kiri" onclick="tombolIklanKiri()" style="display:none; padding:2px 8px; cursor:pointer;">❮</button>
+                    <button id="btn-iklan-kanan" onclick="tombolIklanKanan()" style="display:none; padding:2px 8px; cursor:pointer;">❯</button>
                 </div>
             </div>
 
-            <div class="kotak">
-                <h3>🤝 Induk Organisasi</h3>
-                <div id="logo-induk-organisasi" style="text-align:center; cursor:pointer;"
-                    onclick="bukaTentangOrganisasi()" title="Klik untuk membaca keterangan organisasi">
-                    <p style="color:#888;">Logo belum diisi</p>
-                </div>
-            </div>
-
-            <div class="kotak">
-                <h3>📢 Data Iklan</h3>
-                <div id="wadah-iklan-samping"
-                    style="position:relative; width:100%; min-height:180px; background:#f9f9f9; border-radius:4px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
-                    <div id="konten-iklan-samping" style="width:100%; text-align:center;">
-                        <span style="color:#888;">Belum ada iklan</span>
-                    </div>
-                    <button onclick="tombolIklanKiri()"
-                        style="position:absolute; left:5px; top:40%; padding:4px 8px; cursor:pointer; background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:3px; display:none;"
-                        id="btn-iklan-kiri">◀</button>
-                    <button onclick="tombolIklanKanan()"
-                        style="position:absolute; right:5px; top:40%; padding:4px 8px; cursor:pointer; background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:3px; display:none;"
-                        id="btn-iklan-kanan">▶</button>
-                </div>
-            </div>
-
-            <div class="kotak">
-                <h3>🔗 Iklan Afiliasi</h3>
-                <div class="slider-afiliasi-container"
-                    style="position:relative; overflow:hidden; border-radius:6px; background:#f4f4f4;">
+            <div class="widget">
+                <h3>Afiliasi & Kemitraan</h3>
+                <div style="position:relative; overflow:hidden;">
                     <div id="slider-afiliasi" style="display:flex; transition:transform 0.5s ease-in-out;"></div>
-                    <button onclick="slideAfiliasiPrev()"
-                        style="position:absolute; left:5px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:6px 10px; cursor:pointer; border-radius:3px; z-index:2;">❮</button>
-                    <button onclick="slideAfiliasiNext()"
-                        style="position:absolute; right:5px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:6px 10px; cursor:pointer; border-radius:3px; z-index:2;">❯</button>
                 </div>
             </div>
 
-            <div class="kotak">
-                <h3>🎬 Video Berita Terbaru</h3>
-                <div id="wadah-video-berita" style="text-align:center;">
-                    <span style="color:#888;">Belum ada video</span>
-                </div>
+            <div class="widget">
+                <h3>Video Berita</h3>
+                <div id="wadah-video-berita"></div>
             </div>
 
-            <div class="kotak">
-                <h3>💬 Kolom Komentar</h3>
+            <div class="widget">
+                <h3>Kirim Komentar</h3>
                 <form id="form-komentar" onsubmit="simpanKomentar(event)">
-                    <input type="text" id="kom_nama" placeholder="Nama Lengkap" required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
-                    <input type="email" id="kom_email" placeholder="Email" required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
-                    <input type="tel" id="kom_wa" placeholder="No. WhatsApp" required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
-                    <textarea id="kom_isi" placeholder="Isi Komentar..." rows="3" required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;"></textarea>
-                    <button type="submit"
-                        style="width:100%; padding:8px; background:#27ae60; color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Kirim
-                        Komentar</button>
+                    <input type="text" id="kom_nama" placeholder="Nama Anda" required style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:3px;">
+                    <input type="email" id="kom_email" placeholder="Email" required style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:3px;">
+                    <input type="text" id="kom_wa" placeholder="No WhatsApp" style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:3px;">
+                    <textarea id="kom_isi" placeholder="Tulis komentar..." required style="width:100%; height:70px; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:3px;"></textarea>
+                    <button type="submit" style="width:100%; padding:6px; background:#2980b9; color:#fff; border:none; border-radius:3px; cursor:pointer;">Kirim Komentar</button>
                 </form>
-
-                <div style="margin-top:10px; text-align:center;">
-                    <button onclick="bukaKomentarAdmin()"
-                        style="background:none; border:none; color:#2980b9; cursor:pointer; text-decoration:underline; font-size:13px;">🔒
-                        Lihat Komentar (Admin)</button>
-                </div>
             </div>
 
-            <div class="kotak">
-                <h3>📢 Pasang / Berlangganan Iklan</h3>
+            <div class="widget">
+                <h3>Pengajuan Iklan</h3>
                 <form id="form-iklan-langganan" onsubmit="simpanLanggananIklan(event)">
-                    <input type="text" id="iklan_instansi" placeholder="Nama / Instansi" required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
-                    <input type="email" id="iklan_email" placeholder="Email" required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
-                    <input type="tel" id="iklan_wa" placeholder="No. WhatsApp" required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
-                    <textarea id="iklan_keterangan" placeholder="Keterangan Iklan (Jenis/Durasi/Posisi)..." rows="3"
-                        required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;"></textarea>
-                    <button type="submit"
-                        style="width:100%; padding:8px; background:#e67e22; color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Kirim
-                        Pengajuan Iklan</button>
+                    <input type="text" id="iklan_instansi" placeholder="Nama Instansi/Usaha" required style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:3px;">
+                    <input type="email" id="iklan_email" placeholder="Email Kontak" required style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:3px;">
+                    <input type="text" id="iklan_wa" placeholder="No WhatsApp" required style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:3px;">
+                    <textarea id="iklan_keterangan" placeholder="Keterangan Iklan" style="width:100%; height:60px; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:3px;"></textarea>
+                    <button type="submit" style="width:100%; padding:6px; background:#27ae60; color:#fff; border:none; border-radius:3px; cursor:pointer;">Ajukan Pemasangan</button>
                 </form>
-
-                <div style="margin-top:10px; text-align:center;">
-                    <button onclick="bukaPelangganAdmin()"
-                        style="background:none; border:none; color:#2980b9; cursor:pointer; text-decoration:underline; font-size:13px;">🔒
-                        Lihat Pelanggan (Admin)</button>
-                </div>
             </div>
         </aside>
     </div>
 
-    <footer class="footer-utama">
-        <div class="footer-links"
-            style="text-align: center; padding-bottom: 20px; border-bottom: 1px solid #34495e; margin-bottom: 20px;">
-            <a href="#" onclick="bukaHalamanStatis('tentang'); return false;"
-                style="color: #ecf0f1; text-decoration: none; margin: 0 8px;">Tentang Perusahaan</a> |
-            <a href="#" onclick="bukaHalamanStatis('redaksi'); return false;"
-                style="color: #ecf0f1; text-decoration: none; margin: 0 8px;">Data Redaksi</a> |
-            <a href="#" onclick="bukaHalamanStatis('organisasi'); return false;"
-                style="color: #ecf0f1; text-decoration: none; margin: 0 8px;">Induk Organisasi</a> |
-            <a href="#" onclick="bukaHalamanStatis('pedoman'); return false;"
-                style="color: #ecf0f1; text-decoration: none; margin: 0 8px;">Pedoman Media Siber</a>
-        </div>
-
-        <div class="footer-container">
-            <div class="footer-info">
-                <h4 id="footer-nama-perusahaan">Nama Perusahaan</h4>
-                <p id="footer-alamat-perusahaan">Alamat Perusahaan</p>
-                <p><strong>Telp/WA:</strong> <span id="footer-telp">--</span></p>
-                <p><strong>Email:</strong> <span id="footer-email">--</span></p>
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4 id="footer-nama-perusahaan">Tribuana Putra News</h4>
+                <p id="footer-alamat-perusahaan" style="font-size:13px; color:#ccc; line-height:1.5;">Priangan Timur, Jawa Barat</p>
+                <p style="font-size:13px; color:#ccc; margin-top:8px;">Telp: <span id="footer-telp">-</span></p>
+                <p style="font-size:13px; color:#ccc;">Email: <span id="footer-email">-</span></p>
             </div>
 
-            <div class="footer-sosmed">
-                <h4>Ikuti Kami</h4>
-                <div class="sosmed-links">
-                    <a id="link-fb" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">
-                        <svg class="icon-sosmed" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                        </svg>
-                        <span id="teks-fb">Facebook</span>
-                    </a>
-                    <a id="link-ig" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">
-                        <svg class="icon-sosmed" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                        </svg>
-                        <span id="teks-ig">Instagram</span>
-                    </a>
-                    <a id="link-yt" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">
-                        <svg class="icon-sosmed" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                        </svg>
-                        <span id="teks-yt">YouTube</span>
-                    </a>
+            <div class="footer-col">
+                <h4>Informasi & Navigasi</h4>
+                <ul>
+                    <li><a href="#" onclick="bukaHalamanStatis('tentang')">Tentang Kami</a></li>
+                    <li><a href="#" onclick="bukaHalamanStatis('redaksi')">Data Redaksi</a></li>
+                    <li><a href="#" onclick="bukaHalamanStatis('organisasi')">Induk Organisasi</a></li>
+                    <li><a href="#" onclick="bukaHalamanStatis('pedoman')">Pedoman Media Siber</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Media Sosial</h4>
+                <div class="social-links" style="margin-bottom:15px;">
+                    <a href="#" id="link-fb" target="_blank" style="display:none;">FB</a>
+                    <a href="#" id="link-ig" target="_blank" style="display:none;">IG</a>
+                    <a href="#" id="link-yt" target="_blank" style="display:none;">YT</a>
+                </div>
+                <div style="font-size:11px; color:#aaa;">
+                    <a href="#" onclick="bukaKomentarAdmin()" style="color:#aaa; text-decoration:none;">[Admin Komentar]</a> | 
+                    <a href="#" onclick="bukaPelangganAdmin()" style="color:#aaa; text-decoration:none;">[Admin Iklan]</a>
                 </div>
             </div>
         </div>
 
-        <div class="footer-copyright">
-            <p>&copy; <span id="tahun-copyright"></span> <span id="copyright-nama-perusahaan">Nama Perusahaan</span>.
-                All Rights Reserved.</p>
+        <div class="copyright">
+            &copy; <span id="tahun-copyright">2026</span> <span id="copyright-nama-perusahaan">Tribuana Putra News</span>. All Rights Reserved.
         </div>
     </footer>
 
-    <!-- FIREBASE INTEGRATION MODULE -->
+    <!-- LOGIKA SKRIP JS & FIREBASE (MODULE) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
-            getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, increment, query, orderBy 
+            getFirestore, doc, collection, onSnapshot, updateDoc, addDoc, increment 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // GANTI KONFIGURASI INI SESUAI FIREBASE KAMU
-const firebaseConfig = {
-  apiKey: "AIzaSyCc1rUgdchrZ8vxk3HF6-yQKMZze-dNwzE",
-  authDomain: "tribuanaputra-1968.firebaseapp.com",
-  databaseURL: "https://tribuanaputra-1968-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "tribuanaputra-1968",
-  storageBucket: "tribuanaputra-1968.firebasestorage.app",
-  messagingSenderId: "772922168211",
-  appId: "1:772922168211:web:5bb280501e3d3e6fc50e66",
-  measurementId: "G-5Z8E2GWDHZ"
-};
+        // Konfigurasi Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDummyKey_ GantiDenganApiKeyFirebaseAnda",
+            authDomain: "tribuanaputra-1968.firebaseapp.com",
+            projectId: "tribuanaputra-1968",
+            storageBucket: "tribuanaputra-1968.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef123456"
+        };
 
-
-        
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // STATE GLOBAL WEB
-        window.daftarBerita = [];
-        window.daftarAktifDiLayar = [];
-        window.daftarIklanSamping = [];
-        window.dataOrganisasiGlobal = {};
-        window.dataTentangGlobal = {};
-        window.dataRedaksiGlobal = [];
-        window.pedomanMediaGlobal = "";
-
-        // 1. DENGARKAN WARNA WEB
+        // 1. DENGARKAN PENGATURAN WARNA REALTIME
         onSnapshot(doc(db, "settings", "warna"), (docSnap) => {
             if (docSnap.exists()) {
                 let w = docSnap.data();
-                let root = document.documentElement;
-                root.style.setProperty('--web-menu-latar', w.web_menu_latar || '#34495e');
-                root.style.setProperty('--web-menu-teks', w.web_menu_teks || '#ffffff');
-                root.style.setProperty('--web-header-latar', w.web_header_latar || '#2c3e50');
-                root.style.setProperty('--web-header-teks', w.web_header_teks || '#ffffff');
-                root.style.setProperty('--web-running-latar', w.web_running_latar || '#f1c40f');
-                root.style.setProperty('--web-running-teks', w.web_running_teks || '#222222');
-                root.style.setProperty('--web-footer-latar', w.web_footer_latar || '#2c3e50');
-                root.style.setProperty('--web-footer-teks', w.web_footer_teks || '#ffffff');
+                let r = document.documentElement;
+                if (w.bgHeader) r.style.setProperty('--bg-header', w.bgHeader);
+                if (w.bgMenu) r.style.setProperty('--bg-menu', w.bgMenu);
+                if (w.bgRunning) r.style.setProperty('--bg-running', w.bgRunning);
+                if (w.bgFooter) r.style.setProperty('--bg-footer', w.bgFooter);
+                if (w.textHeader) r.style.setProperty('--text-header', w.textHeader);
+                if (w.textMenu) r.style.setProperty('--text-menu', w.textMenu);
+                if (w.textRunning) r.style.setProperty('--text-running', w.textRunning);
+                if (w.textFooter) r.style.setProperty('--text-footer', w.textFooter);
             }
         });
 
-        // 2. DENGARKAN BERITA REALTIME
+        // 2. DENGARKAN KOLEKSI BERITA REALTIME
         onSnapshot(collection(db, "news"), (snapshot) => {
             window.daftarBerita = [];
             snapshot.forEach((docSnap) => {
@@ -820,8 +532,8 @@ const firebaseConfig = {
                 data.id = docSnap.id;
                 window.daftarBerita.push(data);
             });
-            let beritaAktif = window.daftarBerita.filter(b => b.tampilkanDiWeb !== false);
-            tampilDaftarBerita(beritaAktif);
+            window.daftarBerita.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+            tampilSemua();
             muatSliderBeritaUtama();
         });
 
@@ -944,7 +656,7 @@ const firebaseConfig = {
             }).join('');
         });
 
-        // 8. DENGARKAN PENGATURAN LOGO, PIMRED, ORG, TENTANG & FOOTER
+        // 8. DENGARKAN PENGATURAN UTAMA & PROFIL
         onSnapshot(doc(db, "settings", "utama"), (docSnap) => {
             if (docSnap.exists()) {
                 let setting = docSnap.data();
@@ -1077,11 +789,6 @@ const firebaseConfig = {
         function toggleMenu() {
             let menu = document.getElementById('menu-list');
             menu.classList.toggle('aktif');
-        }
-
-        let tglEl = document.getElementById('hari-ini');
-        if (tglEl) {
-            tglEl.textContent = new Date().toLocaleDateString('id-ID', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
         }
 
         let modeGelap = false;

@@ -690,7 +690,43 @@ window.bukaHalamanStatis = async function(jenis) {
     } 
     else if (jenis === 'organisasi') {
         judul = "Induk Organisasi";
-        konten = "<p>Data induk organisasi.</p>";
+        try {
+            // Ambil data dari Firebase (dokumen: induk_organisasi)
+            const docSnap = await getDoc(doc(db, "pengaturan", "induk_organisasi"));
+            
+            if (docSnap.exists()) {
+                const d = docSnap.data();
+                let kontenHtml = '';
+                
+                // Tampilkan Logo jika ada
+                if (d.logo) {
+                    kontenHtml += `<div style="text-align:center; margin-bottom:20px;">
+                        <img src="${d.logo}" style="max-width:200px; height:auto; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.1);">
+                    </div>`;
+                }
+                
+                // Tampilkan Nama Organisasi
+                if (d.nama) {
+                    kontenHtml += `<h4 style="text-align:center; color:#2c3e50; margin-bottom:15px;">${d.nama}</h4>`;
+                }
+                
+                // Tampilkan Keterangan
+                if (d.keterangan) {
+                    kontenHtml += `<div style="line-height:1.8; color:#333; text-align:justify;">${d.keterangan.replace(/\n/g, '<br>')}</div>`;
+                }
+                
+                if (kontenHtml) {
+                    konten = kontenHtml;
+                } else {
+                    konten = "<p style='text-align:center; color:#888;'>Data induk organisasi belum dilengkapi.</p>";
+                }
+            } else {
+                konten = "<p style='text-align:center; color:#888;'>Data induk organisasi belum diinput dari Panel Admin.</p>";
+            }
+        } catch (error) {
+            console.error("Gagal memuat data organisasi:", error);
+            konten = "<p style='text-align:center; color:red;'>Gagal memuat data. Silakan refresh halaman.</p>";
+        }
     } 
     else if (jenis === 'pedoman') {
         judul = "Pedoman Media Siber";

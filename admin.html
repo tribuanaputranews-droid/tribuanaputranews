@@ -39,6 +39,7 @@
     <a href="#" class="submenu" onclick="window.tampilHalaman('setting-utama'); return false;">• Setting Utama</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('data-redaksi'); return false;">• Data Redaksi</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('induk-organisasi'); return false;">• Induk Organisasi</a>
+    <a href="#" class="submenu" onclick="window.tampilHalaman('running-text'); return false;">• Running Text</a>
     <a href="#" class="menu-judul" style="font-weight:bold; margin-top:15px;">📰 Data Berita</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('konten-berita'); return false;">• Konten Berita</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('arsip-berita'); return false;">• Arsip Berita</a>
@@ -114,7 +115,31 @@
         <button class="btn-utama" onclick="window.simpanIndukOrganisasi()">💾 Simpan Data Induk Organisasi</button>
       </div>
     </div>
-
+    <!-- RUNNING TEXT -->
+    <div id="running-text" class="halaman">
+      <h3>📢 Running Text / Pengumuman</h3>
+      <div class="card">
+        <p style="margin-bottom:10px; color:#666; font-size:14px;">Tambahkan pengumuman berjalan. Biarkan kolom Link kosong jika teks tidak perlu diklik.</p>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:50px;">No</th>
+              <th>Teks Pengumuman</th>
+              <th>Link Tujuan (Opsional, awali dengan https://)</th>
+              <th style="width:80px;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="isi-tabel-pengumuman">
+            <tr><td colspan="4" style="text-align:center; color:#888;">Memuat data...</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:15px;">
+          <button class="btn-utama" onclick="window.tambahBarisPengumuman()" style="background:#27ae60; margin-right:10px;">➕ Tambah Baris</button>
+          <button class="btn-utama" onclick="window.simpanPengumuman()">💾 Simpan Running Text</button>
+        </div>
+        <div id="status-pengumuman" style="margin-top:10px; font-weight:bold;"></div>
+      </div>
+    </div>
     <div id="konten-berita" class="halaman">
       <h3>📝 Konten Berita</h3>
       <div class="card">
@@ -240,6 +265,7 @@
         if (id === 'afiliasi') window.muatDaftarAfiliasi();
         if (id === 'data-redaksi') window.muatDataRedaksi();
         if (id === 'induk-organisasi') window.muatIndukOrganisasi();
+        if (id === 'running-text') window.muatPengumuman();
       }
     };
 
@@ -645,6 +671,73 @@
         btn.disabled = false;
       });
     };
+    // === FUNGSI RUNNING TEXT ===
+    let daftarPengumuman = [];
+
+    window.tampilTabelPengumuman = function() {
+      const tb = document.getElementById('isi-tabel-pengumuman');
+      if (!tb) return;
+      if (daftarPengumuman.length === 0) {
+        tb.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#888;">Belum ada pengumuman.</td></tr>';
+        return;
+      }
+      let html = '';
+      daftarPengumuman.forEach((p, i) => {
+        html += `<tr>
+          <td style="text-align:center">${i+1}</td>
+          <td><input type="text" value="${p.teks||''}" onchange="window.updatePengumuman(${i},'teks',this.value)" style="width:100%; padding:6px;" placeholder="Contoh: Pendaftaran dibuka!"></td>
+          <td><input type="url" value="${p.link||''}" onchange="window.updatePengumuman(${i},'link',this.value)" style="width:100%; padding:6px;" placeholder="https://..."></td>
+          <td style="text-align:center"><button class="btn-hapus" onclick="window.hapusBarisPengumuman(${i})">✖</button></td>
+        </tr>`;
+      });
+      tb.innerHTML = html;
+    };
+
+    window.updatePengumuman = function(index, field, value) { 
+      if (daftarPengumuman[index]) daftarPengumuman[index][field] = value; 
+    };
+
+    window.tambahBarisPengumuman = function() {
+      daftarPengumuman.push({ teks: '', link: '' });
+      window.tampilTabelPengumuman();
+    };
+
+    window.hapusBarisPengumuman = function(i) {
+      if (confirm("Hapus baris ini?")) {
+        daftarPengumuman.splice(i, 1);
+        window.tampilTabelPengumuman();
+      }
+    };
+
+    window.simpanPengumuman = async function() {
+      const statusEl = document.getElementById('status-pengumuman');
+      try {
+        await setDoc(doc(db, "pengaturan", "running_text"), { daftar: daftarPengumuman, updatedAt: new Date() });
+        if (statusEl) { statusEl.innerText = "✅ Running Text Tersimpan di Firebase!"; statusEl.style.color = "#27ae60"; }
+        alert("✅ Running Text Tersimpan!");
+      } catch (error) {
+        if (statusEl) { statusEl.innerText = "❌ Gagal: " + error.message; statusEl.style.color = "#e74c3c"; }
+        alert("❌ Gagal menyimpan: " + error.message);
+      }
+    };
+
+    window.muatPengumuman = async function() {
+      const statusEl = document.getElementById('status-pengumuman');
+      try {
+        const docSnap = await getDoc(doc(db, "pengaturan", "running_text"));
+        if (docSnap.exists() && docSnap.data().daftar) {
+          daftarPengumuman = docSnap.data().daftar;
+          if (statusEl) { statusEl.innerText = `✅ Berhasil memuat ${daftarPengumuman.length} pengumuman.`; statusEl.style.color = "#27ae60"; }
+        } else {
+          daftarPengumuman = [];
+          if (statusEl) { statusEl.innerText = "ℹ️ Belum ada data running text."; statusEl.style.color = "#7f8c8d"; }
+        }
+        window.tampilTabelPengumuman();
+      } catch (error) {
+        if (statusEl) { statusEl.innerText = "❌ Gagal memuat: " + error.message; statusEl.style.color = "#e74c3c"; }
+      }
+    };
+   
     document.addEventListener('DOMContentLoaded', () => {
       console.log("Admin panel dimuat. Memulai inisialisasi...");
       window.muatSettingUtama();

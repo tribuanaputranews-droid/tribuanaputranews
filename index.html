@@ -628,7 +628,25 @@
                 }
             } else if (jenis === 'pedoman') {
                 judul = "Pedoman Media Siber";
-                konten = "<p style='color:#888;'>Silakan lengkapi data ini melalui Panel Admin.</p>";
+                try {
+                    const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
+                    if (docSnap.exists()) {
+                        const d = docSnap.data();
+                        const pedoman = d.pedomanMediaSiber || '';
+                        if (pedoman.trim() !== '') {
+                            // Konversi baris baru menjadi <br> agar tampil rapi
+                            const pedomanFormatted = pedoman.replace(/\n/g, '<br>');
+                            konten = `<div style="line-height:1.8; color:#333; text-align:justify;">${pedomanFormatted}</div>`;
+                        } else {
+                            konten = "<p style='text-align:center; color:#888;'>Pedoman Media Siber belum diisi. Silakan lengkapi melalui Panel Admin.</p>";
+                        }
+                    } else {
+                        konten = "<p style='text-align:center; color:#888;'>Data pedoman belum tersedia.</p>";
+                    }
+                } catch (error) {
+                    console.error("Gagal memuat pedoman media siber:", error);
+                    konten = "<p style='text-align:center; color:red;'>Gagal memuat data. Silakan refresh halaman.</p>";
+                }
             }
             document.getElementById('judul-halaman-statis').innerHTML = judul;
             document.getElementById('isi-halaman-statis').innerHTML = konten;

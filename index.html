@@ -537,11 +537,10 @@ window.muatPengaturanAdmin = async function() {
         const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
         if (docSnap.exists()) {
             let d = docSnap.data();
-            
-            // Tampilkan foto dan nama pemimpin redaksi
             let htmlPemred = '';
+            
             if (d.fotoPemimpinRedaksi) {
-                htmlPemred += `<img src="${d.fotoPemimpinRedaksi}" style="max-width:150px; border-radius:8px; margin-bottom:10px;"><br>`;
+                htmlPemred += `<img src="${d.fotoPemimpinRedaksi}" style="max-width:150px; border-radius:8px; margin-bottom:10px; box-shadow:0 2px 4px rgba(0,0,0,0.1);"><br>`;
             }
             if (d.namaAdmin) {
                 htmlPemred += `<b>${d.namaAdmin}</b><br><small style="color:#666;">Pemimpin Redaksi</small>`;
@@ -550,16 +549,12 @@ window.muatPengaturanAdmin = async function() {
             if (htmlPemred) {
                 document.getElementById('pemimpin-redaksi').innerHTML = htmlPemred;
             }
-            
             if (d.logoWebsite) {
                 document.getElementById('logo-website').src = d.logoWebsite;
             }
         }
-    } catch (e) { 
-        console.error("Gagal muat pengaturan:", e); 
-    }
+    } catch (e) { console.error("Gagal muat pengaturan:", e); }
 };
-
         window.muatDataFooter = async function() {
             try {
                 const docSnap = await getDoc(doc(db, "pengaturan", "utama"));

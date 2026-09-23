@@ -99,7 +99,6 @@
             <marquee onmouseover="this.stop();" onmouseout="this.start();"><span id="teks-pengumuman">📢 Selamat datang di Tribuana Putra News</span></marquee>
         </div>
     </div>
-
     <div class="container">
         <main class="kiri">
             <div id="halaman-berita-utama">
@@ -130,7 +129,6 @@
                 <button onclick="window.bukaBeritaUtama()" style="margin-top: 15px; padding: 6px 12px; cursor: pointer; background:#34495e; color:#fff; border:none; border-radius:4px;">← Kembali ke Berita Utama</button>
             </div>
         </main>
-
         <aside class="kanan">
             <div class="kotak">
                 <h3>👤 Pemimpin Redaksi</h3>
@@ -186,7 +184,6 @@
             </div>
         </aside>
     </div>
-
     <footer class="footer-utama">
         <div class="footer-links">
             <a href="#" onclick="window.bukaHalamanStatis('tentang'); return false;">Tentang Perusahaan</a> |
@@ -214,7 +211,6 @@
             <p>&copy; <span id="tahun-copyright"></span> <span id="copyright-nama-perusahaan">Tribuana Putra News</span>. All Rights Reserved.</p>
         </div>
     </footer>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, doc, getDoc, getDocs, updateDoc, increment, addDoc, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -229,14 +225,11 @@
             appId: "1:772922168211:web:5bb280501e3d3e6fc50e66",
             measurementId: "G-5Z8E2GWDHZ"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
         let daftarBerita = [];
         let daftarAktifDiLayar = [];
         const PASSWORD_ADMIN = "admin123";
-
         document.getElementById('hari-ini').textContent = new Date().toLocaleDateString('id-ID', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
         let modeGelap = false;
         window.ubahMode = function() {
@@ -244,20 +237,17 @@
             document.body.classList.toggle('gelap', modeGelap);
             document.getElementById('tombol-mode').textContent = modeGelap ? "☀️ Mode Terang" : "🌙 Mode Gelap";
         };
-
         window.muatBerita = async function() {
             try {
                 const querySnapshot = await getDocs(collection(db, "berita"));
                 let semuaData = [];
                 querySnapshot.forEach((docSnap) => { semuaData.push({ id: docSnap.id, ...docSnap.data() }); });
-
                 let beritaAktif = semuaData.filter(b => b.tampilkanDiWeb === true || b.tampilkanDiWeb === "true" || b.tampilkanDiWeb === undefined);
                 beritaAktif.sort((a, b) => {
                     let waktuA = a.createdAt ? new Date(a.createdAt.seconds * 1000 || a.createdAt) : new Date(a.tglPublish || 0);
                     let waktuB = b.createdAt ? new Date(b.createdAt.seconds * 1000 || b.createdAt) : new Date(b.tglPublish || 0);
                     return waktuB - waktuA; 
                 });
-
                 daftarBerita = semuaData;
                 window.tampilDaftarBerita(beritaAktif);
                 window.muatSliderBeritaUtama();
@@ -266,7 +256,6 @@
                 document.getElementById('daftar-berita').innerHTML = '<p style="color:red; padding:10px;">Gagal memuat data. Cek koneksi internet.</p>';
             }
         };
-
         window.tampilDaftarBerita = function(list) {
             let area = document.getElementById('daftar-berita');
             if (!area) return;
@@ -314,7 +303,6 @@
                 area.appendChild(wadahGrup);
             });
         };
-
         window.bacaBerita = async function(indeks) {
             let b = daftarAktifDiLayar[indeks];
             if (!b || !b.id) return;
@@ -338,35 +326,29 @@
             window.hentikanTimerSliderBerita();
             window.scrollTo({top: 0, behavior: 'smooth'});
         };
-
         window.kembaliKeSlider = function() {
             document.getElementById('area-slider-berita').style.display = 'block';
             document.getElementById('area-berita-penuh').style.display = 'none';
             window.mulaiTimerSliderBerita();
         };
-
         window.filterKategori = function(kat) {
             let hasil = daftarBerita.filter(b => b.tampilkanDiWeb !== false && (Array.isArray(b.kategori) ? b.kategori.includes(kat) : b.kategori === kat));
             window.tampilDaftarBerita(hasil);
             window.kembaliKeSlider();
         };
-
         window.tampilSemua = function() {
             let beritaAktif = daftarBerita.filter(b => b.tampilkanDiWeb !== false);
             window.tampilDaftarBerita(beritaAktif);
             window.kembaliKeSlider();
         };
-
         window.cariBerita = function(k) {
             if (!k) { window.tampilSemua(); return; }
             let hasil = daftarBerita.filter(b => b.tampilkanDiWeb !== false && (b.judul || '').toLowerCase().includes(k.toLowerCase()));
             window.tampilDaftarBerita(hasil);
         };
-
         window.indeksSliderBerita = 0;
         window.daftarSliderBerita = [];
         let timerSliderBerita = null;
-
         window.muatSliderBeritaUtama = function() {
             window.daftarSliderBerita = daftarBerita.filter(b => b.tampilkanDiWeb !== false && b.beritaUtama === true);
             if (window.daftarSliderBerita.length === 0) window.daftarSliderBerita = daftarBerita.filter(b => b.tampilkanDiWeb !== false).slice(0, 5);
@@ -374,7 +356,6 @@
             window.tampilItemSliderBerita();
             window.mulaiTimerSliderBerita();
         };
-
         window.tampilItemSliderBerita = function() {
             let gambarKosong = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="220"><rect fill="#333" width="400" height="220"/><text x="50%" y="50%" text-anchor="middle" fill="#888" font-size="14">Tidak Ada Gambar</text></svg>');
             let elGambar = document.getElementById('gambar-slider-berita');
@@ -394,7 +375,6 @@
             elJudul.textContent = b.judul || '(Tanpa Judul)';
             if (elKategori) elKategori.textContent = `📂 ${Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || 'Nasional')} | 📅 ${b.tglPublish || '-'}`;
         };
-
         window.mulaiTimerSliderBerita = function() {
             window.hentikanTimerSliderBerita();
             if (window.daftarSliderBerita.length > 1) timerSliderBerita = setInterval(() => { window.geserSliderBerita(1); }, 5000);
@@ -415,7 +395,6 @@
             let idx = daftarAktifDiLayar.findIndex(b => b.id === beritaSaatIni.id || b.judul === beritaSaatIni.judul);
             if (idx !== -1) window.bacaBerita(idx);
         };
-
         window.muatIklanHeaderWeb = async function() {
             let wadahIklan = document.getElementById('iklan-header-tempat');
             if (!wadahIklan) return;
@@ -440,7 +419,6 @@
                 }
             } catch (e) { console.error("Gagal muat iklan header:", e); }
         };
-
         window.muatIklanSampingWeb = async function() {
             try {
                 const snap = await getDocs(collection(db, "iklan_header")); 
@@ -473,7 +451,6 @@
         };
         window.tombolIklanKiri = function() { window.geserIklanSamping(-1); window.mulaiTimerIklanSamping(); };
         window.tombolIklanKanan = function() { window.geserIklanSamping(1); window.mulaiTimerIklanSamping(); };
-
         window.muatAfiliasiWeb = async function() {
             let wadah = document.getElementById('slider-afiliasi');
             if (!wadah) return;
@@ -507,7 +484,6 @@
             if (timerAutoSlideAfiliasi) clearInterval(timerAutoSlideAfiliasi);
             if (total > 1) timerAutoSlideAfiliasi = setInterval(() => { window.slideAfiliasiNext(); }, 4000);
         };
-
         window.muatPengaturanAdmin = async function() {
             try {
                 // Muat data Setting Utama (Logo Website + Foto Pemimpin Redaksi)
@@ -532,7 +508,6 @@
                         document.getElementById('logo-website').src = d.logoWebsite;
                     }
                 }
-
                 // Muat Logo Induk Organisasi
                 const docSnapOrg = await getDoc(doc(db, "pengaturan", "induk_organisasi"));
                 if (docSnapOrg.exists()) {
@@ -585,10 +560,8 @@
         window.bukaHalamanStatis = async function(jenis) {
             document.getElementById('halaman-berita-utama').style.display = 'none';
             document.getElementById('halaman-statis').style.display = 'block';
-            
             let judul = "";
             let konten = "<p style='text-align:center; padding:20px; color:#888;'>Memuat data...</p>";
-
             if (jenis === 'tentang') {
                 judul = "Tentang Perusahaan";
                 try {
@@ -657,18 +630,15 @@
                 judul = "Pedoman Media Siber";
                 konten = "<p style='color:#888;'>Silakan lengkapi data ini melalui Panel Admin.</p>";
             }
-
             document.getElementById('judul-halaman-statis').innerHTML = judul;
             document.getElementById('isi-halaman-statis').innerHTML = konten;
             window.scrollTo({top: 0, behavior: 'smooth'});
         };
-
         window.bukaBeritaUtama = function() {
             document.getElementById('halaman-statis').style.display = 'none';
             document.getElementById('halaman-berita-utama').style.display = 'block';
             window.scrollTo({top: 0, behavior: 'smooth'});
         };
-
         window.bukaTentangOrganisasi = function() { 
             window.bukaHalamanStatis('organisasi'); 
         };
@@ -687,7 +657,6 @@
                 document.getElementById('form-komentar').reset();
             } catch (error) { alert("❌ Gagal mengirim komentar."); }
         };
-
         window.bukaKomentarAdmin = async function() {
             let pwd = prompt("Masukkan Password Admin:");
             if (pwd === PASSWORD_ADMIN) {
@@ -704,7 +673,6 @@
                 } catch (e) { alert("Gagal memuat data."); }
             } else if (pwd !== null) { alert("❌ Password Salah!"); }
         };
-
         window.simpanLanggananIklan = async function(e) {
             e.preventDefault();
             try {
@@ -720,7 +688,6 @@
                 document.getElementById('form-iklan-langganan').reset();
             } catch (error) { alert("❌ Gagal menyimpan pengajuan."); }
         };
-
         window.bukaPelangganAdmin = async function() {
             let pwd = prompt("Masukkan Password Admin:");
             if (pwd === PASSWORD_ADMIN) {
@@ -737,7 +704,6 @@
                 } catch (e) { alert("Gagal memuat data."); }
             } else if (pwd !== null) { alert("❌ Password Salah!"); }
         };
-
         document.addEventListener('DOMContentLoaded', () => {
             window.muatBerita();
             window.muatPengaturanAdmin();

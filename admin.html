@@ -1,90 +1,260 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel Admin - Tribuana Putra News</title>
-  <!-- LIBRARY HTML2PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    /* ... (Pertahankan semua CSS Anda yang lama di sini, tidak perlu diubah) ... */
-    body { font-family: Arial, sans-serif; margin: 0; display: flex; height: 100vh; background: #f4f6f8; }
-    .sidebar { width: 250px; background: #2c3e50; color: white; padding: 20px; overflow-y: auto; }
-    .sidebar a { display: block; color: #ecf0f1; text-decoration: none; padding: 10px; margin: 5px 0; border-radius: 4px; }
-    .sidebar a:hover { background: #34495e; }
-    .submenu { padding-left: 20px !important; font-size: 0.9em; }
-    .content { flex: 1; padding: 20px; overflow-y: auto; }
-    .halaman { display: none; }
-    .halaman.aktif { display: block; }
-    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
-    .stat-box { background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .stat-box h3 { font-size: 2em; margin: 0; color: #2980b9; }
-    label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.9em; }
-    input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-    .btn-utama { background: #2980b9; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; margin-top: 15px; font-weight: bold; }
-    .btn-utama:hover { background: #1f6391; }
-    .btn-hapus { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background-color: #f2f2f2; }
-    .img-iklan-header-preview { max-width: 200px; max-height: 100px; object-fit: contain; border: 1px solid #ccc; }
-    .img-iklan-header-thumb { width: 80px; height: 50px; object-fit: cover; border: 1px solid #ccc; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      background: #f4f6f8;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #2c3e50;
+      color: white;
+      padding: 20px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .sidebar h3 {
+      margin-top: 0;
+      border-bottom: 1px solid #34495e;
+      padding-bottom: 10px;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #ecf0f1;
+      text-decoration: none;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .sidebar a:hover {
+      background: #34495e;
+    }
+
+    .submenu {
+      padding-left: 20px !important;
+      font-size: 0.9em;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .halaman {
+      display: none;
+    }
+
+    .halaman.aktif {
+      display: block;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .grid3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .stat-box {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-box h3 {
+      font-size: 2em;
+      margin: 0;
+      color: #2980b9;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 0.9em;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .btn-utama {
+      background: #2980b9;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .btn-utama:hover {
+      background: #1f6391;
+    }
+
+    .btn-hapus {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: white;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .img-preview {
+      max-width: 200px;
+      max-height: 100px;
+      object-fit: contain;
+      border: 1px solid #ccc;
+      margin-top: 5px;
+    }
+
+    .img-thumb {
+      width: 80px;
+      height: 50px;
+      object-fit: cover;
+      border: 1px solid #ccc;
+    }
   </style>
 </head>
+
 <body>
   <div class="sidebar">
     <h3>📋 Menu Admin</h3>
-    <a href="#" onclick="tampilHalaman('beranda'); return false;">🏠 Dashboard</a>
-    <a href="#" class="menu-judul">⚙️ Konfigurasi ▼</a>
-    <a href="#" class="submenu" onclick="tampilHalaman('setting-utama'); return false;">• Setting Utama</a>
-    <a href="#" class="submenu" onclick="tampilHalaman('data-redaksi'); return false;">• Data Redaksi</a>
-    <a href="#" class="menu-judul">📰 Data Berita ▼</a>
-    <a href="#" class="submenu" onclick="tampilHalaman('konten-berita'); return false;">• Konten Berita</a>
-    <a href="#" class="submenu" onclick="tampilHalaman('arsip-berita'); return false;">• Arsip Berita</a>
-    <a href="#" class="menu-judul">📢 Spot Iklan ▼</a>
-    <a href="#" class="submenu" onclick="tampilHalaman('iklan-header'); return false;">• 🔝 Iklan Header</a>
-    <a href="#" class="submenu" onclick="tampilHalaman('daftar-iklan'); return false;">• Daftar Semua Iklan</a>
-    <a href="#" class="submenu" onclick="tampilHalaman('afiliasi'); return false;">• Iklan Afiliasi</a>
-    <a href="index.html" target="_blank">👁️ Lihat Halaman Depan</a>
+    <a href="#" onclick="window.tampilHalaman('beranda'); return false;">🏠 Dashboard</a>
+    <a href="#" class="menu-judul" style="font-weight:bold; margin-top:15px;">⚙️ Konfigurasi</a>
+    <a href="#" class="submenu" onclick="window.tampilHalaman('setting-utama'); return false;">• Setting Utama</a>
+    <a href="#" class="submenu" onclick="window.tampilHalaman('data-redaksi'); return false;">• Data Redaksi</a>
+    <a href="#" class="menu-judul" style="font-weight:bold; margin-top:15px;">📰 Data Berita</a>
+    <a href="#" class="submenu" onclick="window.tampilHalaman('konten-berita'); return false;">• Konten Berita</a>
+    <a href="#" class="submenu" onclick="window.tampilHalaman('arsip-berita'); return false;">• Arsip Berita</a>
+    <a href="#" class="menu-judul" style="font-weight:bold; margin-top:15px;">📢 Iklan</a>
+    <a href="#" class="submenu" onclick="window.tampilHalaman('iklan-header'); return false;">• Iklan Header</a>
+    <a href="#" class="submenu" onclick="window.tampilHalaman('afiliasi'); return false;">• Iklan Afiliasi</a>
+    <a href="index.html" target="_blank" style="margin-top:20px; background:#27ae60; text-align:center;">👁️ Lihat
+      Web</a>
   </div>
 
   <div class="content">
     <!-- DASHBOARD -->
     <div id="beranda" class="halaman aktif">
       <h2>Hai, Administrator 👋</h2>
-      <p>Selamat datang di beranda Website Tribuana Putra News, Portal Berita Online Priangan Timur</p>
+      <p>Selamat datang di Panel Admin Tribuana Putra News.</p>
       <div class="grid3">
-        <div class="stat-box"><h3 id="total-berita">0</h3><p>Total Berita</p></div>
-        <div class="stat-box"><h3 id="berita-publish">0</h3><p>Berita Dipublish</p></div>
-        <div class="stat-box"><h3 id="berita-unpublish">0</h3><p>Berita Unpublish</p></div>
+        <div class="stat-box">
+          <h3 id="total-berita">0</h3>
+          <p>Total Berita</p>
+        </div>
+        <div class="stat-box">
+          <h3 id="berita-publish">0</h3>
+          <p>Berita Dipublish</p>
+        </div>
+        <div class="stat-box">
+          <h3 id="berita-unpublish">0</h3>
+          <p>Berita Unpublish</p>
+        </div>
       </div>
     </div>
 
     <!-- SETTING UTAMA -->
     <div id="setting-utama" class="halaman">
-      <div class="judul-section"><h3>Setting Utama</h3></div>
+      <h3>⚙️ Setting Utama</h3>
       <div class="card">
-        <label>Nama Admin</label><input type="text" id="nama-admin" placeholder="Nama Admin">
-        <label>Nama Perusahaan</label><input type="text" id="nama-perusahaan" placeholder="Tribuana Putra News">
-        <label>Alamat Perusahaan</label><input type="text" id="alamat-perusahaan" placeholder="Alamat lengkap">
-        <label>No Telp / WA</label><input type="text" id="telp" placeholder="Nomor Telepon">
-        <label>Alamat Email</label><input type="email" id="email-kontak" placeholder="Email">
-        <label>FB Pages</label><input type="url" id="fb-link" placeholder="Link Facebook">
-        <label>IG Pages</label><input type="url" id="ig-link" placeholder="Link Instagram">
-        <label>Youtube Link</label><input type="url" id="yt-link" placeholder="Link Youtube">
-        <button class="btn-utama" onclick="simpanSettingUtama()">💾 Update Data</button>
+        <label>Nama Admin / Pemimpin Redaksi</label><input type="text" id="nama-admin">
+        <label>Nama Perusahaan</label><input type="text" id="nama-perusahaan">
+        <label>Alamat Perusahaan</label><input type="text" id="alamat-perusahaan">
+        <label>No Telp / WA</label><input type="text" id="telp">
+        <label>Alamat Email</label><input type="email" id="email-kontak">
+        <label>Link Facebook</label><input type="url" id="fb-link">
+        <label>Link Instagram</label><input type="url" id="ig-link">
+        <label>Link Youtube</label><input type="url" id="yt-link">
+        <label>Logo Website</label>
+        <input type="file" id="logo-website" accept="image/*" onchange="window.pratinjauLogo(this)">
+        <div id="pratinjau-logo" style="margin-top:10px;"></div>
+        <button class="btn-utama" onclick="window.simpanSettingUtama()">💾 Simpan Setting Utama</button>
+      </div>
+    </div>
+
+    <!-- DATA REDAKSI -->
+    <div id="data-redaksi" class="halaman">
+      <h3>👥 Data Redaksi</h3>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Jabatan</th>
+              <th>Nama</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="isi-tabel-redaksi"></tbody>
+        </table>
+        <button class="btn-utama" onclick="window.tambahBarisRedaksi()" style="background:#27ae60; margin-right:10px;">➕
+          Tambah Baris</button>
+        <button class="btn-utama" onclick="window.simpanDataRedaksi()">💾 Simpan Data Redaksi</button>
       </div>
     </div>
 
     <!-- KONTEN BERITA -->
     <div id="konten-berita" class="halaman">
-      <div class="judul-section"><h3>Konten Berita</h3></div>
+      <h3>📝 Konten Berita</h3>
       <div class="card">
-        <label>Judul Berita</label>
-        <input type="text" id="judul-berita" placeholder="Tulis judul berita...">
-        <label>📂 Kategori Berita <small>(Tekan Ctrl + klik untuk pilih lebih dari satu)</small></label>
-        <select id="kategori-berita" multiple style="height:150px;">
+        <label>Judul Berita</label><input type="text" id="judul-berita">
+        <label>Kategori (Ctrl+Klik untuk memilih lebih dari satu)</label>
+        <select id="kategori-berita" multiple style="height:120px;">
           <option value="Tasikmalaya">Tasikmalaya</option>
           <option value="Kota Tasikmalaya">Kota Tasikmalaya</option>
           <option value="Ciamis">Ciamis</option>
@@ -100,104 +270,104 @@
           <option value="Hiburan">Hiburan</option>
           <option value="Artikel">Artikel</option>
         </select>
-        <label>📅 Tanggal & Waktu Publish</label>
         <div style="display:flex; gap:10px;">
-          <input type="date" id="tgl-publish">
-          <input type="time" id="jam-publish">
+          <div style="flex:1;"><label>Tanggal Publish</label><input type="date" id="tgl-publish"></div>
+          <div style="flex:1;"><label>Jam Publish</label><input type="time" id="jam-publish"></div>
         </div>
-        <label>🔑 Meta Keywords</label>
-        <input type="text" id="meta-kata-kunci" placeholder="kunci1, kunci2">
+        <label>Meta Keywords</label><input type="text" id="meta-kata-kunci">
         <div style="display:flex; gap:20px; margin:10px 0;">
-          <label><input type="checkbox" id="berita-utama" style="width:auto;"> ⭐ Berita Utama</label>
-          <label><input type="checkbox" id="tampilkan-berita" checked style="width:auto;"> 👁️ Tampilkan di Web</label>
+          <label style="font-weight:normal;"><input type="checkbox" id="berita-utama" style="width:auto;"> ⭐ Berita
+            Utama</label>
+          <label style="font-weight:normal;"><input type="checkbox" id="tampilkan-berita" checked style="width:auto;">
+            👁️ Tampilkan di Web</label>
         </div>
+
+        <!-- FITUR SISIPKAN GAMBAR -->
+        <div style="border:1px dashed #ccc; padding:10px; background:#f9f9f9; border-radius:4px; margin:10px 0;">
+          <label>🖼️ Sisipkan Foto ke dalam Isi Berita</label>
+          <input type="file" id="foto-berita" accept="image/*" onchange="window.sisipkanFotoBerita(this)">
+          <small style="color:#e74c3c;">*Maksimal 500KB per gambar agar muat di database.</small>
+        </div>
+
         <label>Isi Berita</label>
-        <div id="isi-berita" contenteditable="true" style="min-height:200px; border:1px solid #ccc; padding:10px; background:#fff;"></div>
-        <button class="btn-utama" onclick="simpanBerita()" style="margin-top:15px;">💾 Simpan Berita</button>
-        <button class="btn-hapus" onclick="resetFormBerita()" style="margin-top:15px; margin-left:10px;">🔄 Reset Form</button>
+        <div id="isi-berita" contenteditable="true"
+          style="min-height:250px; border:1px solid #ccc; padding:10px; background:#fff;"></div>
+
+        <button class="btn-utama" onclick="window.simpanBerita()">💾 Simpan Berita</button>
+        <button class="btn-hapus" onclick="window.resetFormBerita()" style="margin-left:10px;">🔄 Reset Form</button>
       </div>
     </div>
 
     <!-- ARSIP BERITA -->
     <div id="arsip-berita" class="halaman">
-      <h3>📰 Arsip Berita</h3>
-      <table>
-        <thead>
-          <tr>
-            <th style="width:40px;">No</th>
-            <th>Judul Berita</th>
-            <th>URL (Slug)</th>
-            <th>Kategori</th>
-            <th>Tanggal</th>
-            <th>Utama</th>
-            <th>Publish</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="daftar-arsip-berita">
-          <tr><td colspan="8" style="text-align:center;">Memuat data dari Firebase...</td></tr>
-        </tbody>
-      </table>
+      <h3>📂 Arsip Berita</h3>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Judul</th>
+              <th>Kategori</th>
+              <th>Tanggal</th>
+              <th>Utama</th>
+              <th>Publish</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="daftar-arsip-berita">
+            <tr>
+              <td colspan="7" style="text-align:center;">Memuat data...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- IKLAN HEADER -->
     <div id="iklan-header" class="halaman">
-      <div class="judul-section"><h3>📢 Iklan Header</h3></div>
+      <h3>📢 Iklan Header</h3>
       <div class="card">
-        <h4>Tambah Iklan Header Baru</h4>
         <label>Gambar Iklan</label>
-        <input type="file" id="gambar-iklan-header" accept="image/*" onchange="pratinjauGambarIklanHeader(this)">
-        <div id="pratinjau-iklan-header" style="margin: 10px 0;"></div>
-        <label>Judul Iklan</label>
-        <input type="text" id="judul-iklan-header" placeholder="Masukkan judul/nama iklan">
-        <label>Link URL</label>
-        <input type="url" id="link-iklan-header" placeholder="https://...">
-        <button class="btn-utama" onclick="simpanIklanHeader()">💾 Simpan Iklan</button>
+        <input type="file" id="gambar-iklan-header" accept="image/*" onchange="window.pratinjauIklanHeader(this)">
+        <div id="pratinjau-iklan-header" style="margin:10px 0;"></div>
+        <label>Judul Iklan</label><input type="text" id="judul-iklan-header">
+        <label>Link URL</label><input type="url" id="link-iklan-header">
+        <button class="btn-utama" onclick="window.simpanIklanHeader()">💾 Simpan Iklan Header</button>
       </div>
       <div class="card">
-        <h4>Daftar Iklan Header Aktif</h4>
+        <h4>Daftar Iklan Header</h4>
         <table>
-          <thead><tr><th>No</th><th>Gambar</th><th>Judul</th><th>Link</th><th>Aksi</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Gambar</th>
+              <th>Judul</th>
+              <th>Link</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
           <tbody id="tabel-daftar-iklan-header"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- DAFTAR SEMUA IKLAN -->
-    <div id="daftar-iklan" class="halaman">
-      <div class="judul-section"><h3>📋 Daftar Semua Iklan</h3></div>
-      <div class="card">
-        <h3>📢 Iklan Header</h3>
-        <div id="daftar-iklan-header"></div>
-      </div>
-    </div>
-
     <!-- AFILIASI -->
     <div id="afiliasi" class="halaman">
-      <div class="judul-section"><h3>Iklan Afiliasi</h3></div>
+      <h3>🔗 Iklan Afiliasi</h3>
       <div class="card">
-        <label>Nama Afiliasi</label>
-        <input type="text" id="nama-afiliasi" placeholder="Misal: Promo Shopee / Tokopedia">
-        <label>Pilih Gambar Iklan (dari Komputer)</label>
-        <input type="file" id="file-gambar-afiliasi" accept="image/*" style="margin-bottom: 12px; display: block;">
-        <label>Link Tujuan (URL Afiliasi)</label>
-        <input type="url" id="link-afiliasi" placeholder="https://shope.ee/...">
-        <button class="btn-utama" onclick="simpanAfiliasi()" style="margin-top:10px;">➕ Tambah Iklan Afiliasi</button>
+        <label>Nama Afiliasi</label><input type="text" id="nama-afiliasi">
+        <label>Gambar Iklan</label><input type="file" id="file-gambar-afiliasi" accept="image/*">
+        <label>Link Tujuan</label><input type="url" id="link-afiliasi">
+        <button class="btn-utama" onclick="window.simpanAfiliasi()">➕ Tambah Iklan Afiliasi</button>
         <div id="daftar-afiliasi" style="margin-top:15px;"></div>
       </div>
     </div>
   </div>
 
-  <!-- SCRIPT UTAMA DENGAN FIREBASE -->
+  <!-- SCRIPT FIREBASE UTUH -->
   <script type="module">
-    // 1. IMPORT FIREBASE SDK (Versi 10.8.0 Modular)
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getFirestore, collection, doc, setDoc, getDoc, getDocs, 
-      addDoc, updateDoc, deleteDoc, query, orderBy 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import {initializeApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import {getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, orderBy} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // 2. KONFIGURASI FIREBASE ANDA
     const firebaseConfig = {
       apiKey: "AIzaSyCc1rUgdchrZ8vxk3HF6-yQKMZze-dNwzE",
       authDomain: "tribuanaputra-1968.firebaseapp.com",
@@ -209,204 +379,208 @@
       measurementId: "G-5Z8E2GWDHZ"
     };
 
-    // 3. INISIALISASI
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // 4. GLOBAL STATE
     let sedangEdit = false;
     let idBeritaDiedit = null;
-    let gambarIklanHeaderBase64 = "";
+    let daftarRedaksi = [];
+    let imgHeaderBase64 = "";
 
-    // 5. FUNGSI UTILITAS
-    window.tampilHalaman = function(id) {
+    // --- NAVIGASI ---
+    window.tampilHalaman = function (id) {
       document.querySelectorAll('.halaman').forEach(h => h.classList.remove('aktif'));
-      let hal = document.getElementById(id);
-      if (hal) {
-        hal.classList.add('aktif');
-        if (id === 'arsip-berita') muatArsipBerita();
-        if (id === 'daftar-iklan') muatDaftarIklanHeader();
-        if (id === 'afiliasi') muatDaftarAfiliasi();
+      document.getElementById(id).classList.add('aktif');
+      if (id === 'arsip-berita') window.muatArsipBerita();
+      if (id === 'iklan-header') window.muatDaftarIklanHeader();
+      if (id === 'afiliasi') window.muatDaftarAfiliasi();
+    };
+
+    // --- SETTING UTAMA ---
+    window.pratinjauLogo = function (input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => document.getElementById('pratinjau-logo').innerHTML = `<img src="${e.target.result}" class="img-preview">`;
+        reader.readAsDataURL(input.files[0]);
       }
     };
 
-    window.buatSlug = function(teks) {
-      if (!teks) return '';
-      return teks.toString().toLowerCase().trim().replace(/[^a-z0-9-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
-    };
-
-    // 6. SETTING UTAMA (FIRESTORE)
-    window.simpanSettingUtama = async function() {
+    window.simpanSettingUtama = async function () {
       const data = {
-        namaAdmin: document.getElementById('nama-admin').value.trim(),
-        namaPerusahaan: document.getElementById('nama-perusahaan').value.trim(),
-        alamatPerusahaan: document.getElementById('alamat-perusahaan').value.trim(),
-        telp: document.getElementById('telp').value.trim(),
-        emailKontak: document.getElementById('email-kontak').value.trim(),
-        fbLink: document.getElementById('fb-link').value.trim(),
-        igLink: document.getElementById('ig-link').value.trim(),
-        ytLink: document.getElementById('yt-link').value.trim(),
+        namaAdmin: document.getElementById('nama-admin').value,
+        namaPerusahaan: document.getElementById('nama-perusahaan').value,
+        alamatPerusahaan: document.getElementById('alamat-perusahaan').value,
+        telp: document.getElementById('telp').value,
+        emailKontak: document.getElementById('email-kontak').value,
+        fbLink: document.getElementById('fb-link').value,
+        igLink: document.getElementById('ig-link').value,
+        ytLink: document.getElementById('yt-link').value,
         updatedAt: new Date()
       };
-      try {
-        await setDoc(doc(db, "pengaturan", "utama"), data);
-        alert("✅ Setting Utama tersimpan di Firebase!");
-      } catch (error) {
-        console.error("Gagal menyimpan:", error);
-        alert("❌ Gagal menyimpan data.");
+
+      const fileLogo = document.getElementById('logo-website').files[0];
+      if (fileLogo) {
+        if (fileLogo.size > 1000000) {alert("Logo maksimal 1MB!"); return;}
+        const reader = new FileReader();
+        reader.onload = async function (e) {
+          data.logoWebsite = e.target.result;
+          await setDoc(doc(db, "pengaturan", "utama"), data);
+          alert("✅ Setting & Logo tersimpan!");
+        };
+        reader.readAsDataURL(fileLogo);
+      } else {
+        await setDoc(doc(db, "pengaturan", "utama"), data, {merge: true});
+        alert("✅ Setting tersimpan!");
       }
     };
 
-    window.muatSettingUtama = async function() {
-      try {
-        const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
-        if (docSnap.exists()) {
-          const d = docSnap.data();
-          if (d.namaAdmin) document.getElementById('nama-admin').value = d.namaAdmin;
-          if (d.namaPerusahaan) document.getElementById('nama-perusahaan').value = d.namaPerusahaan;
-          if (d.alamatPerusahaan) document.getElementById('alamat-perusahaan').value = d.alamatPerusahaan;
-          if (d.telp) document.getElementById('telp').value = d.telp;
-          if (d.emailKontak) document.getElementById('email-kontak').value = d.emailKontak;
-          if (d.fbLink) document.getElementById('fb-link').value = d.fbLink;
-          if (d.igLink) document.getElementById('ig-link').value = d.igLink;
-          if (d.ytLink) document.getElementById('yt-link').value = d.ytLink;
-        }
-      } catch (error) {
-        console.error("Gagal memuat setting:", error);
+    window.muatSettingUtama = async function () {
+      const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
+      if (docSnap.exists()) {
+        const d = docSnap.data();
+        document.getElementById('nama-admin').value = d.namaAdmin || '';
+        document.getElementById('nama-perusahaan').value = d.namaPerusahaan || '';
+        document.getElementById('alamat-perusahaan').value = d.alamatPerusahaan || '';
+        document.getElementById('telp').value = d.telp || '';
+        document.getElementById('email-kontak').value = d.emailKontak || '';
+        document.getElementById('fb-link').value = d.fbLink || '';
+        document.getElementById('ig-link').value = d.igLink || '';
+        document.getElementById('yt-link').value = d.ytLink || '';
+        if (d.logoWebsite) document.getElementById('pratinjau-logo').innerHTML = `<img src="${d.logoWebsite}" class="img-preview">`;
       }
     };
 
-    // 7. DATA BERITA (FIRESTORE)
-    window.simpanBerita = async function() {
-      let judul = document.getElementById('judul-berita').value.trim();
-      if (!judul) { alert("Judul Wajib Diisi!"); return; }
-      
-      let kategori = Array.from(document.getElementById('kategori-berita').selectedOptions).map(o => o.value);
-      let tgl = document.getElementById('tgl-publish').value;
-      let jam = document.getElementById('jam-publish').value;
-      let metaKata = document.getElementById('meta-kata-kunci').value.trim();
-      let utama = document.getElementById('berita-utama').checked;
-      let tampil = document.getElementById('tampilkan-berita').checked;
-      let isi = document.getElementById('isi-berita').innerHTML;
-      let urlSlug = buatSlug(judul);
+    // --- DATA REDAKSI ---
+    window.tampilTabelRedaksi = function () {
+      const tb = document.getElementById('isi-tabel-redaksi');
+      tb.innerHTML = '';
+      daftarRedaksi.forEach((r, i) => {
+        tb.innerHTML += `<tr>
+          <td style="text-align:center">${i + 1}</td>
+          <td><input type="text" value="${r.jabatan || ''}" onchange="daftarRedaksi[${i}].jabatan=this.value" style="width:100%"></td>
+          <td><input type="text" value="${r.nama || ''}" onchange="daftarRedaksi[${i}].nama=this.value" style="width:100%"></td>
+          <td style="text-align:center"><button class="btn-hapus" onclick="window.hapusBarisRedaksi(${i})">✖</button></td>
+        </tr>`;
+      });
+    };
+    window.tambahBarisRedaksi = function () {daftarRedaksi.push({jabatan: '', nama: ''}); window.tampilTabelRedaksi();};
+    window.hapusBarisRedaksi = function (i) {daftarRedaksi.splice(i, 1); window.tampilTabelRedaksi();};
 
-      const beritaData = {
-        judul, urlSlug, kategori, tglPublish: tgl, jamPublish: jam,
-        metaKataKunci: metaKata, beritaUtama: utama, tampilkanDiWeb: tampil,
-        isiBerita: isi, viewer: 0, updatedAt: new Date()
+    window.simpanDataRedaksi = async function () {
+      await setDoc(doc(db, "pengaturan", "redaksi"), {anggota: daftarRedaksi, updatedAt: new Date()});
+      alert("✅ Data Redaksi Tersimpan!");
+    };
+    window.muatDataRedaksi = async function () {
+      const docSnap = await getDoc(doc(db, "pengaturan", "redaksi"));
+      if (docSnap.exists() && docSnap.data().anggota) daftarRedaksi = docSnap.data().anggota;
+      window.tampilTabelRedaksi();
+    };
+
+    // --- BERITA ---
+    window.sisipkanFotoBerita = function (input) {
+      if (!input.files[0]) return;
+      if (input.files[0].size > 500000) {alert("Gambar maksimal 500KB!"); input.value = ''; return;}
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById('isi-berita').focus();
+        document.execCommand('insertImage', false, e.target.result);
+        input.value = '';
+      };
+      reader.readAsDataURL(input.files[0]);
+    };
+
+    window.simpanBerita = async function () {
+      const judul = document.getElementById('judul-berita').value.trim();
+      if (!judul) {alert("Judul wajib diisi!"); return;}
+
+      const kategori = Array.from(document.getElementById('kategori-berita').selectedOptions).map(o => o.value);
+      const data = {
+        judul,
+        urlSlug: judul.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        kategori,
+        tglPublish: document.getElementById('tgl-publish').value,
+        jamPublish: document.getElementById('jam-publish').value,
+        metaKataKunci: document.getElementById('meta-kata-kunci').value,
+        beritaUtama: document.getElementById('berita-utama').checked,
+        tampilkanDiWeb: document.getElementById('tampilkan-berita').checked,
+        isiBerita: document.getElementById('isi-berita').innerHTML,
+        viewer: 0,
+        updatedAt: new Date()
       };
 
       try {
         if (sedangEdit && idBeritaDiedit) {
-          await updateDoc(doc(db, "berita", idBeritaDiedit), beritaData);
-          alert("✅ Berita Diperbarui di Firebase!");
+          await updateDoc(doc(db, "berita", idBeritaDiedit), data);
+          alert("✅ Berita Diperbarui!");
         } else {
-          beritaData.createdAt = new Date();
-          const docRef = await addDoc(collection(db, "berita"), beritaData);
-          alert(`✅ Berita Tersimpan dengan Permalink: /${urlSlug}`);
+          data.createdAt = new Date();
+          await addDoc(collection(db, "berita"), data);
+          alert("✅ Berita Disimpan!");
         }
-        resetFormBerita();
-        muatArsipBerita(); // Refresh tabel
-      } catch (error) {
-        console.error("Gagal menyimpan berita:", error);
-        alert("❌ Gagal menyimpan berita.");
+        window.resetFormBerita();
+      } catch (e) {
+        alert("❌ Gagal menyimpan: " + e.message);
       }
     };
 
-    window.muatArsipBerita = async function() {
+    window.muatArsipBerita = async function () {
       const tb = document.getElementById('daftar-arsip-berita');
-      tb.innerHTML = '<tr><td colspan="8" style="text-align:center;">Memuat data dari Firebase...</td></tr>';
-      
-      try {
-        const q = query(collection(db, "berita"), orderBy("createdAt", "desc"));
-        const querySnapshot = await getDocs(q);
-        
-        if (querySnapshot.empty) {
-          tb.innerHTML = '<tr><td colspan="8" style="text-align:center;">Belum ada berita.</td></tr>';
-          perbaruiStatistik(0, 0, 0);
-          return;
-        }
+      tb.innerHTML = '<tr><td colspan="7" style="text-align:center;">Memuat...</td></tr>';
+      const snap = await getDocs(query(collection(db, "berita"), orderBy("createdAt", "desc")));
 
-        let html = '';
-        let i = 1;
-        let total = 0, publish = 0, unpublish = 0;
+      if (snap.empty) {tb.innerHTML = '<tr><td colspan="7" style="text-align:center;">Belum ada berita.</td></tr>'; return;}
 
-        querySnapshot.forEach((docSnap) => {
-          const b = docSnap.data();
-          const id = docSnap.id;
-          total++;
-          if (b.tampilkanDiWeb) publish++; else unpublish++;
+      let html = '', i = 1, total = 0, pub = 0, unpub = 0;
+      snap.forEach(d => {
+        const b = d.data(); const id = d.id;
+        total++; if (b.tampilkanDiWeb) pub++; else unpub++;
+        html += `<tr>
+          <td>${i++}</td><td><b>${b.judul}</b></td>
+          <td>${Array.isArray(b.kategori) ? b.kategori.join(', ') : '-'}</td>
+          <td>${b.tglPublish || '-'}</td>
+          <td style="text-align:center">${b.beritaUtama ? '⭐' : '-'}</td>
+          <td style="text-align:center">${b.tampilkanDiWeb ? '✅' : '❌'}</td>
+          <td style="text-align:center">
+            <button onclick="window.editBeritaGlobal('${id}')" style="cursor:pointer;">✏️</button>
+            <button class="btn-hapus" onclick="window.hapusBeritaGlobal('${id}')">✖</button>
+          </td>
+        </tr>`;
+      });
+      tb.innerHTML = html;
+      document.getElementById('total-berita').innerText = total;
+      document.getElementById('berita-publish').innerText = pub;
+      document.getElementById('berita-unpublish').innerText = unpub;
+    };
 
-          const kategoriStr = Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || '-');
-          
-          html += `
-            <tr>
-              <td style="text-align:center">${i++}</td>
-              <td><b>${b.judul}</b></td>
-              <td><code>/${b.urlSlug || '-'}</code></td>
-              <td>${kategoriStr}</td>
-              <td>${b.tglPublish || '-'}</td>
-              <td style="text-align:center">${b.beritaUtama ? '⭐' : '-'}</td>
-              <td style="text-align:center">${b.tampilkanDiWeb ? '✅' : '❌'}</td>
-              <td style="text-align:center">
-                <button onclick="window.editBeritaGlobal('${id}')" title="Edit">✏</button>
-                <button class="btn-hapus" onclick="window.hapusBeritaGlobal('${id}')" title="Hapus">✖</button>
-              </td>
-            </tr>
-          `;
-        });
-        tb.innerHTML = html;
-        perbaruiStatistik(total, publish, unpublish);
-      } catch (error) {
-        console.error("Gagal memuat berita:", error);
-        tb.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">Gagal memuat data. Cek konsol.</td></tr>';
+    window.editBeritaGlobal = async function (id) {
+      const snap = await getDoc(doc(db, "berita", id));
+      if (!snap.exists()) return;
+      const b = snap.data();
+      sedangEdit = true; idBeritaDiedit = id;
+      document.getElementById('judul-berita').value = b.judul || '';
+      document.getElementById('tgl-publish').value = b.tglPublish || '';
+      document.getElementById('jam-publish').value = b.jamPublish || '';
+      document.getElementById('meta-kata-kunci').value = b.metaKataKunci || '';
+      document.getElementById('berita-utama').checked = b.beritaUtama || false;
+      document.getElementById('tampilkan-berita').checked = b.tampilkanDiWeb !== false;
+      document.getElementById('isi-berita').innerHTML = b.isiBerita || '';
+
+      const select = document.getElementById('kategori-berita');
+      Array.from(select.options).forEach(opt => {opt.selected = (b.kategori && b.kategori.includes(opt.value));});
+
+      window.tampilHalaman('konten-berita');
+      alert("Mode Edit Aktif. Ubah data lalu klik Simpan.");
+    };
+
+    window.hapusBeritaGlobal = async function (id) {
+      if (confirm("Hapus berita ini?")) {
+        await deleteDoc(doc(db, "berita", id));
+        window.muatArsipBerita();
       }
     };
 
-    window.editBeritaGlobal = async function(id) {
-      try {
-        const docSnap = await getDoc(doc(db, "berita", id));
-        if (docSnap.exists()) {
-          const b = docSnap.data();
-          sedangEdit = true;
-          idBeritaDiedit = id;
-          
-          document.getElementById('judul-berita').value = b.judul || '';
-          const kategoriSelect = document.getElementById('kategori-berita');
-          Array.from(kategoriSelect.options).forEach(opt => {
-            opt.selected = (b.kategori && b.kategori.includes(opt.value));
-          });
-          document.getElementById('tgl-publish').value = b.tglPublish || '';
-          document.getElementById('jam-publish').value = b.jamPublish || '';
-          document.getElementById('meta-kata-kunci').value = b.metaKataKunci || '';
-          document.getElementById('berita-utama').checked = b.beritaUtama || false;
-          document.getElementById('tampilkan-berita').checked = b.tampilkanDiWeb !== false;
-          document.getElementById('isi-berita').innerHTML = b.isiBerita || '';
-          
-          window.tampilHalaman('konten-berita');
-          alert("Mode Edit Aktif. Silakan ubah data dan klik 'Simpan Berita'.");
-        }
-      } catch (error) {
-        console.error("Gagal memuat data untuk edit:", error);
-      }
-    };
-
-    window.hapusBeritaGlobal = async function(id) {
-      if (confirm("Yakin ingin menghapus berita ini secara permanen dari Firebase?")) {
-        try {
-          await deleteDoc(doc(db, "berita", id));
-          alert("✅ Berita berhasil dihapus!");
-          muatArsipBerita();
-        } catch (error) {
-          console.error("Gagal menghapus:", error);
-          alert("❌ Gagal menghapus berita.");
-        }
-      }
-    };
-
-    window.resetFormBerita = function() {
-      sedangEdit = false;
-      idBeritaDiedit = null;
+    window.resetFormBerita = function () {
+      sedangEdit = false; idBeritaDiedit = null;
       document.getElementById('judul-berita').value = '';
       document.getElementById('kategori-berita').selectedIndex = -1;
       document.getElementById('tgl-publish').value = '';
@@ -417,169 +591,86 @@
       document.getElementById('isi-berita').innerHTML = '';
     };
 
-    window.perbaruiStatistik = function(total, publish, unpublish) {
-      document.getElementById('total-berita').innerText = total;
-      document.getElementById('berita-publish').innerText = publish;
-      document.getElementById('berita-unpublish').innerText = unpublish;
+    // --- IKLAN ---
+    window.pratinjauIklanHeader = function (input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {imgHeaderBase64 = e.target.result; document.getElementById('pratinjau-iklan-header').innerHTML = `<img src="${e.target.result}" class="img-preview">`;};
+        reader.readAsDataURL(input.files[0]);
+      }
     };
 
-    // 8. IKLAN HEADER (FIRESTORE)
-    window.pratinjauGambarIklanHeader = function(input) {
-      if (!input.files || !input.files[0]) return;
-      let p = new FileReader();
-      p.onload = e => {
-        gambarIklanHeaderBase64 = e.target.result;
-        document.getElementById('pratinjau-iklan-header').innerHTML = `<img src="${e.target.result}" class="img-iklan-header-preview">`;
+    window.simpanIklanHeader = async function () {
+      if (!imgHeaderBase64) {alert("Pilih gambar dulu!"); return;}
+      await addDoc(collection(db, "iklan_header"), {
+        judul: document.getElementById('judul-iklan-header').value,
+        link: document.getElementById('link-iklan-header').value,
+        gambar: imgHeaderBase64, createdAt: new Date()
+      });
+      alert("✅ Iklan Header Disimpan!");
+      imgHeaderBase64 = ""; document.getElementById('gambar-iklan-header').value = ""; document.getElementById('pratinjau-iklan-header').innerHTML = "";
+      window.muatDaftarIklanHeader();
+    };
+
+    window.muatDaftarIklanHeader = async function () {
+      const snap = await getDocs(collection(db, "iklan_header"));
+      const tb = document.getElementById('tabel-daftar-iklan-header');
+      if (snap.empty) {tb.innerHTML = '<tr><td colspan="4" style="text-align:center;">Kosong</td></tr>'; return;}
+      let html = '';
+      snap.forEach(d => {
+        const x = d.data(); const id = d.id;
+        html += `<tr><td><img src="${x.gambar}" class="img-thumb"></td><td>${x.judul || '-'}</td><td><a href="${x.link}" target="_blank">Link</a></td><td><button class="btn-hapus" onclick="window.hapusIklanGlobal('iklan_header','${id}')">✖</button></td></tr>`;
+      });
+      tb.innerHTML = html;
+    };
+
+    window.simpanAfiliasi = async function () {
+      const nama = document.getElementById('nama-afiliasi').value;
+      const link = document.getElementById('link-afiliasi').value;
+      const file = document.getElementById('file-gambar-afiliasi').files[0];
+      if (!nama || !link || !file) {alert("Lengkapi semua data!"); return;}
+      if (file.size > 500000) {alert("Gambar maksimal 500KB!"); return;}
+
+      const reader = new FileReader();
+      reader.onload = async function (e) {
+        await addDoc(collection(db, "afiliasi"), {nama, link, gambar: e.target.result, createdAt: new Date()});
+        alert("✅ Afiliasi Disimpan!");
+        document.getElementById('nama-afiliasi').value = ''; document.getElementById('link-afiliasi').value = ''; document.getElementById('file-gambar-afiliasi').value = '';
+        window.muatDaftarAfiliasi();
       };
-      p.readAsDataURL(input.files[0]);
+      reader.readAsDataURL(file);
     };
 
-    window.simpanIklanHeader = async function() {
-      if (!gambarIklanHeaderBase64) { alert("⚠️ Silakan pilih gambar iklan terlebih dahulu!"); return; }
-      try {
-        await addDoc(collection(db, "iklan_header"), {
-          judul: document.getElementById('judul-iklan-header').value.trim(),
-          link: document.getElementById('link-iklan-header').value.trim(),
-          gambar: gambarIklanHeaderBase64,
-          createdAt: new Date()
-        });
-        alert("✅ Iklan Header Tersimpan!");
-        document.getElementById('judul-iklan-header').value = '';
-        document.getElementById('link-iklan-header').value = '';
-        document.getElementById('gambar-iklan-header').value = '';
-        document.getElementById('pratinjau-iklan-header').innerHTML = '';
-        gambarIklanHeaderBase64 = "";
-        muatDaftarIklanHeader();
-      } catch (error) {
-        console.error("Gagal menyimpan iklan:", error);
-        alert("❌ Gagal menyimpan. (Mungkin ukuran gambar terlalu besar > 1MB)");
+    window.muatDaftarAfiliasi = async function () {
+      const snap = await getDocs(collection(db, "afiliasi"));
+      const wadah = document.getElementById('daftar-afiliasi');
+      if (snap.empty) {wadah.innerHTML = '<p>Belum ada afiliasi.</p>'; return;}
+      let html = '';
+      snap.forEach(d => {
+        const x = d.data(); const id = d.id;
+        html += `<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; padding:10px; background:#f9f9f9; border:1px solid #ddd;">
+          <img src="${x.gambar}" style="width:60px; height:60px; object-fit:cover;">
+          <div style="flex:1;"><b>${x.nama}</b><br><small>${x.link}</small></div>
+          <button class="btn-hapus" onclick="window.hapusIklanGlobal('afiliasi','${id}')">✖</button>
+        </div>`;
+      });
+      wadah.innerHTML = html;
+    };
+
+    window.hapusIklanGlobal = async function (koleksi, id) {
+      if (confirm("Hapus item ini?")) {
+        await deleteDoc(doc(db, koleksi, id));
+        if (koleksi === 'iklan_header') window.muatDaftarIklanHeader();
+        else window.muatDaftarAfiliasi();
       }
     };
 
-    window.muatDaftarIklanHeader = async function() {
-      try {
-        const querySnapshot = await getDocs(collection(db, "iklan_header"));
-        const el = document.getElementById('daftar-iklan-header');
-        const tb = document.getElementById('tabel-daftar-iklan-header');
-        
-        if (querySnapshot.empty) {
-          if(el) el.innerHTML = '<div style="padding:8px; color:#777;">Belum ada iklan.</div>';
-          if(tb) tb.innerHTML = '<tr><td colspan="5" style="text-align:center;">Kosong</td></tr>';
-          return;
-        }
-
-        let htmlList = '', htmlTable = '', i = 1;
-        querySnapshot.forEach((docSnap) => {
-          const x = docSnap.data();
-          const id = docSnap.id;
-          htmlList += `<div style="padding:8px; border-bottom:1px solid #ccc; display:flex; align-items:center; justify-content:space-between;">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <img src="${x.gambar}" class="img-iklan-header-thumb">
-              <b>${x.judul||'Tanpa Judul'}</b>
-            </div>
-            <button class="btn-hapus" onclick="window.hapusIklanHeaderGlobal('${id}')">✖</button>
-          </div>`;
-          
-          htmlTable += `<tr>
-            <td>${i++}</td>
-            <td><img src="${x.gambar}" class="img-iklan-header-thumb"></td>
-            <td>${x.judul||'-'}</td>
-            <td><a href="${x.link}" target="_blank">Link</a></td>
-            <td><button class="btn-hapus" onclick="window.hapusIklanHeaderGlobal('${id}')">✖</button></td>
-          </tr>`;
-        });
-        if(el) el.innerHTML = htmlList;
-        if(tb) tb.innerHTML = htmlTable;
-      } catch (error) {
-        console.error("Gagal memuat iklan:", error);
-      }
-    };
-
-    window.hapusIklanHeaderGlobal = async function(id) {
-      if (confirm("Hapus iklan ini?")) {
-        await deleteDoc(doc(db, "iklan_header", id));
-        muatDaftarIklanHeader();
-      }
-    };
-
-    // 9. IKLAN AFILIASI (FIRESTORE)
-    window.simpanAfiliasi = async function() {
-      let nama = document.getElementById('nama-afiliasi').value.trim();
-      let fileInput = document.getElementById('file-gambar-afiliasi');
-      let link = document.getElementById('link-afiliasi').value.trim();
-      
-      if (!nama || !link || !fileInput.files || fileInput.files.length === 0) {
-        alert('Nama, Link, dan Gambar wajib diisi!'); return;
-      }
-      
-      let reader = new FileReader();
-      reader.onload = async function(e) {
-        try {
-          await addDoc(collection(db, "afiliasi"), {
-            nama: nama,
-            gambar: e.target.result,
-            link: link,
-            createdAt: new Date()
-          });
-          alert('✅ Iklan afiliasi berhasil ditambahkan!');
-          document.getElementById('nama-afiliasi').value = '';
-          fileInput.value = '';
-          document.getElementById('link-afiliasi').value = '';
-          muatDaftarAfiliasi();
-        } catch (error) {
-          console.error("Gagal:", error);
-          alert("❌ Gagal menyimpan. Ukuran gambar mungkin > 1MB.");
-        }
-      };
-      reader.readAsDataURL(fileInput.files[0]);
-    };
-
-    window.muatDaftarAfiliasi = async function() {
-      try {
-        const querySnapshot = await getDocs(collection(db, "afiliasi"));
-        const wadah = document.getElementById('daftar-afiliasi');
-        if (!wadah) return;
-        
-        if (querySnapshot.empty) {
-          wadah.innerHTML = '<p style="color:#888;">Belum ada iklan afiliasi.</p>';
-          return;
-        }
-        
-        wadah.innerHTML = '';
-        querySnapshot.forEach((docSnap) => {
-          const x = docSnap.data();
-          const id = docSnap.id;
-          const div = document.createElement('div');
-          div.style.cssText = "display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; padding:10px; background:#f9f9f9; border:1px solid #ddd; border-radius:6px;";
-          div.innerHTML = `
-            <div style="display:flex; align-items:center; gap:12px;">
-              <img src="${x.gambar}" alt="${x.nama}" style="width:60px; height:60px; object-fit:cover; border-radius:4px; border:1px solid #ccc;">
-              <div>
-                <strong>${x.nama}</strong><br>
-                <small style="color:#555;">Link: <a href="${x.link}" target="_blank" style="color:#2980b9;">${x.link}</a></small>
-              </div>
-            </div>
-            <button onclick="window.hapusAfiliasiGlobal('${id}')" style="background:#e74c3c; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-weight:bold;">🗑️ Hapus</button>
-          `;
-          wadah.appendChild(div);
-        });
-      } catch (error) {
-        console.error("Gagal memuat afiliasi:", error);
-      }
-    };
-
-    window.hapusAfiliasiGlobal = async function(id) {
-      if (confirm("Hapus afiliasi ini?")) {
-        await deleteDoc(doc(db, "afiliasi", id));
-        muatDaftarAfiliasi();
-      }
-    };
-
-    // 10. INISIALISASI SAAT HALAMAN DIMUAT
-    document.addEventListener('DOMContentLoaded', function () {
-      muatSettingUtama();
-      perbaruiStatistik(0, 0, 0);
+    // --- INIT ---
+    document.addEventListener('DOMContentLoaded', () => {
+      window.muatSettingUtama();
+      window.muatDataRedaksi();
     });
   </script>
 </body>
+
 </html>

@@ -38,7 +38,7 @@
     <a href="#" class="menu-judul" style="font-weight:bold; margin-top:15px;">⚙️ Konfigurasi</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('setting-utama'); return false;">• Setting Utama</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('data-redaksi'); return false;">• Data Redaksi</a>
-    <a href="#" class="submenu" onclick="window.tampilHalaman('induk-organisasi'); return false;">• Induk Organisasi</a>   
+    <a href="#" class="submenu" onclick="window.tampilHalaman('induk-organisasi'); return false;">• Induk Organisasi</a>
     <a href="#" class="menu-judul" style="font-weight:bold; margin-top:15px;">📰 Data Berita</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('konten-berita'); return false;">• Konten Berita</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('arsip-berita'); return false;">• Arsip Berita</a>
@@ -73,9 +73,6 @@
         <label>Logo Website</label>
         <input type="file" id="logo-website" accept="image/*" onchange="window.pratinjauLogo(this)">
         <div id="pratinjau-logo" style="margin-top:10px;"></div>
-        <label>Foto Pemimpin Redaksi</label>
-<input type="file" id="foto-pemimpin-redaksi" accept="image/*" onchange="window.pratinjauFotoPemred(this)">
-<div id="pratinjau-foto-pemred" style="margin-top:10px;"></div>
         <button class="btn-utama" onclick="window.simpanSettingUtama()">💾 Simpan Setting Utama</button>
       </div>
     </div>
@@ -84,26 +81,18 @@
       <h3>👥 Data Redaksi</h3>
       <div class="card">
         <table>
-          <thead>
-            <tr>
-              <th style="width:50px;">No</th>
-              <th>Jabatan</th>
-              <th>Nama</th>
-              <th style="width:80px;">Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="isi-tabel-redaksi">
-            <tr><td colspan="4" style="text-align:center; color:#888;">Memuat data...</td></tr>
-          </tbody>
+          <thead><tr><th style="width:50px;">No</th><th>Jabatan</th><th>Nama</th><th style="width:80px;">Aksi</th></tr></thead>
+          <tbody id="isi-tabel-redaksi"><tr><td colspan="4" style="text-align:center; color:#888;">Memuat data...</td></tr></tbody>
         </table>
         <div style="margin-top:15px;">
           <button class="btn-utama" onclick="window.tambahBarisRedaksi()" style="background:#27ae60; margin-right:10px;">➕ Tambah Baris</button>
           <button class="btn-utama" onclick="window.simpanDataRedaksi()">💾 Simpan Data Redaksi</button>
-          <button class="btn-utama" onclick="window.muatDataRedaksi()" style="background:#7f8c8d; margin-left:10px;">🔄 Refresh</button>
         </div>
         <div id="status-redaksi" style="margin-top:10px; color:#27ae60; font-weight:bold;"></div>
       </div>
     </div>
+
+    <!-- INDUK ORGANISASI -->
     <div id="induk-organisasi" class="halaman">
       <h3>🏛️ Induk Organisasi</h3>
       <div class="card">
@@ -120,6 +109,7 @@
         <button class="btn-utama" onclick="window.simpanIndukOrganisasi()">💾 Simpan Data Induk Organisasi</button>
       </div>
     </div>
+
     <div id="konten-berita" class="halaman">
       <h3>📝 Konten Berita</h3>
       <div class="card">
@@ -143,16 +133,13 @@
           <label style="font-weight:normal;"><input type="checkbox" id="berita-utama" style="width:auto;"> ⭐ Berita Utama</label>
           <label style="font-weight:normal;"><input type="checkbox" id="tampilkan-berita" checked style="width:auto;"> 👁️ Tampilkan di Web</label>
         </div>
-        
         <div style="border:1px dashed #ccc; padding:10px; background:#f9f9f9; border-radius:4px; margin:10px 0;">
           <label>🖼️ Sisipkan Foto ke dalam Isi Berita</label>
           <input type="file" id="foto-berita" accept="image/*" onchange="window.sisipkanFotoBerita(this)">
           <small style="color:#e74c3c;">*Maksimal 500KB per gambar agar muat di database.</small>
         </div>
-
         <label>Isi Berita</label>
         <div id="isi-berita" contenteditable="true" style="min-height:250px; border:1px solid #ccc; padding:10px; background:#fff;"></div>
-        
         <button class="btn-utama" onclick="window.simpanBerita()">💾 Simpan Berita</button>
         <button class="btn-hapus" onclick="window.resetFormBerita()" style="margin-left:10px;">🔄 Reset Form</button>
       </div>
@@ -222,6 +209,7 @@
     let daftarRedaksi = [];
     let imgHeaderBase64 = "";
 
+    // --- NAVIGASI ---
     window.tampilHalaman = function(id) {
       document.querySelectorAll('.halaman').forEach(h => h.classList.remove('aktif'));
       const el = document.getElementById(id);
@@ -231,11 +219,11 @@
         if (id === 'iklan-header') window.muatDaftarIklanHeader();
         if (id === 'afiliasi') window.muatDaftarAfiliasi();
         if (id === 'data-redaksi') window.muatDataRedaksi();
-        if (id === 'induk-organisasi') window.muatIndukOrganisasi(); 
+        if (id === 'induk-organisasi') window.muatIndukOrganisasi();
       }
     };
 
-    // === 1. PRATINJAU LOGO ===
+    // --- SETTING UTAMA ---
     window.pratinjauLogo = function(input) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
@@ -244,24 +232,6 @@
       }
     };
 
-    // === 2. PRATINJAU FOTO PEMIMPIN REDAKSI ===
-    window.pratinjauFotoPemred = function(input) {
-      if (input.files && input.files[0]) {
-        if (input.files[0].size > 1000000) {
-          alert("⚠️ Ukuran foto terlalu besar! Maksimal 1MB.");
-          input.value = '';
-          return;
-        }
-        const reader = new FileReader();
-        reader.onload = e => {
-          document.getElementById('pratinjau-foto-pemred').innerHTML = 
-            `<img src="${e.target.result}" class="img-preview" style="max-width:150px;">`;
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
-    };
-
-    // === 3. SIMPAN SETTING UTAMA (Logo + Foto Pemred) ===
     window.simpanSettingUtama = async function() {
       const data = {
         namaAdmin: document.getElementById('nama-admin').value,
@@ -274,93 +244,46 @@
         ytLink: document.getElementById('yt-link').value,
         updatedAt: new Date()
       };
-
       const fileLogo = document.getElementById('logo-website').files[0];
-      const fileFotoPemred = document.getElementById('foto-pemimpin-redaksi').files[0];
-
-      // Jika tidak ada file baru, langsung simpan data teks saja
-      if (!fileLogo && !fileFotoPemred) {
-        try {
-          await setDoc(doc(db, "pengaturan", "utama"), data, { merge: true });
-          alert("✅ Setting Utama tersimpan!");
-        } catch (error) {
-          alert("❌ Gagal menyimpan: " + error.message);
-        }
-        return;
-      }
-
-      // Proses file yang diupload
-      try {
-        if (fileLogo) {
-          if (fileLogo.size > 1000000) { alert("Logo maksimal 1MB!"); return; }
-          data.logoWebsite = await fileToBase64(fileLogo);
-        }
-        if (fileFotoPemred) {
-          if (fileFotoPemred.size > 1000000) { alert("Foto Pemred maksimal 1MB!"); return; }
-          data.fotoPemimpinRedaksi = await fileToBase64(fileFotoPemred);
-        }
-
-        await setDoc(doc(db, "pengaturan", "utama"), data, { merge: true });
-        alert("✅ Setting Utama, Logo & Foto Pemimpin Redaksi tersimpan!");
-        
-        // Update tampilan pratinjau setelah simpan
-        if (data.logoWebsite) {
-          document.getElementById('pratinjau-logo').innerHTML = `<img src="${data.logoWebsite}" class="img-preview">`;
-        }
-        if (data.fotoPemimpinRedaksi) {
-          document.getElementById('pratinjau-foto-pemred').innerHTML = `<img src="${data.fotoPemimpinRedaksi}" class="img-preview" style="max-width:150px;">`;
-        }
-      } catch (error) {
-        alert("❌ Gagal menyimpan: " + error.message);
-      }
-    };
-
-    // === HELPER: Ubah File menjadi Base64 ===
-    function fileToBase64(file) {
-      return new Promise((resolve, reject) => {
+      if (fileLogo) {
+        if (fileLogo.size > 1000000) { alert("Logo maksimal 1MB!"); return; }
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // === 4. MUAT SETTING UTAMA SAAT HALAMAN DIBUKA ===
-    window.muatSettingUtama = async function() {
-      try {
-        const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
-        if (docSnap.exists()) {
-          const d = docSnap.data();
-          document.getElementById('nama-admin').value = d.namaAdmin || '';
-          document.getElementById('nama-perusahaan').value = d.namaPerusahaan || '';
-          document.getElementById('alamat-perusahaan').value = d.alamatPerusahaan || '';
-          document.getElementById('telp').value = d.telp || '';
-          document.getElementById('email-kontak').value = d.emailKontak || '';
-          document.getElementById('fb-link').value = d.fbLink || '';
-          document.getElementById('ig-link').value = d.igLink || '';
-          document.getElementById('yt-link').value = d.ytLink || '';
-          
-          if (d.logoWebsite) {
-            document.getElementById('pratinjau-logo').innerHTML = `<img src="${d.logoWebsite}" class="img-preview">`;
-          }
-          
-          if (d.fotoPemimpinRedaksi) {
-            document.getElementById('pratinjau-foto-pemred').innerHTML = `<img src="${d.fotoPemimpinRedaksi}" class="img-preview" style="max-width:150px;">`;
-          }
-        }
-      } catch (error) {
-        console.error("Gagal memuat setting:", error);
+        reader.onload = async function(e) {
+          data.logoWebsite = e.target.result;
+          await setDoc(doc(db, "pengaturan", "utama"), data, { merge: true });
+          alert("✅ Setting & Logo tersimpan!");
+        };
+        reader.readAsDataURL(fileLogo);
+      } else {
+        await setDoc(doc(db, "pengaturan", "utama"), data, { merge: true });
+        alert("✅ Setting tersimpan!");
       }
     };
+
+    window.muatSettingUtama = async function() {
+      const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
+      if (docSnap.exists()) {
+        const d = docSnap.data();
+        document.getElementById('nama-admin').value = d.namaAdmin || '';
+        document.getElementById('nama-perusahaan').value = d.namaPerusahaan || '';
+        document.getElementById('alamat-perusahaan').value = d.alamatPerusahaan || '';
+        document.getElementById('telp').value = d.telp || '';
+        document.getElementById('email-kontak').value = d.emailKontak || '';
+        document.getElementById('fb-link').value = d.fbLink || '';
+        document.getElementById('ig-link').value = d.igLink || '';
+        document.getElementById('yt-link').value = d.ytLink || '';
+        if (d.logoWebsite) document.getElementById('pratinjau-logo').innerHTML = `<img src="${d.logoWebsite}" class="img-preview">`;
+      }
+    };
+
+    // --- DATA REDAKSI ---
     window.tampilTabelRedaksi = function() {
       const tb = document.getElementById('isi-tabel-redaksi');
       if (!tb) return;
-      
       if (daftarRedaksi.length === 0) {
-        tb.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#888;">Belum ada data redaksi. Klik "Tambah Baris" untuk memulai.</td></tr>';
+        tb.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#888;">Belum ada data redaksi.</td></tr>';
         return;
       }
-      
       let html = '';
       daftarRedaksi.forEach((r, i) => {
         html += `<tr>
@@ -372,45 +295,24 @@
       });
       tb.innerHTML = html;
     };
-
-    window.updateRedaksi = function(index, field, value) {
-      if (daftarRedaksi[index]) {
-        daftarRedaksi[index][field] = value;
-      }
-    };
-
-    window.tambahBarisRedaksi = function() {
-      daftarRedaksi.push({ jabatan: '', nama: '' });
-      window.tampilTabelRedaksi();
+    window.updateRedaksi = function(index, field, value) { if (daftarRedaksi[index]) daftarRedaksi[index][field] = value; };
+    window.tambahBarisRedaksi = function() { 
+      daftarRedaksi.push({ jabatan: '', nama: '' }); 
+      window.tampilTabelRedaksi(); 
       const statusEl = document.getElementById('status-redaksi');
       if (statusEl) statusEl.innerText = "✅ Baris baru ditambahkan. Jangan lupa klik Simpan!";
     };
-
-    window.hapusBarisRedaksi = function(i) {
-      if (confirm("Hapus baris ini?")) {
-        daftarRedaksi.splice(i, 1);
-        window.tampilTabelRedaksi();
-      }
-    };
-
+    window.hapusBarisRedaksi = function(i) { if (confirm("Hapus baris ini?")) { daftarRedaksi.splice(i, 1); window.tampilTabelRedaksi(); } };
+    
     window.simpanDataRedaksi = async function() {
       const statusEl = document.getElementById('status-redaksi');
       try {
-        await setDoc(doc(db, "pengaturan", "redaksi"), { 
-          anggota: daftarRedaksi, 
-          updatedAt: new Date() 
-        });
-        if (statusEl) {
-          statusEl.innerText = "✅ Data Redaksi Tersimpan di Firebase!";
-          statusEl.style.color = "#27ae60";
-        }
+        await setDoc(doc(db, "pengaturan", "redaksi"), { anggota: daftarRedaksi, updatedAt: new Date() });
+        if (statusEl) { statusEl.innerText = "✅ Data Redaksi Tersimpan di Firebase!"; statusEl.style.color = "#27ae60"; }
         alert("✅ Data Redaksi Tersimpan!");
       } catch (error) {
         console.error("Gagal simpan redaksi:", error);
-        if (statusEl) {
-          statusEl.innerText = "❌ Gagal menyimpan: " + error.message;
-          statusEl.style.color = "#e74c3c";
-        }
+        if (statusEl) { statusEl.innerText = "❌ Gagal menyimpan: " + error.message; statusEl.style.color = "#e74c3c"; }
         alert("❌ Gagal menyimpan: " + error.message);
       }
     };
@@ -421,74 +323,59 @@
         const docSnap = await getDoc(doc(db, "pengaturan", "redaksi"));
         if (docSnap.exists() && docSnap.data().anggota) {
           daftarRedaksi = docSnap.data().anggota;
-          if (statusEl) {
-            statusEl.innerText = `✅ Berhasil memuat ${daftarRedaksi.length} data redaksi.`;
-            statusEl.style.color = "#27ae60";
-          }
+          if (statusEl) { statusEl.innerText = `✅ Berhasil memuat ${daftarRedaksi.length} data redaksi.`; statusEl.style.color = "#27ae60"; }
         } else {
           daftarRedaksi = [];
-          if (statusEl) {
-            statusEl.innerText = "ℹ️ Belum ada data redaksi di database.";
-            statusEl.style.color = "#7f8c8d";
-          }
-        };
-        
-    // 1. Pratinjau Logo Organisasi     
+          if (statusEl) { statusEl.innerText = "ℹ️ Belum ada data redaksi di database."; statusEl.style.color = "#7f8c8d"; }
+        }
+        window.tampilTabelRedaksi();
+      } catch (error) {
+        console.error("Gagal muat redaksi:", error);
+        if (statusEl) { statusEl.innerText = "❌ Gagal memuat: " + error.message; statusEl.style.color = "#e74c3c"; }
+      }
+    };
+
+    // --- INDUK ORGANISASI ---
     window.pratinjauLogoOrganisasi = function(input) {
       if (input.files && input.files[0]) {
-        if (input.files[0].size > 1000000) {
-          alert("⚠️ Ukuran logo terlalu besar! Maksimal 1MB.");
-          input.value = '';
-          return;
-        }
+        if (input.files[0].size > 1000000) { alert("⚠️ Ukuran logo terlalu besar! Maksimal 1MB."); input.value = ''; return; }
         const reader = new FileReader();
         reader.onload = e => {
-          document.getElementById('pratinjau-logo-organisasi').innerHTML = 
-            `<img src="${e.target.result}" class="img-preview" style="max-width:150px;">`;
+          document.getElementById('pratinjau-logo-organisasi').innerHTML = `<img src="${e.target.result}" class="img-preview" style="max-width:150px;">`;
         };
         reader.readAsDataURL(input.files[0]);
       }
     };
 
-    // 2. Simpan Data ke Firebase
     window.simpanIndukOrganisasi = async function() {
       const nama = document.getElementById('nama-organisasi').value;
       const keterangan = document.getElementById('keterangan-organisasi').value;
       const fileLogo = document.getElementById('logo-organisasi').files[0];
 
-      if (!nama) {
-        alert("⚠️ Nama Induk Organisasi wajib diisi!");
-        return;
-      }
+      if (!nama) { alert("⚠️ Nama Induk Organisasi wajib diisi!"); return; }
 
-      const data = {
-        nama: nama,
-        keterangan: keterangan,
-        updatedAt: new Date()
-      };
+      const data = { nama: nama, keterangan: keterangan, updatedAt: new Date() };
 
       try {
-        // Jika ada file logo baru, ubah ke base64 dulu
         if (fileLogo) {
-          data.logo = await fileToBase64(fileLogo); // Menggunakan helper fileToBase64 yang sudah ada
+          if (fileLogo.size > 1000000) { alert("Logo maksimal 1MB!"); return; }
+          const base64 = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(fileLogo);
+          });
+          data.logo = base64;
         }
-
-        // Simpan ke koleksi 'pengaturan', dokumen 'induk_organisasi'
         await setDoc(doc(db, "pengaturan", "induk_organisasi"), data, { merge: true });
         alert("✅ Data Induk Organisasi berhasil disimpan!");
-        
-        // Update pratinjau jika ada logo baru
-        if (data.logo) {
-          document.getElementById('pratinjau-logo-organisasi').innerHTML = 
-            `<img src="${data.logo}" class="img-preview" style="max-width:150px;">`;
-        }
+        window.muatIndukOrganisasi();
       } catch (error) {
         console.error("Gagal menyimpan:", error);
         alert("❌ Gagal menyimpan data: " + error.message);
       }
     };
 
-    // 3. Muat Data dari Firebase saat halaman dibuka
     window.muatIndukOrganisasi = async function() {
       try {
         const docSnap = await getDoc(doc(db, "pengaturan", "induk_organisasi"));
@@ -496,27 +383,18 @@
           const d = docSnap.data();
           document.getElementById('nama-organisasi').value = d.nama || '';
           document.getElementById('keterangan-organisasi').value = d.keterangan || '';
-          
           if (d.logo) {
-            document.getElementById('pratinjau-logo-organisasi').innerHTML = 
-              `<img src="${d.logo}" class="img-preview" style="max-width:150px;">`;
+            document.getElementById('pratinjau-logo-organisasi').innerHTML = `<img src="${d.logo}" class="img-preview" style="max-width:150px;">`;
+          } else {
+            document.getElementById('pratinjau-logo-organisasi').innerHTML = '';
           }
         }
       } catch (error) {
         console.error("Gagal memuat data induk organisasi:", error);
       }
     };
-     
-        window.tampilTabelRedaksi();
-      } catch (error) {
-        console.error("Gagal muat redaksi:", error);
-        if (statusEl) {
-          statusEl.innerText = "❌ Gagal memuat: " + error.message;
-          statusEl.style.color = "#e74c3c";
-        }
-      }
-    };
 
+    // --- BERITA ---
     window.sisipkanFotoBerita = function(input) {
       if (!input.files[0]) return;
       if (input.files[0].size > 500000) { alert("Gambar maksimal 500KB!"); input.value = ''; return; }
@@ -532,22 +410,17 @@
     window.simpanBerita = async function() {
       const judul = document.getElementById('judul-berita').value.trim();
       if (!judul) { alert("Judul wajib diisi!"); return; }
-      
       const kategori = Array.from(document.getElementById('kategori-berita').selectedOptions).map(o => o.value);
       const data = {
-        judul,
-        urlSlug: judul.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        kategori,
+        judul, urlSlug: judul.toLowerCase().replace(/[^a-z0-9]+/g, '-'), kategori,
         tglPublish: document.getElementById('tgl-publish').value,
         jamPublish: document.getElementById('jam-publish').value,
         metaKataKunci: document.getElementById('meta-kata-kunci').value,
         beritaUtama: document.getElementById('berita-utama').checked,
         tampilkanDiWeb: document.getElementById('tampilkan-berita').checked,
         isiBerita: document.getElementById('isi-berita').innerHTML,
-        viewer: 0,
-        updatedAt: new Date()
+        viewer: 0, updatedAt: new Date()
       };
-
       try {
         if (sedangEdit && idBeritaDiedit) {
           await updateDoc(doc(db, "berita", idBeritaDiedit), data);
@@ -558,23 +431,15 @@
           alert("✅ Berita Disimpan!");
         }
         window.resetFormBerita();
-      } catch (e) {
-        alert("❌ Gagal menyimpan: " + e.message);
-      }
+      } catch (e) { alert("❌ Gagal menyimpan: " + e.message); }
     };
 
     window.muatArsipBerita = async function() {
       const tb = document.getElementById('daftar-arsip-berita');
       tb.innerHTML = '<tr><td colspan="7" style="text-align:center;">Memuat...</td></tr>';
-      
       try {
         const snap = await getDocs(collection(db, "berita"));
-        
-        if (snap.empty) { 
-          tb.innerHTML = '<tr><td colspan="7" style="text-align:center;">Belum ada berita.</td></tr>'; 
-          return; 
-        }
-
+        if (snap.empty) { tb.innerHTML = '<tr><td colspan="7" style="text-align:center;">Belum ada berita.</td></tr>'; return; }
         let html = '', i = 1, total = 0, pub = 0, unpub = 0;
         snap.forEach(d => {
           const b = d.data(); const id = d.id;
@@ -613,19 +478,14 @@
       document.getElementById('berita-utama').checked = b.beritaUtama || false;
       document.getElementById('tampilkan-berita').checked = b.tampilkanDiWeb !== false;
       document.getElementById('isi-berita').innerHTML = b.isiBerita || '';
-      
       const select = document.getElementById('kategori-berita');
       Array.from(select.options).forEach(opt => { opt.selected = (b.kategori && b.kategori.includes(opt.value)); });
-      
       window.tampilHalaman('konten-berita');
       alert("Mode Edit Aktif. Ubah data lalu klik Simpan.");
     };
 
     window.hapusBeritaGlobal = async function(id) {
-      if (confirm("Hapus berita ini?")) {
-        await deleteDoc(doc(db, "berita", id));
-        window.muatArsipBerita();
-      }
+      if (confirm("Hapus berita ini?")) { await deleteDoc(doc(db, "berita", id)); window.muatArsipBerita(); }
     };
 
     window.resetFormBerita = function() {
@@ -640,6 +500,7 @@
       document.getElementById('isi-berita').innerHTML = '';
     };
 
+    // --- IKLAN ---
     window.pratinjauIklanHeader = function(input) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
@@ -683,7 +544,6 @@
       const file = document.getElementById('file-gambar-afiliasi').files[0];
       if (!nama || !link || !file) { alert("Lengkapi semua data!"); return; }
       if (file.size > 500000) { alert("Gambar maksimal 500KB!"); return; }
-      
       const reader = new FileReader();
       reader.onload = async function(e) {
         await addDoc(collection(db, "afiliasi"), { nama, link, gambar: e.target.result, createdAt: new Date() });
@@ -720,11 +580,11 @@
       }
     };
 
+    // --- INIT ---
     document.addEventListener('DOMContentLoaded', () => {
       console.log("Admin panel dimuat. Memulai inisialisasi...");
       window.muatSettingUtama();
       window.muatDataRedaksi();
-      window.muatIndukOrganisasi();
     });
   </script>
 </body>

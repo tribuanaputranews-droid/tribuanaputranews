@@ -510,9 +510,12 @@
 
         window.muatPengaturanAdmin = async function() {
             try {
-                const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
-                if (docSnap.exists()) {
-                    let d = docSnap.data();
+                // Muat data Setting Utama (Logo Website + Foto Pemimpin Redaksi)
+                const docSnapUtama = await getDoc(doc(db, "pengaturan", "utama"));
+                if (docSnapUtama.exists()) {
+                    const d = docSnapUtama.data();
+                    
+                    // Tampilkan Foto Pemimpin Redaksi
                     let htmlPemred = '';
                     if (d.fotoPemimpinRedaksi) {
                         htmlPemred += `<img src="${d.fotoPemimpinRedaksi}" style="max-width:150px; border-radius:8px; margin-bottom:10px; box-shadow:0 2px 4px rgba(0,0,0,0.1);"><br>`;
@@ -523,11 +526,27 @@
                     if (htmlPemred) {
                         document.getElementById('pemimpin-redaksi').innerHTML = htmlPemred;
                     }
+                    
+                    // Tampilkan Logo Website
                     if (d.logoWebsite) {
                         document.getElementById('logo-website').src = d.logoWebsite;
                     }
                 }
-            } catch (e) { console.error("Gagal muat pengaturan:", e); }
+
+                // Muat Logo Induk Organisasi
+                const docSnapOrg = await getDoc(doc(db, "pengaturan", "induk_organisasi"));
+                if (docSnapOrg.exists()) {
+                    const dOrg = docSnapOrg.data();
+                    if (dOrg.logo) {
+                        const elOrg = document.getElementById('logo-induk-organisasi');
+                        if (elOrg) {
+                            elOrg.innerHTML = `<img src="${dOrg.logo}" style="max-width:100%; height:auto; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.1);" alt="Logo Induk Organisasi">`;
+                        }
+                    }
+                }
+            } catch (e) { 
+                console.error("Gagal muat pengaturan:", e); 
+            }
         };
         window.muatLogoOrganisasi = async function() {
             try {

@@ -590,13 +590,32 @@
             let judul = "";
             let konten = "<p style='text-align:center; padding:20px; color:#888;'>Memuat data...</p>";
 
-            if (jenis === 'tentang') {
-                judul = "Tentang Perusahaan";
-                konten = "<p style='color:#888;'>Silakan lengkapi data ini melalui Panel Admin.</p>";
-            } 
+
             else if (jenis === 'redaksi') {
                 judul = "Data Redaksi";
+                try {            if (jenis === 'tentang') {
+                judul = "Tentang Perusahaan";
                 try {
+                    const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
+                    if (docSnap.exists()) {
+                        const d = docSnap.data();
+                        const uraian = d.uraianTentangPerusahaan || '';
+                        
+                        if (uraian.trim() !== '') {
+                            // Konversi baris baru menjadi <br> agar tampil rapi
+                            const uraianFormatted = uraian.replace(/\n/g, '<br>');
+                            konten = `<div style="line-height:1.8; color:#333; text-align:justify;">${uraianFormatted}</div>`;
+                        } else {
+                            konten = "<p style='text-align:center; color:#888;'>Uraian tentang perusahaan belum diisi. Silakan lengkapi melalui Panel Admin.</p>";
+                        }
+                    } else {
+                        konten = "<p style='text-align:center; color:#888;'>Data perusahaan belum tersedia.</p>";
+                    }
+                } catch (error) {
+                    console.error("Gagal memuat uraian perusahaan:", error);
+                    konten = "<p style='text-align:center; color:red;'>Gagal memuat data. Silakan refresh halaman.</p>";
+                }
+            }
                     const docSnap = await getDoc(doc(db, "pengaturan", "redaksi"));
                     if (docSnap.exists() && docSnap.data().anggota && docSnap.data().anggota.length > 0) {
                         let anggota = docSnap.data().anggota;

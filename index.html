@@ -529,7 +529,22 @@
                 }
             } catch (e) { console.error("Gagal muat pengaturan:", e); }
         };
-
+        window.muatLogoOrganisasi = async function() {
+            try {
+                const docSnap = await getDoc(doc(db, "pengaturan", "induk_organisasi"));
+                if (docSnap.exists()) {
+                    const d = docSnap.data();
+                    if (d.logo) {
+                        const elOrg = document.getElementById('logo-induk-organisasi');
+                        if (elOrg) {
+                            elOrg.innerHTML = `<img src="${d.logo}" style="max-width:100%; height:auto; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.1);" alt="Logo Induk Organisasi">`;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Gagal memuat logo organisasi:", e);
+            }
+        };
         window.muatDataFooter = async function() {
             try {
                 const docSnap = await getDoc(doc(db, "pengaturan", "utama"));

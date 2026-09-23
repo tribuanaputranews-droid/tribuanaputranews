@@ -270,7 +270,9 @@
             </ul>
         </nav>
         <div class="running">
-            <marquee onmouseover="this.stop();" onmouseout="this.start();"><span id="teks-pengumuman">📢 Selamat datang di Tribuana Putra News</span></marquee>
+            <marquee onmouseover="this.stop();" onmouseout="this.start();" id="marquee-pengumuman">
+                <span style="color:#fff;">📢 Selamat datang di Tribuana Putra News</span>
+            </marquee>
         </div>
     </div>
     <div class="container">
@@ -896,11 +898,46 @@
                 } catch (e) { alert("Gagal memuat data."); }
             } else if (pwd !== null) { alert("❌ Password Salah!"); }
         };
+        window.muatRunningText = async function() {
+            try {
+                const docSnap = await getDoc(doc(db, "pengaturan", "running_text"));
+                const marqueeEl = document.getElementById('marquee-pengumuman');
+                if (!marqueeEl) return;
+
+                if (docSnap.exists() && docSnap.data().daftar && docSnap.data().daftar.length > 0) {
+                    const daftar = docSnap.data().daftar;
+                    let itemTeks = [];
+                    
+                    daftar.forEach(item => {
+                        let teks = item.teks ? item.teks.trim() : '';
+                        let link = item.link ? item.link.trim() : '';
+                        
+                        if (teks) {
+                            // Jika ada link dan valid (dimulai dengan http), buat menjadi <a>
+                            if (link && (link.startsWith('http://') || link.startsWith('https://'))) {
+                                itemTeks.push(`<a href="${link}" target="_blank" style="color: inherit; text-decoration: none; display: inline-block; padding: 0 15px; font-weight:bold;">${teks}</a>`);
+                            } else {
+                                // Jika tidak ada link, tampilkan sebagai teks biasa
+                                itemTeks.push(`<span style="display: inline-block; padding: 0 15px;">${teks}</span>`);
+                            }
+                        }
+                    });
+
+                    if (itemTeks.length > 0) {
+                        // Gabungkan dengan pemisah "✦"
+                        marqueeEl.innerHTML = itemTeks.join('<span style="color: rgba(255,255,255,0.6); padding: 0 10px;">✦</span>');
+                    }
+                }
+            } catch (error) {
+                console.error("Gagal memuat running text:", error);
+            }
+        };
         document.addEventListener('DOMContentLoaded', () => {
             window.muatBerita();
             window.muatPengaturanAdmin();
             window.muatLogoOrganisasi(); 
             window.muatIklanHeaderWeb();
+            window.muatRunningText();
             window.muatIklanSampingWeb();
             window.muatAfiliasiWeb();
             window.muatDataFooter();

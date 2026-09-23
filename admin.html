@@ -49,6 +49,7 @@
   </div>
 
   <div class="content">
+    <!-- DASHBOARD -->
     <div id="beranda" class="halaman aktif">
       <h2>Hai, Administrator 👋</h2>
       <p>Selamat datang di Panel Admin Tribuana Putra News.</p>
@@ -59,6 +60,7 @@
       </div>
     </div>
 
+    <!-- SETTING UTAMA -->
     <div id="setting-utama" class="halaman">
       <h3>⚙️ Setting Utama</h3>
       <div class="card">
@@ -70,13 +72,20 @@
         <label>Link Facebook</label><input type="url" id="fb-link">
         <label>Link Instagram</label><input type="url" id="ig-link">
         <label>Link Youtube</label><input type="url" id="yt-link">
+        
         <label>Logo Website</label>
         <input type="file" id="logo-website" accept="image/*" onchange="window.pratinjauLogo(this)">
         <div id="pratinjau-logo" style="margin-top:10px;"></div>
+
+        <label style="margin-top:20px;">Foto Pemimpin Redaksi</label>
+        <input type="file" id="foto-pemimpin-redaksi" accept="image/*" onchange="window.pratinjauFotoPemred(this)">
+        <div id="pratinjau-foto-pemred" style="margin-top:10px;"></div>
+
         <button class="btn-utama" onclick="window.simpanSettingUtama()">💾 Simpan Setting Utama</button>
       </div>
     </div>
 
+    <!-- DATA REDAKSI -->
     <div id="data-redaksi" class="halaman">
       <h3>👥 Data Redaksi</h3>
       <div class="card">
@@ -98,18 +107,16 @@
       <div class="card">
         <label>Nama Induk Organisasi</label>
         <input type="text" id="nama-organisasi" placeholder="Contoh: Persatuan Wartawan Indonesia (PWI)">
-        
         <label>Logo Organisasi</label>
         <input type="file" id="logo-organisasi" accept="image/*" onchange="window.pratinjauLogoOrganisasi(this)">
         <div id="pratinjau-logo-organisasi" style="margin-top:10px;"></div>
-        
         <label>Keterangan / Sejarah Singkat</label>
-        <textarea id="keterangan-organisasi" rows="6" placeholder="Tuliskan keterangan atau sejarah singkat induk organisasi..." style="width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:4px;"></textarea>
-        
+        <textarea id="keterangan-organisasi" rows="6" placeholder="Tuliskan keterangan atau sejarah singkat..." style="width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:4px;"></textarea>
         <button class="btn-utama" onclick="window.simpanIndukOrganisasi()">💾 Simpan Data Induk Organisasi</button>
       </div>
     </div>
 
+    <!-- KONTEN BERITA -->
     <div id="konten-berita" class="halaman">
       <h3>📝 Konten Berita</h3>
       <div class="card">
@@ -145,6 +152,7 @@
       </div>
     </div>
 
+    <!-- ARSIP BERITA -->
     <div id="arsip-berita" class="halaman">
       <h3>📂 Arsip Berita</h3>
       <div class="card">
@@ -155,6 +163,7 @@
       </div>
     </div>
 
+    <!-- IKLAN HEADER -->
     <div id="iklan-header" class="halaman">
       <h3>📢 Iklan Header</h3>
       <div class="card">
@@ -174,6 +183,7 @@
       </div>
     </div>
 
+    <!-- AFILIASI -->
     <div id="afiliasi" class="halaman">
       <h3>🔗 Iklan Afiliasi</h3>
       <div class="card">
@@ -188,7 +198,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCc1rUgdchrZ8vxk3HF6-yQKMZze-dNwzE",
@@ -215,6 +225,7 @@
       const el = document.getElementById(id);
       if (el) {
         el.classList.add('aktif');
+        if (id === 'beranda') window.muatStatistikDashboard();
         if (id === 'arsip-berita') window.muatArsipBerita();
         if (id === 'iklan-header') window.muatDaftarIklanHeader();
         if (id === 'afiliasi') window.muatDaftarAfiliasi();
@@ -223,11 +234,38 @@
       }
     };
 
-    // --- SETTING UTAMA ---
+    // --- STATISTIK DASHBOARD ---
+    window.muatStatistikDashboard = async function() {
+      try {
+        const snap = await getDocs(collection(db, "berita"));
+        let total = 0, pub = 0, unpub = 0;
+        snap.forEach(d => {
+          const b = d.data();
+          total++;
+          if (b.tampilkanDiWeb) pub++; else unpub++;
+        });
+        document.getElementById('total-berita').innerText = total;
+        document.getElementById('berita-publish').innerText = pub;
+        document.getElementById('berita-unpublish').innerText = unpub;
+      } catch (error) {
+        console.error("Gagal muat statistik:", error);
+      }
+    };
+
+    // --- SETTING UTAMA (Logo + Foto Pemred) ---
     window.pratinjauLogo = function(input) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = e => document.getElementById('pratinjau-logo').innerHTML = `<img src="${e.target.result}" class="img-preview">`;
+        reader.readAsDataURL(input.files[0]);
+      }
+    };
+
+    window.pratinjauFotoPemred = function(input) {
+      if (input.files && input.files[0]) {
+        if (input.files[0].size > 1000000) { alert("⚠️ Ukuran foto terlalu besar! Maksimal 1MB."); input.value = ''; return; }
+        const reader = new FileReader();
+        reader.onload = e => document.getElementById('pratinjau-foto-pemred').innerHTML = `<img src="${e.target.result}" class="img-preview" style="max-width:150px;">`;
         reader.readAsDataURL(input.files[0]);
       }
     };
@@ -244,19 +282,29 @@
         ytLink: document.getElementById('yt-link').value,
         updatedAt: new Date()
       };
+
       const fileLogo = document.getElementById('logo-website').files[0];
-      if (fileLogo) {
-        if (fileLogo.size > 1000000) { alert("Logo maksimal 1MB!"); return; }
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-          data.logoWebsite = e.target.result;
-          await setDoc(doc(db, "pengaturan", "utama"), data, { merge: true });
-          alert("✅ Setting & Logo tersimpan!");
-        };
-        reader.readAsDataURL(fileLogo);
-      } else {
+      const fileFoto = document.getElementById('foto-pemimpin-redaksi').files[0];
+
+      try {
+        if (fileLogo) {
+          if (fileLogo.size > 1000000) { alert("Logo maksimal 1MB!"); return; }
+          data.logoWebsite = await new Promise((resolve, reject) => {
+            const r = new FileReader(); r.onload = () => resolve(r.result); r.onerror = reject; r.readAsDataURL(fileLogo);
+          });
+        }
+        if (fileFoto) {
+          if (fileFoto.size > 1000000) { alert("Foto Pemred maksimal 1MB!"); return; }
+          data.fotoPemimpinRedaksi = await new Promise((resolve, reject) => {
+            const r = new FileReader(); r.onload = () => resolve(r.result); r.onerror = reject; r.readAsDataURL(fileFoto);
+          });
+        }
+
         await setDoc(doc(db, "pengaturan", "utama"), data, { merge: true });
-        alert("✅ Setting tersimpan!");
+        alert("✅ Setting Utama, Logo & Foto Pemred tersimpan!");
+        window.muatSettingUtama(); // Refresh tampilan
+      } catch (error) {
+        alert("❌ Gagal menyimpan: " + error.message);
       }
     };
 
@@ -273,6 +321,7 @@
         document.getElementById('ig-link').value = d.igLink || '';
         document.getElementById('yt-link').value = d.ytLink || '';
         if (d.logoWebsite) document.getElementById('pratinjau-logo').innerHTML = `<img src="${d.logoWebsite}" class="img-preview">`;
+        if (d.fotoPemimpinRedaksi) document.getElementById('pratinjau-foto-pemred').innerHTML = `<img src="${d.fotoPemimpinRedaksi}" class="img-preview" style="max-width:150px;">`;
       }
     };
 
@@ -457,6 +506,7 @@
           </tr>`;
         });
         tb.innerHTML = html;
+        // Update dashboard stats juga saat arsip dimuat
         document.getElementById('total-berita').innerText = total;
         document.getElementById('berita-publish').innerText = pub;
         document.getElementById('berita-unpublish').innerText = unpub;
@@ -585,6 +635,7 @@
       console.log("Admin panel dimuat. Memulai inisialisasi...");
       window.muatSettingUtama();
       window.muatDataRedaksi();
+      window.muatStatistikDashboard(); // <-- INI YANG MEMPERBAIKI DASHBOARD
     });
   </script>
 </body>

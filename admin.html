@@ -556,7 +556,6 @@
     };
     // === FUNGSI LIHAT BERITA & DOWNLOAD PDF ===
     let dataBeritaAktif = null;
-
     window.lihatBeritaPDF = async function(id) {
       try {
         const snap = await getDoc(doc(db, "berita", id));
@@ -565,28 +564,43 @@
         dataBeritaAktif = snap.data();
         const b = dataBeritaAktif;
         
-        // Tampilkan Judul
+        // 1. Tampilkan Judul
         document.getElementById('detail-judul-berita').innerText = b.judul || 'Tanpa Judul';
         
-        // Tampilkan Meta (Tanggal, Kategori, Viewer)
+        // 2. Tampilkan Meta (Tanggal, Kategori, Viewer)
         let kategori = Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || '-');
         let meta = `📅 Dipublish: ${b.tglPublish || '-'} ${b.jamPublish || ''} | 📂 Kategori: ${kategori} | 👁️ Dibaca: ${b.viewer || 0} kali`;
         document.getElementById('detail-meta-berita').innerText = meta;
         
-        // Tampilkan Gambar Utama (ambil dari isi berita)
+        // 3. Tampilkan Gambar Utama & BERSIHKAN dari isi berita agar tidak dobel
         let gambarHTML = '';
+        let isiBersih = b.isiBerita || '<p style="color:#888;">Isi berita kosong.</p>';
+        
         if (b.isiBerita) {
-          let match = b.isiBerita.match(/<img[^>]+src="([^">]+)"/);
-          if (match && match[1]) {
-            gambarHTML = `<img src="${match[1]}" style="max-width:100%; height:auto; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">`;
+          // Cari seluruh tag <img ... > pertama
+          let match = b.isiBerita.match(/<img[^>]*src="[^"]*"[^>]*>/i);
+          
+          if (match && match[0]) {
+            // Ambil URL gambar untuk ditampilkan di atas
+            let urlMatch = match[0].match(/src="([^"]+)"/);
+            if (urlMatch && urlMatch[1]) {
+              gambarHTML = `<img src="${urlMatch[1]}" style="max-width:100%; height:auto; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.1); margin-bottom:15px;">`;
+            }
+            
+            // HAPUS tag <img> pertama tersebut dari isi berita agar tidak tampil dobel
+            isiBersih = b.isiBerita.replace(/<img[^>]*src="[^"]*"[^>]*>/i, '');
+            
+            // Opsional: Bersihkan tag <p> atau <div> kosong yang mungkin tertinggal setelah gambar dihapus
+            isiBersih = isiBersih.replace(/<p>\s*<\/p>/gi, '').replace(/<div>\s*<\/div>/gi, '');
           }
         }
+        
         document.getElementById('detail-gambar-berita').innerHTML = gambarHTML;
         
-        // Tampilkan Isi Berita
-        document.getElementById('detail-isi-berita').innerHTML = b.isiBerita || '<p style="color:#888;">Isi berita kosong.</p>';
+        // 4. Tampilkan Isi Berita yang sudah dibersihkan
+        document.getElementById('detail-isi-berita').innerHTML = isiBersih;
         
-        // Tampilkan Modal
+        // 5. Tampilkan Modal
         document.getElementById('modal-lihat-berita').style.display = 'block';
         document.body.style.overflow = 'hidden'; // Cegah scroll di belakang modal
       } catch (error) {

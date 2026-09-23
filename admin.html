@@ -79,6 +79,9 @@
         <label style="margin-top:20px;">📝 Uraian Tentang Perusahaan</label>
         <textarea id="uraian-tentang-perusahaan" rows="8" placeholder="Tuliskan profil singkat, sejarah, atau visi-misi perusahaan Anda di sini..." style="width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:4px; font-family:Arial; line-height:1.6;"></textarea>
         <small style="color:#666;">*Teks ini akan tampil di halaman "Tentang Perusahaan" pada website.</small>
+        <label style="margin-top:20px;">📜 Pedoman Media Siber</label>
+        <textarea id="pedoman-media-siber" rows="10" placeholder="Tuliskan pedoman pemberitaan media siber Anda di sini (sesuai UU Pers & Kode Etik Jurnalistik)..." style="width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:4px; font-family:Arial; line-height:1.6;"></textarea>
+        <small style="color:#666;">*Teks ini akan tampil di halaman "Pedoman Media Siber" pada website.</small>
         <button class="btn-utama" onclick="window.simpanSettingUtama()">💾 Simpan Setting Utama</button>
       </div>
     </div>
@@ -261,6 +264,7 @@
         igLink: document.getElementById('ig-link').value, 
         ytLink: document.getElementById('yt-link').value, 
         uraianTentangPerusahaan: document.getElementById('uraian-tentang-perusahaan').value,
+        pedomanMediaSiber: document.getElementById('pedoman-media-siber').value,
         updatedAt: new Date()
       };
       const fileLogo = document.getElementById('logo-website').files[0];
@@ -293,6 +297,7 @@
         document.getElementById('ig-link').value = d.igLink || '';
         document.getElementById('yt-link').value = d.ytLink || '';
         document.getElementById('uraian-tentang-perusahaan').value = d.uraianTentangPerusahaan || '';
+        document.getElementById('pedoman-media-siber').value = d.pedomanMediaSiber || '';
         if (d.logoWebsite) document.getElementById('pratinjau-logo').innerHTML = `<img src="${d.logoWebsite}" class="img-preview">`;
         if (d.fotoPemimpinRedaksi) document.getElementById('pratinjau-foto-pemred').innerHTML = `<img src="${d.fotoPemimpinRedaksi}" class="img-preview" style="max-width:150px;">`;
       }

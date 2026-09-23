@@ -532,16 +532,33 @@
             if (total > 1) timerAutoSlideAfiliasi = setInterval(() => { window.slideAfiliasiNext(); }, 4000);
         };
 
-        window.muatPengaturanAdmin = async function() {
-            try {
-                const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
-                if (docSnap.exists()) {
-                    let d = docSnap.data();
-                    if (d.namaAdmin) document.getElementById('pemimpin-redaksi').innerHTML = `<b>${d.namaAdmin}</b><br><small>Pemimpin Redaksi</small>`;
-                    if (d.logoWebsite) document.getElementById('logo-website').src = d.logoWebsite;
-                }
-            } catch (e) { console.error("Gagal muat pengaturan:", e); }
-        };
+window.muatPengaturanAdmin = async function() {
+    try {
+        const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
+        if (docSnap.exists()) {
+            let d = docSnap.data();
+            
+            // Tampilkan foto dan nama pemimpin redaksi
+            let htmlPemred = '';
+            if (d.fotoPemimpinRedaksi) {
+                htmlPemred += `<img src="${d.fotoPemimpinRedaksi}" style="max-width:150px; border-radius:8px; margin-bottom:10px;"><br>`;
+            }
+            if (d.namaAdmin) {
+                htmlPemred += `<b>${d.namaAdmin}</b><br><small style="color:#666;">Pemimpin Redaksi</small>`;
+            }
+            
+            if (htmlPemred) {
+                document.getElementById('pemimpin-redaksi').innerHTML = htmlPemred;
+            }
+            
+            if (d.logoWebsite) {
+                document.getElementById('logo-website').src = d.logoWebsite;
+            }
+        }
+    } catch (e) { 
+        console.error("Gagal muat pengaturan:", e); 
+    }
+};
 
         window.muatDataFooter = async function() {
             try {

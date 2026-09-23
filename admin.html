@@ -234,17 +234,22 @@
         <table>
           <thead>
             <tr>
-              <th>No</th>
+              <th style="width:50px;">No</th>
               <th>Jabatan</th>
               <th>Nama</th>
-              <th>Aksi</th>
+              <th style="width:80px;">Aksi</th>
             </tr>
           </thead>
-          <tbody id="isi-tabel-redaksi"></tbody>
+          <tbody id="isi-tabel-redaksi">
+            <tr><td colspan="4" style="text-align:center; color:#888;">Memuat data...</td></tr>
+          </tbody>
         </table>
-        <button class="btn-utama" onclick="window.tambahBarisRedaksi()" style="background:#27ae60; margin-right:10px;">➕
-          Tambah Baris</button>
-        <button class="btn-utama" onclick="window.simpanDataRedaksi()">💾 Simpan Data Redaksi</button>
+        <div style="margin-top:15px;">
+          <button class="btn-utama" onclick="tambahBarisRedaksi()" style="background:#27ae60; margin-right:10px;">➕ Tambah Baris</button>
+          <button class="btn-utama" onclick="simpanDataRedaksi()">💾 Simpan Data Redaksi</button>
+          <button class="btn-utama" onclick="muatDataRedaksi()" style="background:#7f8c8d; margin-left:10px;">🔄 Refresh</button>
+        </div>
+        <div id="status-redaksi" style="margin-top:10px; color:#27ae60; font-weight:bold;"></div>
       </div>
     </div>
 
@@ -450,30 +455,107 @@
       }
     };
 
-    // --- DATA REDAKSI ---
-    window.tampilTabelRedaksi = function () {
+    // --- DATA REDAKSI (Versi Anti-Error GitHub) ---
+    let daftarRedaksi = [];
+
+    // Pastikan fungsi tersedia di window (PENTING untuk GitHub Pages)
+    window.daftarRedaksi = daftarRedaksi;
+
+    window.tampilTabelRedaksi = function() {
+      console.log("Menampilkan tabel redaksi. Jumlah data:", daftarRedaksi.length);
       const tb = document.getElementById('isi-tabel-redaksi');
-      tb.innerHTML = '';
+      if (!tb) {
+        console.error("Tabel isi-tabel-redaksi tidak ditemukan!");
+        return;
+      }
+      
+      if (daftarRedaksi.length === 0) {
+        tb.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#888;">Belum ada data redaksi. Klik "Tambah Baris" untuk memulai.</td></tr>';
+        return;
+      }
+      
+      let html = '';
       daftarRedaksi.forEach((r, i) => {
-        tb.innerHTML += `<tr>
-          <td style="text-align:center">${i + 1}</td>
-          <td><input type="text" value="${r.jabatan || ''}" onchange="daftarRedaksi[${i}].jabatan=this.value" style="width:100%"></td>
-          <td><input type="text" value="${r.nama || ''}" onchange="daftarRedaksi[${i}].nama=this.value" style="width:100%"></td>
+        html += `<tr>
+          <td style="text-align:center">${i+1}</td>
+          <td><input type="text" value="${r.jabatan||''}" onchange="window.updateRedaksi(${i},'jabatan',this.value)" style="width:100%; padding:6px;"></td>
+          <td><input type="text" value="${r.nama||''}" onchange="window.updateRedaksi(${i},'nama',this.value)" style="width:100%; padding:6px;"></td>
           <td style="text-align:center"><button class="btn-hapus" onclick="window.hapusBarisRedaksi(${i})">✖</button></td>
         </tr>`;
       });
+      tb.innerHTML = html;
     };
-    window.tambahBarisRedaksi = function () {daftarRedaksi.push({jabatan: '', nama: ''}); window.tampilTabelRedaksi();};
-    window.hapusBarisRedaksi = function (i) {daftarRedaksi.splice(i, 1); window.tampilTabelRedaksi();};
 
-    window.simpanDataRedaksi = async function () {
-      await setDoc(doc(db, "pengaturan", "redaksi"), {anggota: daftarRedaksi, updatedAt: new Date()});
-      alert("✅ Data Redaksi Tersimpan!");
+    window.updateRedaksi = function(index, field, value) {
+      if (daftarRedaksi[index]) {
+        daftarRedaksi[index][field] = value;
+      }
     };
-    window.muatDataRedaksi = async function () {
-      const docSnap = await getDoc(doc(db, "pengaturan", "redaksi"));
-      if (docSnap.exists() && docSnap.data().anggota) daftarRedaksi = docSnap.data().anggota;
+
+    window.tambahBarisRedaksi = function() {
+      console.log("Menambah baris redaksi...");
+      if (!Array.isArray(daftarRedaksi)) {
+        daftarRedaksi = [];
+      }
+      daftarRedaksi.push({ jabatan: '', nama: '' });
       window.tampilTabelRedaksi();
+      document.getElementById('status-redaksi').innerText = "✅ Baris baru ditambahkan. Jangan lupa klik Simpan!";
+    };
+
+    window.hapusBarisRedaksi = function(i) {
+      if (confirm("Hapus baris ini?")) {
+        daftarRedaksi.splice(i, 1);
+        window.tampilTabelRedaksi();
+      }
+    };
+
+    window.simpanDataRedaksi = async function() {
+      console.log("Menyimpan data redaksi:", daftarRedaksi);
+      const statusEl = document.getElementById('status-redaksi');
+      try {
+        await setDoc(doc(db, "pengaturan", "redaksi"), { 
+          anggota: daftarRedaksi, 
+          updatedAt: new Date() 
+        });
+        statusEl.innerText = "✅ Data Redaksi Tersimpan di Firebase!";
+        statusEl.style.color = "#27ae60";
+        alert("✅ Data Redaksi Tersimpan!");
+      } catch (error) {
+        console.error("Gagal simpan redaksi:", error);
+        statusEl.innerText = "❌ Gagal menyimpan: " + error.message;
+        statusEl.style.color = "#e74c3c";
+        alert("❌ Gagal menyimpan: " + error.message);
+      }
+    };
+
+    window.muatDataRedaksi = async function() {
+      console.log("Memuat data redaksi dari Firebase...");
+      const statusEl = document.getElementById('status-redaksi');
+      try {
+        const docSnap = await getDoc(doc(db, "pengaturan", "redaksi"));
+        if (docSnap.exists() && docSnap.data().anggota) {
+          daftarRedaksi = docSnap.data().anggota;
+          console.log("Data redaksi berhasil dimuat:", daftarRedaksi.length, "anggota");
+          if (statusEl) {
+            statusEl.innerText = `✅ Berhasil memuat ${daftarRedaksi.length} data redaksi.`;
+            statusEl.style.color = "#27ae60";
+          }
+        } else {
+          daftarRedaksi = [];
+          console.log("Data redaksi kosong di Firebase.");
+          if (statusEl) {
+            statusEl.innerText = "ℹ️ Belum ada data redaksi di database.";
+            statusEl.style.color = "#7f8c8d";
+          }
+        }
+        window.tampilTabelRedaksi();
+      } catch (error) {
+        console.error("Gagal muat redaksi:", error);
+        if (statusEl) {
+          statusEl.innerText = "❌ Gagal memuat: " + error.message;
+          statusEl.style.color = "#e74c3c";
+        }
+      }
     };
 
     // --- BERITA ---

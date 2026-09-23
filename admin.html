@@ -38,6 +38,7 @@
     <a href="#" class="menu-judul" style="font-weight:bold; margin-top:15px;">⚙️ Konfigurasi</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('setting-utama'); return false;">• Setting Utama</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('data-redaksi'); return false;">• Data Redaksi</a>
+    <a href="#" class="submenu" onclick="window.tampilHalaman('induk-organisasi'); return false;">• Induk Organisasi</a>   
     <a href="#" class="menu-judul" style="font-weight:bold; margin-top:15px;">📰 Data Berita</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('konten-berita'); return false;">• Konten Berita</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('arsip-berita'); return false;">• Arsip Berita</a>
@@ -103,7 +104,22 @@
         <div id="status-redaksi" style="margin-top:10px; color:#27ae60; font-weight:bold;"></div>
       </div>
     </div>
-
+    <div id="induk-organisasi" class="halaman">
+      <h3>🏛️ Induk Organisasi</h3>
+      <div class="card">
+        <label>Nama Induk Organisasi</label>
+        <input type="text" id="nama-organisasi" placeholder="Contoh: Persatuan Wartawan Indonesia (PWI)">
+        
+        <label>Logo Organisasi</label>
+        <input type="file" id="logo-organisasi" accept="image/*" onchange="window.pratinjauLogoOrganisasi(this)">
+        <div id="pratinjau-logo-organisasi" style="margin-top:10px;"></div>
+        
+        <label>Keterangan / Sejarah Singkat</label>
+        <textarea id="keterangan-organisasi" rows="6" placeholder="Tuliskan keterangan atau sejarah singkat induk organisasi..." style="width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:4px;"></textarea>
+        
+        <button class="btn-utama" onclick="window.simpanIndukOrganisasi()">💾 Simpan Data Induk Organisasi</button>
+      </div>
+    </div>
     <div id="konten-berita" class="halaman">
       <h3>📝 Konten Berita</h3>
       <div class="card">
@@ -215,6 +231,7 @@
         if (id === 'iklan-header') window.muatDaftarIklanHeader();
         if (id === 'afiliasi') window.muatDaftarAfiliasi();
         if (id === 'data-redaksi') window.muatDataRedaksi();
+        if (id === 'induk-organisasi') window.muatIndukOrganisasi(); 
       }
     };
 
@@ -414,7 +431,82 @@
             statusEl.innerText = "ℹ️ Belum ada data redaksi di database.";
             statusEl.style.color = "#7f8c8d";
           }
+        };
+        
+    // 1. Pratinjau Logo Organisasi     
+    window.pratinjauLogoOrganisasi = function(input) {
+      if (input.files && input.files[0]) {
+        if (input.files[0].size > 1000000) {
+          alert("⚠️ Ukuran logo terlalu besar! Maksimal 1MB.");
+          input.value = '';
+          return;
         }
+        const reader = new FileReader();
+        reader.onload = e => {
+          document.getElementById('pratinjau-logo-organisasi').innerHTML = 
+            `<img src="${e.target.result}" class="img-preview" style="max-width:150px;">`;
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    };
+
+    // 2. Simpan Data ke Firebase
+    window.simpanIndukOrganisasi = async function() {
+      const nama = document.getElementById('nama-organisasi').value;
+      const keterangan = document.getElementById('keterangan-organisasi').value;
+      const fileLogo = document.getElementById('logo-organisasi').files[0];
+
+      if (!nama) {
+        alert("⚠️ Nama Induk Organisasi wajib diisi!");
+        return;
+      }
+
+      const data = {
+        nama: nama,
+        keterangan: keterangan,
+        updatedAt: new Date()
+      };
+
+      try {
+        // Jika ada file logo baru, ubah ke base64 dulu
+        if (fileLogo) {
+          data.logo = await fileToBase64(fileLogo); // Menggunakan helper fileToBase64 yang sudah ada
+        }
+
+        // Simpan ke koleksi 'pengaturan', dokumen 'induk_organisasi'
+        await setDoc(doc(db, "pengaturan", "induk_organisasi"), data, { merge: true });
+        alert("✅ Data Induk Organisasi berhasil disimpan!");
+        
+        // Update pratinjau jika ada logo baru
+        if (data.logo) {
+          document.getElementById('pratinjau-logo-organisasi').innerHTML = 
+            `<img src="${data.logo}" class="img-preview" style="max-width:150px;">`;
+        }
+      } catch (error) {
+        console.error("Gagal menyimpan:", error);
+        alert("❌ Gagal menyimpan data: " + error.message);
+      }
+    };
+
+    // 3. Muat Data dari Firebase saat halaman dibuka
+    window.muatIndukOrganisasi = async function() {
+      try {
+        const docSnap = await getDoc(doc(db, "pengaturan", "induk_organisasi"));
+        if (docSnap.exists()) {
+          const d = docSnap.data();
+          document.getElementById('nama-organisasi').value = d.nama || '';
+          document.getElementById('keterangan-organisasi').value = d.keterangan || '';
+          
+          if (d.logo) {
+            document.getElementById('pratinjau-logo-organisasi').innerHTML = 
+              `<img src="${d.logo}" class="img-preview" style="max-width:150px;">`;
+          }
+        }
+      } catch (error) {
+        console.error("Gagal memuat data induk organisasi:", error);
+      }
+    };
+     
         window.tampilTabelRedaksi();
       } catch (error) {
         console.error("Gagal muat redaksi:", error);
@@ -632,6 +724,7 @@
       console.log("Admin panel dimuat. Memulai inisialisasi...");
       window.muatSettingUtama();
       window.muatDataRedaksi();
+      window.muatIndukOrganisasi();
     });
   </script>
 </body>

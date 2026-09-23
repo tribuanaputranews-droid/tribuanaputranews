@@ -1,175 +1,36 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel Admin - Tribuana Putra News</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      display: flex;
-      height: 100vh;
-      background: #f4f6f8;
-    }
-
-    .sidebar {
-      width: 250px;
-      background: #2c3e50;
-      color: white;
-      padding: 20px;
-      overflow-y: auto;
-      flex-shrink: 0;
-    }
-
-    .sidebar h3 {
-      margin-top: 0;
-      border-bottom: 1px solid #34495e;
-      padding-bottom: 10px;
-    }
-
-    .sidebar a {
-      display: block;
-      color: #ecf0f1;
-      text-decoration: none;
-      padding: 10px;
-      margin: 5px 0;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-
-    .sidebar a:hover {
-      background: #34495e;
-    }
-
-    .submenu {
-      padding-left: 20px !important;
-      font-size: 0.9em;
-    }
-
-    .content {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    .halaman {
-      display: none;
-    }
-
-    .halaman.aktif {
-      display: block;
-    }
-
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
-    }
-
-    .grid3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-top: 20px;
-    }
-
-    .stat-box {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .stat-box h3 {
-      font-size: 2em;
-      margin: 0;
-      color: #2980b9;
-    }
-
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-      font-size: 0.9em;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-
-    .btn-utama {
-      background: #2980b9;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-
-    .btn-utama:hover {
-      background: #1f6391;
-    }
-
-    .btn-hapus {
-      background: #e74c3c;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      background: white;
-    }
-
-    th,
-    td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-      font-size: 14px;
-    }
-
-    th {
-      background-color: #f2f2f2;
-    }
-
-    .img-preview {
-      max-width: 200px;
-      max-height: 100px;
-      object-fit: contain;
-      border: 1px solid #ccc;
-      margin-top: 5px;
-    }
-
-    .img-thumb {
-      width: 80px;
-      height: 50px;
-      object-fit: cover;
-      border: 1px solid #ccc;
-    }
+    body { font-family: Arial, sans-serif; margin: 0; display: flex; height: 100vh; background: #f4f6f8; }
+    .sidebar { width: 250px; background: #2c3e50; color: white; padding: 20px; overflow-y: auto; flex-shrink: 0; }
+    .sidebar h3 { margin-top: 0; border-bottom: 1px solid #34495e; padding-bottom: 10px; }
+    .sidebar a { display: block; color: #ecf0f1; text-decoration: none; padding: 10px; margin: 5px 0; border-radius: 4px; font-size: 14px; }
+    .sidebar a:hover { background: #34495e; }
+    .submenu { padding-left: 20px !important; font-size: 0.9em; }
+    .content { flex: 1; padding: 20px; overflow-y: auto; }
+    .halaman { display: none; }
+    .halaman.aktif { display: block; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
+    .stat-box { background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .stat-box h3 { font-size: 2em; margin: 0; color: #2980b9; }
+    label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.9em; }
+    input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .btn-utama { background: #2980b9; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; margin-top: 15px; font-weight: bold; }
+    .btn-utama:hover { background: #1f6391; }
+    .btn-hapus { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 14px; }
+    th { background-color: #f2f2f2; }
+    .img-preview { max-width: 200px; max-height: 100px; object-fit: contain; border: 1px solid #ccc; margin-top: 5px; }
+    .img-thumb { width: 80px; height: 50px; object-fit: cover; border: 1px solid #ccc; }
   </style>
 </head>
-
 <body>
   <div class="sidebar">
     <h3>📋 Menu Admin</h3>
@@ -183,8 +44,7 @@
     <a href="#" class="menu-judul" style="font-weight:bold; margin-top:15px;">📢 Iklan</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('iklan-header'); return false;">• Iklan Header</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('afiliasi'); return false;">• Iklan Afiliasi</a>
-    <a href="index.html" target="_blank" style="margin-top:20px; background:#27ae60; text-align:center;">👁️ Lihat
-      Web</a>
+    <a href="index.html" target="_blank" style="margin-top:20px; background:#27ae60; text-align:center;">👁️ Lihat Web</a>
   </div>
 
   <div class="content">
@@ -193,18 +53,9 @@
       <h2>Hai, Administrator 👋</h2>
       <p>Selamat datang di Panel Admin Tribuana Putra News.</p>
       <div class="grid3">
-        <div class="stat-box">
-          <h3 id="total-berita">0</h3>
-          <p>Total Berita</p>
-        </div>
-        <div class="stat-box">
-          <h3 id="berita-publish">0</h3>
-          <p>Berita Dipublish</p>
-        </div>
-        <div class="stat-box">
-          <h3 id="berita-unpublish">0</h3>
-          <p>Berita Unpublish</p>
-        </div>
+        <div class="stat-box"><h3 id="total-berita">0</h3><p>Total Berita</p></div>
+        <div class="stat-box"><h3 id="berita-publish">0</h3><p>Berita Dipublish</p></div>
+        <div class="stat-box"><h3 id="berita-unpublish">0</h3><p>Berita Unpublish</p></div>
       </div>
     </div>
 
@@ -245,9 +96,9 @@
           </tbody>
         </table>
         <div style="margin-top:15px;">
-          <button class="btn-utama" onclick="tambahBarisRedaksi()" style="background:#27ae60; margin-right:10px;">➕ Tambah Baris</button>
-          <button class="btn-utama" onclick="simpanDataRedaksi()">💾 Simpan Data Redaksi</button>
-          <button class="btn-utama" onclick="muatDataRedaksi()" style="background:#7f8c8d; margin-left:10px;">🔄 Refresh</button>
+          <button class="btn-utama" onclick="window.tambahBarisRedaksi()" style="background:#27ae60; margin-right:10px;">➕ Tambah Baris</button>
+          <button class="btn-utama" onclick="window.simpanDataRedaksi()">💾 Simpan Data Redaksi</button>
+          <button class="btn-utama" onclick="window.muatDataRedaksi()" style="background:#7f8c8d; margin-left:10px;">🔄 Refresh</button>
         </div>
         <div id="status-redaksi" style="margin-top:10px; color:#27ae60; font-weight:bold;"></div>
       </div>
@@ -260,20 +111,13 @@
         <label>Judul Berita</label><input type="text" id="judul-berita">
         <label>Kategori (Ctrl+Klik untuk memilih lebih dari satu)</label>
         <select id="kategori-berita" multiple style="height:120px;">
-          <option value="Tasikmalaya">Tasikmalaya</option>
-          <option value="Kota Tasikmalaya">Kota Tasikmalaya</option>
-          <option value="Ciamis">Ciamis</option>
-          <option value="Banjar">Banjar</option>
-          <option value="Garut">Garut</option>
-          <option value="Pangandaran">Pangandaran</option>
-          <option value="Jawa Barat">Jawa Barat</option>
-          <option value="Nasional">Nasional</option>
-          <option value="Keagamaan">Keagamaan</option>
-          <option value="Pendidikan">Pendidikan</option>
-          <option value="Hukum">Hukum</option>
-          <option value="Kuliner">Kuliner</option>
-          <option value="Hiburan">Hiburan</option>
-          <option value="Artikel">Artikel</option>
+          <option value="Tasikmalaya">Tasikmalaya</option><option value="Kota Tasikmalaya">Kota Tasikmalaya</option>
+          <option value="Ciamis">Ciamis</option><option value="Banjar">Banjar</option>
+          <option value="Garut">Garut</option><option value="Pangandaran">Pangandaran</option>
+          <option value="Jawa Barat">Jawa Barat</option><option value="Nasional">Nasional</option>
+          <option value="Keagamaan">Keagamaan</option><option value="Pendidikan">Pendidikan</option>
+          <option value="Hukum">Hukum</option><option value="Kuliner">Kuliner</option>
+          <option value="Hiburan">Hiburan</option><option value="Artikel">Artikel</option>
         </select>
         <div style="display:flex; gap:10px;">
           <div style="flex:1;"><label>Tanggal Publish</label><input type="date" id="tgl-publish"></div>
@@ -281,13 +125,10 @@
         </div>
         <label>Meta Keywords</label><input type="text" id="meta-kata-kunci">
         <div style="display:flex; gap:20px; margin:10px 0;">
-          <label style="font-weight:normal;"><input type="checkbox" id="berita-utama" style="width:auto;"> ⭐ Berita
-            Utama</label>
-          <label style="font-weight:normal;"><input type="checkbox" id="tampilkan-berita" checked style="width:auto;">
-            👁️ Tampilkan di Web</label>
+          <label style="font-weight:normal;"><input type="checkbox" id="berita-utama" style="width:auto;"> ⭐ Berita Utama</label>
+          <label style="font-weight:normal;"><input type="checkbox" id="tampilkan-berita" checked style="width:auto;"> 👁️ Tampilkan di Web</label>
         </div>
-
-        <!-- FITUR SISIPKAN GAMBAR -->
+        
         <div style="border:1px dashed #ccc; padding:10px; background:#f9f9f9; border-radius:4px; margin:10px 0;">
           <label>🖼️ Sisipkan Foto ke dalam Isi Berita</label>
           <input type="file" id="foto-berita" accept="image/*" onchange="window.sisipkanFotoBerita(this)">
@@ -295,9 +136,8 @@
         </div>
 
         <label>Isi Berita</label>
-        <div id="isi-berita" contenteditable="true"
-          style="min-height:250px; border:1px solid #ccc; padding:10px; background:#fff;"></div>
-
+        <div id="isi-berita" contenteditable="true" style="min-height:250px; border:1px solid #ccc; padding:10px; background:#fff;"></div>
+        
         <button class="btn-utama" onclick="window.simpanBerita()">💾 Simpan Berita</button>
         <button class="btn-hapus" onclick="window.resetFormBerita()" style="margin-left:10px;">🔄 Reset Form</button>
       </div>
@@ -308,22 +148,8 @@
       <h3>📂 Arsip Berita</h3>
       <div class="card">
         <table>
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Judul</th>
-              <th>Kategori</th>
-              <th>Tanggal</th>
-              <th>Utama</th>
-              <th>Publish</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="daftar-arsip-berita">
-            <tr>
-              <td colspan="7" style="text-align:center;">Memuat data...</td>
-            </tr>
-          </tbody>
+          <thead><tr><th>No</th><th>Judul</th><th>Kategori</th><th>Tanggal</th><th>Utama</th><th>Publish</th><th>Aksi</th></tr></thead>
+          <tbody id="daftar-arsip-berita"><tr><td colspan="7" style="text-align:center;">Memuat data...</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -342,14 +168,7 @@
       <div class="card">
         <h4>Daftar Iklan Header</h4>
         <table>
-          <thead>
-            <tr>
-              <th>Gambar</th>
-              <th>Judul</th>
-              <th>Link</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Gambar</th><th>Judul</th><th>Link</th><th>Aksi</th></tr></thead>
           <tbody id="tabel-daftar-iklan-header"></tbody>
         </table>
       </div>
@@ -368,10 +187,10 @@
     </div>
   </div>
 
-  <!-- SCRIPT FIREBASE UTUH -->
+  <!-- SCRIPT FIREBASE UTUH - FINAL VERSION -->
   <script type="module">
-    import {initializeApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import {getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, orderBy} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCc1rUgdchrZ8vxk3HF6-yQKMZze-dNwzE",
@@ -387,22 +206,27 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // === STATE GLOBAL (HANYA DIKLARASIKAN SEKALI) ===
     let sedangEdit = false;
     let idBeritaDiedit = null;
     let daftarRedaksi = [];
     let imgHeaderBase64 = "";
 
-    // --- NAVIGASI ---
-    window.tampilHalaman = function (id) {
+    // === NAVIGASI ===
+    window.tampilHalaman = function(id) {
       document.querySelectorAll('.halaman').forEach(h => h.classList.remove('aktif'));
-      document.getElementById(id).classList.add('aktif');
-      if (id === 'arsip-berita') window.muatArsipBerita();
-      if (id === 'iklan-header') window.muatDaftarIklanHeader();
-      if (id === 'afiliasi') window.muatDaftarAfiliasi();
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('aktif');
+        if (id === 'arsip-berita') window.muatArsipBerita();
+        if (id === 'iklan-header') window.muatDaftarIklanHeader();
+        if (id === 'afiliasi') window.muatDaftarAfiliasi();
+        if (id === 'data-redaksi') window.muatDataRedaksi();
+      }
     };
 
-    // --- SETTING UTAMA ---
-    window.pratinjauLogo = function (input) {
+    // === SETTING UTAMA ===
+    window.pratinjauLogo = function(input) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = e => document.getElementById('pratinjau-logo').innerHTML = `<img src="${e.target.result}" class="img-preview">`;
@@ -410,7 +234,7 @@
       }
     };
 
-    window.simpanSettingUtama = async function () {
+    window.simpanSettingUtama = async function() {
       const data = {
         namaAdmin: document.getElementById('nama-admin').value,
         namaPerusahaan: document.getElementById('nama-perusahaan').value,
@@ -425,21 +249,21 @@
 
       const fileLogo = document.getElementById('logo-website').files[0];
       if (fileLogo) {
-        if (fileLogo.size > 1000000) {alert("Logo maksimal 1MB!"); return;}
+        if (fileLogo.size > 1000000) { alert("Logo maksimal 1MB!"); return; }
         const reader = new FileReader();
-        reader.onload = async function (e) {
+        reader.onload = async function(e) {
           data.logoWebsite = e.target.result;
           await setDoc(doc(db, "pengaturan", "utama"), data);
           alert("✅ Setting & Logo tersimpan!");
         };
         reader.readAsDataURL(fileLogo);
       } else {
-        await setDoc(doc(db, "pengaturan", "utama"), data, {merge: true});
+        await setDoc(doc(db, "pengaturan", "utama"), data, { merge: true });
         alert("✅ Setting tersimpan!");
       }
     };
 
-    window.muatSettingUtama = async function () {
+    window.muatSettingUtama = async function() {
       const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
       if (docSnap.exists()) {
         const d = docSnap.data();
@@ -455,19 +279,10 @@
       }
     };
 
-    // --- DATA REDAKSI (Versi Anti-Error GitHub) ---
-    let daftarRedaksi = [];
-
-    // Pastikan fungsi tersedia di window (PENTING untuk GitHub Pages)
-    window.daftarRedaksi = daftarRedaksi;
-
+    // === DATA REDAKSI ===
     window.tampilTabelRedaksi = function() {
-      console.log("Menampilkan tabel redaksi. Jumlah data:", daftarRedaksi.length);
       const tb = document.getElementById('isi-tabel-redaksi');
-      if (!tb) {
-        console.error("Tabel isi-tabel-redaksi tidak ditemukan!");
-        return;
-      }
+      if (!tb) return;
       
       if (daftarRedaksi.length === 0) {
         tb.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#888;">Belum ada data redaksi. Klik "Tambah Baris" untuk memulai.</td></tr>';
@@ -493,13 +308,10 @@
     };
 
     window.tambahBarisRedaksi = function() {
-      console.log("Menambah baris redaksi...");
-      if (!Array.isArray(daftarRedaksi)) {
-        daftarRedaksi = [];
-      }
       daftarRedaksi.push({ jabatan: '', nama: '' });
       window.tampilTabelRedaksi();
-      document.getElementById('status-redaksi').innerText = "✅ Baris baru ditambahkan. Jangan lupa klik Simpan!";
+      const statusEl = document.getElementById('status-redaksi');
+      if (statusEl) statusEl.innerText = "✅ Baris baru ditambahkan. Jangan lupa klik Simpan!";
     };
 
     window.hapusBarisRedaksi = function(i) {
@@ -510,39 +322,39 @@
     };
 
     window.simpanDataRedaksi = async function() {
-      console.log("Menyimpan data redaksi:", daftarRedaksi);
       const statusEl = document.getElementById('status-redaksi');
       try {
         await setDoc(doc(db, "pengaturan", "redaksi"), { 
           anggota: daftarRedaksi, 
           updatedAt: new Date() 
         });
-        statusEl.innerText = "✅ Data Redaksi Tersimpan di Firebase!";
-        statusEl.style.color = "#27ae60";
+        if (statusEl) {
+          statusEl.innerText = "✅ Data Redaksi Tersimpan di Firebase!";
+          statusEl.style.color = "#27ae60";
+        }
         alert("✅ Data Redaksi Tersimpan!");
       } catch (error) {
         console.error("Gagal simpan redaksi:", error);
-        statusEl.innerText = "❌ Gagal menyimpan: " + error.message;
-        statusEl.style.color = "#e74c3c";
+        if (statusEl) {
+          statusEl.innerText = "❌ Gagal menyimpan: " + error.message;
+          statusEl.style.color = "#e74c3c";
+        }
         alert("❌ Gagal menyimpan: " + error.message);
       }
     };
 
     window.muatDataRedaksi = async function() {
-      console.log("Memuat data redaksi dari Firebase...");
       const statusEl = document.getElementById('status-redaksi');
       try {
         const docSnap = await getDoc(doc(db, "pengaturan", "redaksi"));
         if (docSnap.exists() && docSnap.data().anggota) {
           daftarRedaksi = docSnap.data().anggota;
-          console.log("Data redaksi berhasil dimuat:", daftarRedaksi.length, "anggota");
           if (statusEl) {
             statusEl.innerText = `✅ Berhasil memuat ${daftarRedaksi.length} data redaksi.`;
             statusEl.style.color = "#27ae60";
           }
         } else {
           daftarRedaksi = [];
-          console.log("Data redaksi kosong di Firebase.");
           if (statusEl) {
             statusEl.innerText = "ℹ️ Belum ada data redaksi di database.";
             statusEl.style.color = "#7f8c8d";
@@ -558,12 +370,12 @@
       }
     };
 
-    // --- BERITA ---
-    window.sisipkanFotoBerita = function (input) {
+    // === BERITA ===
+    window.sisipkanFotoBerita = function(input) {
       if (!input.files[0]) return;
-      if (input.files[0].size > 500000) {alert("Gambar maksimal 500KB!"); input.value = ''; return;}
+      if (input.files[0].size > 500000) { alert("Gambar maksimal 500KB!"); input.value = ''; return; }
       const reader = new FileReader();
-      reader.onload = function (e) {
+      reader.onload = function(e) {
         document.getElementById('isi-berita').focus();
         document.execCommand('insertImage', false, e.target.result);
         input.value = '';
@@ -571,10 +383,10 @@
       reader.readAsDataURL(input.files[0]);
     };
 
-    window.simpanBerita = async function () {
+    window.simpanBerita = async function() {
       const judul = document.getElementById('judul-berita').value.trim();
-      if (!judul) {alert("Judul wajib diisi!"); return;}
-
+      if (!judul) { alert("Judul wajib diisi!"); return; }
+      
       const kategori = Array.from(document.getElementById('kategori-berita').selectedOptions).map(o => o.value);
       const data = {
         judul,
@@ -605,36 +417,45 @@
       }
     };
 
-    window.muatArsipBerita = async function () {
+    window.muatArsipBerita = async function() {
       const tb = document.getElementById('daftar-arsip-berita');
       tb.innerHTML = '<tr><td colspan="7" style="text-align:center;">Memuat...</td></tr>';
-      const snap = await getDocs(query(collection(db, "berita"), orderBy("createdAt", "desc")));
+      
+      try {
+        const snap = await getDocs(collection(db, "berita"));
+        
+        if (snap.empty) { 
+          tb.innerHTML = '<tr><td colspan="7" style="text-align:center;">Belum ada berita.</td></tr>'; 
+          return; 
+        }
 
-      if (snap.empty) {tb.innerHTML = '<tr><td colspan="7" style="text-align:center;">Belum ada berita.</td></tr>'; return;}
-
-      let html = '', i = 1, total = 0, pub = 0, unpub = 0;
-      snap.forEach(d => {
-        const b = d.data(); const id = d.id;
-        total++; if (b.tampilkanDiWeb) pub++; else unpub++;
-        html += `<tr>
-          <td>${i++}</td><td><b>${b.judul}</b></td>
-          <td>${Array.isArray(b.kategori) ? b.kategori.join(', ') : '-'}</td>
-          <td>${b.tglPublish || '-'}</td>
-          <td style="text-align:center">${b.beritaUtama ? '⭐' : '-'}</td>
-          <td style="text-align:center">${b.tampilkanDiWeb ? '✅' : '❌'}</td>
-          <td style="text-align:center">
-            <button onclick="window.editBeritaGlobal('${id}')" style="cursor:pointer;">✏️</button>
-            <button class="btn-hapus" onclick="window.hapusBeritaGlobal('${id}')">✖</button>
-          </td>
-        </tr>`;
-      });
-      tb.innerHTML = html;
-      document.getElementById('total-berita').innerText = total;
-      document.getElementById('berita-publish').innerText = pub;
-      document.getElementById('berita-unpublish').innerText = unpub;
+        let html = '', i = 1, total = 0, pub = 0, unpub = 0;
+        snap.forEach(d => {
+          const b = d.data(); const id = d.id;
+          total++; if(b.tampilkanDiWeb) pub++; else unpub++;
+          html += `<tr>
+            <td>${i++}</td><td><b>${b.judul}</b></td>
+            <td>${Array.isArray(b.kategori) ? b.kategori.join(', ') : '-'}</td>
+            <td>${b.tglPublish || '-'}</td>
+            <td style="text-align:center">${b.beritaUtama ? '⭐' : '-'}</td>
+            <td style="text-align:center">${b.tampilkanDiWeb ? '✅' : '❌'}</td>
+            <td style="text-align:center">
+              <button onclick="window.editBeritaGlobal('${id}')" style="cursor:pointer;">✏️</button>
+              <button class="btn-hapus" onclick="window.hapusBeritaGlobal('${id}')">✖</button>
+            </td>
+          </tr>`;
+        });
+        tb.innerHTML = html;
+        document.getElementById('total-berita').innerText = total;
+        document.getElementById('berita-publish').innerText = pub;
+        document.getElementById('berita-unpublish').innerText = unpub;
+      } catch (error) {
+        console.error("Gagal muat arsip:", error);
+        tb.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Gagal memuat data.</td></tr>';
+      }
     };
 
-    window.editBeritaGlobal = async function (id) {
+    window.editBeritaGlobal = async function(id) {
       const snap = await getDoc(doc(db, "berita", id));
       if (!snap.exists()) return;
       const b = snap.data();
@@ -646,22 +467,22 @@
       document.getElementById('berita-utama').checked = b.beritaUtama || false;
       document.getElementById('tampilkan-berita').checked = b.tampilkanDiWeb !== false;
       document.getElementById('isi-berita').innerHTML = b.isiBerita || '';
-
+      
       const select = document.getElementById('kategori-berita');
-      Array.from(select.options).forEach(opt => {opt.selected = (b.kategori && b.kategori.includes(opt.value));});
-
+      Array.from(select.options).forEach(opt => { opt.selected = (b.kategori && b.kategori.includes(opt.value)); });
+      
       window.tampilHalaman('konten-berita');
       alert("Mode Edit Aktif. Ubah data lalu klik Simpan.");
     };
 
-    window.hapusBeritaGlobal = async function (id) {
+    window.hapusBeritaGlobal = async function(id) {
       if (confirm("Hapus berita ini?")) {
         await deleteDoc(doc(db, "berita", id));
         window.muatArsipBerita();
       }
     };
 
-    window.resetFormBerita = function () {
+    window.resetFormBerita = function() {
       sedangEdit = false; idBeritaDiedit = null;
       document.getElementById('judul-berita').value = '';
       document.getElementById('kategori-berita').selectedIndex = -1;
@@ -673,60 +494,67 @@
       document.getElementById('isi-berita').innerHTML = '';
     };
 
-    // --- IKLAN ---
-    window.pratinjauIklanHeader = function (input) {
+    // === IKLAN ===
+    window.pratinjauIklanHeader = function(input) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
-        reader.onload = e => {imgHeaderBase64 = e.target.result; document.getElementById('pratinjau-iklan-header').innerHTML = `<img src="${e.target.result}" class="img-preview">`;};
+        reader.onload = e => { 
+          imgHeaderBase64 = e.target.result; 
+          document.getElementById('pratinjau-iklan-header').innerHTML = `<img src="${e.target.result}" class="img-preview">`; 
+        };
         reader.readAsDataURL(input.files[0]);
       }
     };
 
-    window.simpanIklanHeader = async function () {
-      if (!imgHeaderBase64) {alert("Pilih gambar dulu!"); return;}
+    window.simpanIklanHeader = async function() {
+      if (!imgHeaderBase64) { alert("Pilih gambar dulu!"); return; }
       await addDoc(collection(db, "iklan_header"), {
         judul: document.getElementById('judul-iklan-header').value,
         link: document.getElementById('link-iklan-header').value,
         gambar: imgHeaderBase64, createdAt: new Date()
       });
       alert("✅ Iklan Header Disimpan!");
-      imgHeaderBase64 = ""; document.getElementById('gambar-iklan-header').value = ""; document.getElementById('pratinjau-iklan-header').innerHTML = "";
+      imgHeaderBase64 = ""; 
+      document.getElementById('gambar-iklan-header').value = ""; 
+      document.getElementById('pratinjau-iklan-header').innerHTML = "";
       window.muatDaftarIklanHeader();
     };
 
-    window.muatDaftarIklanHeader = async function () {
+    window.muatDaftarIklanHeader = async function() {
       const snap = await getDocs(collection(db, "iklan_header"));
       const tb = document.getElementById('tabel-daftar-iklan-header');
-      if (snap.empty) {tb.innerHTML = '<tr><td colspan="4" style="text-align:center;">Kosong</td></tr>'; return;}
+      if (snap.empty) { tb.innerHTML = '<tr><td colspan="4" style="text-align:center;">Kosong</td></tr>'; return; }
       let html = '';
       snap.forEach(d => {
         const x = d.data(); const id = d.id;
-        html += `<tr><td><img src="${x.gambar}" class="img-thumb"></td><td>${x.judul || '-'}</td><td><a href="${x.link}" target="_blank">Link</a></td><td><button class="btn-hapus" onclick="window.hapusIklanGlobal('iklan_header','${id}')">✖</button></td></tr>`;
+        html += `<tr><td><img src="${x.gambar}" class="img-thumb"></td><td>${x.judul||'-'}</td><td><a href="${x.link}" target="_blank">Link</a></td><td><button class="btn-hapus" onclick="window.hapusIklanGlobal('iklan_header','${id}')">✖</button></td></tr>`;
       });
       tb.innerHTML = html;
     };
 
-    window.simpanAfiliasi = async function () {
+    window.simpanAfiliasi = async function() {
       const nama = document.getElementById('nama-afiliasi').value;
       const link = document.getElementById('link-afiliasi').value;
       const file = document.getElementById('file-gambar-afiliasi').files[0];
-      if (!nama || !link || !file) {alert("Lengkapi semua data!"); return;}
-      if (file.size > 500000) {alert("Gambar maksimal 500KB!"); return;}
-
+      if (!nama || !link || !file) { alert("Lengkapi semua data!"); return; }
+      if (file.size > 500000) { alert("Gambar maksimal 500KB!"); return; }
+      
       const reader = new FileReader();
-      reader.onload = async function (e) {
-        await addDoc(collection(db, "afiliasi"), {nama, link, gambar: e.target.result, createdAt: new Date()});
+      reader.onload = async function(e) {
+        await addDoc(collection(db, "afiliasi"), { nama, link, gambar: e.target.result, createdAt: new Date() });
         alert("✅ Afiliasi Disimpan!");
-        document.getElementById('nama-afiliasi').value = ''; document.getElementById('link-afiliasi').value = ''; document.getElementById('file-gambar-afiliasi').value = '';
+        document.getElementById('nama-afiliasi').value = ''; 
+        document.getElementById('link-afiliasi').value = ''; 
+        document.getElementById('file-gambar-afiliasi').value = '';
         window.muatDaftarAfiliasi();
       };
       reader.readAsDataURL(file);
     };
 
-    window.muatDaftarAfiliasi = async function () {
+    window.muatDaftarAfiliasi = async function() {
       const snap = await getDocs(collection(db, "afiliasi"));
       const wadah = document.getElementById('daftar-afiliasi');
-      if (snap.empty) {wadah.innerHTML = '<p>Belum ada afiliasi.</p>'; return;}
+      if (snap.empty) { wadah.innerHTML = '<p>Belum ada afiliasi.</p>'; return; }
       let html = '';
       snap.forEach(d => {
         const x = d.data(); const id = d.id;
@@ -739,7 +567,7 @@
       wadah.innerHTML = html;
     };
 
-    window.hapusIklanGlobal = async function (koleksi, id) {
+    window.hapusIklanGlobal = async function(koleksi, id) {
       if (confirm("Hapus item ini?")) {
         await deleteDoc(doc(db, koleksi, id));
         if (koleksi === 'iklan_header') window.muatDaftarIklanHeader();
@@ -747,13 +575,12 @@
       }
     };
 
-    // --- INIT ---
+    // === INIT ===
     document.addEventListener('DOMContentLoaded', () => {
       console.log("Admin panel dimuat. Memulai inisialisasi...");
       window.muatSettingUtama();
-      window.muatDataRedaksi(); // Pastikan ini ada!
+      window.muatDataRedaksi();
     });
   </script>
 </body>
-
 </html>

@@ -45,6 +45,7 @@
     <a href="#" class="submenu" onclick="window.tampilHalaman('arsip-berita'); return false;">• Arsip Berita</a>
     <a href="#" class="menu-judul" style="font-weight:bold; margin-top:15px;">📢 Iklan</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('iklan-header'); return false;">• Iklan Header</a>
+    <a href="#" class="submenu" onclick="window.tampilHalaman('iklan-samping'); return false;">• Iklan Samping</a>
     <a href="#" class="submenu" onclick="window.tampilHalaman('afiliasi'); return false;">• Iklan Afiliasi</a>
     <a href="index.html" target="_blank" style="margin-top:20px; background:#27ae60; text-align:center;">👁️ Lihat Web</a>
   </div>
@@ -203,7 +204,26 @@
         </table>
       </div>
     </div>
-
+    <!-- IKLAN SAMPING -->
+    <div id="iklan-samping" class="halaman">
+      <h3>📢 Iklan Samping (Slider)</h3>
+      <div class="card">
+        <p style="margin-bottom:10px; color:#666; font-size:14px;">Tambahkan gambar iklan untuk slider samping. Tidak perlu link, gambar akan tampil besar saat diklik di website.</p>
+        <label>Judul / Keterangan Iklan</label>
+        <input type="text" id="judul-iklan-samping" placeholder="Contoh: Promo Spesial Bulan Ini">
+        <label>Gambar Iklan</label>
+        <input type="file" id="gambar-iklan-samping" accept="image/*" onchange="window.pratinjauIklanSamping(this)">
+        <div id="pratinjau-iklan-samping" style="margin:10px 0;"></div>
+        <button class="btn-utama" onclick="window.simpanIklanSamping()">💾 Tambah Iklan Samping</button>
+      </div>
+      <div class="card">
+        <h4>Daftar Iklan Samping</h4>
+        <table>
+          <thead><tr><th style="width:50px;">No</th><th>Gambar</th><th>Judul</th><th style="width:80px;">Aksi</th></tr></thead>
+          <tbody id="tabel-daftar-iklan-samping"></tbody>
+        </table>
+      </div>
+    </div>
     <div id="afiliasi" class="halaman">
       <h3>🔗 Iklan Afiliasi</h3>
       <div class="card">
@@ -262,6 +282,7 @@
         if (id === 'beranda') window.muatStatistikDashboard();
         if (id === 'arsip-berita') window.muatArsipBerita();
         if (id === 'iklan-header') window.muatDaftarIklanHeader();
+        if (id === 'iklan-samping') window.muatDaftarIklanSamping();
         if (id === 'afiliasi') window.muatDaftarAfiliasi();
         if (id === 'data-redaksi') window.muatDataRedaksi();
         if (id === 'induk-organisasi') window.muatIndukOrganisasi();
@@ -737,7 +758,66 @@
         if (statusEl) { statusEl.innerText = "❌ Gagal memuat: " + error.message; statusEl.style.color = "#e74c3c"; }
       }
     };
-   
+       // === IKLAN SAMPING ===
+    let imgSampingBase64 = "";
+
+    window.pratinjauIklanSamping = function(input) {
+      if (input.files && input.files[0]) {
+        if (input.files[0].size > 1000000) { alert("Gambar maksimal 1MB!"); input.value = ''; return; }
+        const reader = new FileReader();
+        reader.onload = e => { 
+          imgSampingBase64 = e.target.result; 
+          document.getElementById('pratinjau-iklan-samping').innerHTML = `<img src="${e.target.result}" class="img-preview">`; 
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    };
+
+    window.simpanIklanSamping = async function() {
+      const judul = document.getElementById('judul-iklan-samping').value.trim();
+      if (!imgSampingBase64) { alert("Pilih gambar dulu!"); return; }
+      if (!judul) { alert("Judul/keterangan wajib diisi!"); return; }
+      
+      try {
+        await addDoc(collection(db, "iklan_samping"), {
+          judul: judul,
+          gambar: imgSampingBase64,
+          createdAt: new Date()
+        });
+        alert("✅ Iklan Samping Disimpan!");
+        imgSampingBase64 = "";
+        document.getElementById('judul-iklan-samping').value = "";
+        document.getElementById('gambar-iklan-samping').value = "";
+        document.getElementById('pratinjau-iklan-samping').innerHTML = "";
+        window.muatDaftarIklanSamping();
+      } catch (error) {
+        alert("❌ Gagal: " + error.message);
+      }
+    };
+
+    window.muatDaftarIklanSamping = async function() {
+      const snap = await getDocs(collection(db, "iklan_samping"));
+      const tb = document.getElementById('tabel-daftar-iklan-samping');
+      if (snap.empty) { tb.innerHTML = '<tr><td colspan="4" style="text-align:center;">Kosong</td></tr>'; return; }
+      let html = '', i = 1;
+      snap.forEach(d => {
+        const x = d.data(); const id = d.id;
+        html += `<tr>
+          <td style="text-align:center">${i++}</td>
+          <td><img src="${x.gambar}" class="img-thumb"></td>
+          <td>${x.judul||'-'}</td>
+          <td style="text-align:center"><button class="btn-hapus" onclick="window.hapusIklanSamping('${id}')">✖</button></td>
+        </tr>`;
+      });
+      tb.innerHTML = html;
+    };
+
+    window.hapusIklanSamping = async function(id) {
+      if (confirm("Hapus iklan samping ini?")) {
+        await deleteDoc(doc(db, "iklan_samping", id));
+        window.muatDaftarIklanSamping();
+      }
+    };
     document.addEventListener('DOMContentLoaded', () => {
       console.log("Admin panel dimuat. Memulai inisialisasi...");
       window.muatSettingUtama();

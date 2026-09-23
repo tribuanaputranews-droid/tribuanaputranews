@@ -223,8 +223,7 @@
         body.gelap .berita-item { border-color: #444; }
         body.gelap #iklan-header-tempat { background: #444; }
 
-        @media (max-width: 768px) {
-        @media (max-width: 48rem) { /* 768px */
+        @media (max-width: 48rem) {
             .container { flex-direction: column; }
             #header-utama { flex-direction: column; text-align: center; }
             .menu-bar ul { flex-direction: column; }
@@ -408,6 +407,9 @@
         const PASSWORD_ADMIN = "admin123";
         document.getElementById('hari-ini').textContent = new Date().toLocaleDateString('id-ID', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
         let modeGelap = false;
+        window.daftarIklanSamping = []; 
+        window.indeksIklanSamping = 0; 
+        let timerIklanSamping = null;         
         window.ubahMode = function() {
             modeGelap = !modeGelap;
             document.body.classList.toggle('gelap', modeGelap);
@@ -597,25 +599,59 @@
         };
         window.muatIklanSampingWeb = async function() {
             try {
-                const snap = await getDocs(collection(db, "iklan_header")); 
-                window.daftarIklanSamping = []; snap.forEach((doc) => { window.daftarIklanSamping.push(doc.data()); });
+                // Baca dari koleksi IKLAN SAMPING (terpisah dari header)
+                const snap = await getDocs(collection(db, "iklan_samping"));
+                window.daftarIklanSamping = [];
+                snap.forEach((doc) => { 
+                    window.daftarIklanSamping.push({ id: doc.id, ...doc.data() }); 
+                });
                 window.indeksIklanSamping = 0;
                 window.tampilkanIklanSampingAktif();
                 window.mulaiTimerIklanSamping();
-            } catch (e) { console.error("Gagal muat iklan samping:", e); }
+            } catch (e) { 
+                console.error("Gagal muat iklan samping:", e); 
+            }
         };
         window.daftarIklanSamping = []; window.indeksIklanSamping = 0; let timerIklanSamping = null;
         window.tampilkanIklanSampingAktif = function() {
             let wadah = document.getElementById('konten-iklan-samping');
+            let btnKiri = document.getElementById('btn-iklan-kiri');
+            let btnKanan = document.getElementById('btn-iklan-kanan');
             if (!wadah) return;
-            if (window.daftarIklanSamping.length === 0) { wadah.innerHTML = '<span style="color:#888;">Belum ada iklan</span>'; return; }
+
+            if (window.daftarIklanSamping.length === 0) {
+                wadah.innerHTML = '<span style="color:#888;">Belum ada iklan</span>';
+                if (btnKiri) btnKiri.style.display = 'none';
+                if (btnKanan) btnKanan.style.display = 'none';
+                return;
+            }
+
+            // Tampilkan tombol panah jika lebih dari 1 iklan
+            if (btnKiri) btnKiri.style.display = window.daftarIklanSamping.length > 1 ? 'block' : 'none';
+            if (btnKanan) btnKanan.style.display = window.daftarIklanSamping.length > 1 ? 'block' : 'none';
+
             let iklan = window.daftarIklanSamping[window.indeksIklanSamping];
-            let html = `<img src="${iklan.gambar}" style="max-width:100%; height:auto; display:block; margin:0 auto; border-radius:4px;">`;
-            wadah.innerHTML = iklan.link ? `<a href="${iklan.link}" target="_blank">${html}</a>` : html;
-        };
+            
+            // Gambar bisa diklik untuk tampil besar (lightbox)
+            let htmlGambar = `<img src="${iklan.gambar}" alt="${iklan.judul || 'Iklan'}" 
+                style="max-width:100%; height:auto; display:block; margin:0 auto; border-radius:4px; cursor:pointer;"
+                onclick="window.bukaLightboxIklan('${iklan.id}')">`;
+            
+            // Tambah judul kecil di bawah gambar
+            if (iklan.judul) {
+                htmlGambar += `<div style="text-align:center; font-size:12px; color:#555; margin-top:6px; font-weight:bold;">${iklan.judul}</div>`;
+            }
+            
+            wadah.innerHTML = htmlGambar;
+        };        
         window.mulaiTimerIklanSamping = function() {
             window.hentikanTimerIklanSamping();
-            if (window.daftarIklanSamping.length > 1) timerIklanSamping = setInterval(() => { window.geserIklanSamping(1); }, 10000);
+            if (window.daftarIklanSamping.length > 1) {
+                // Auto-slide setiap 10 detik (10000 ms)
+                timerIklanSamping = setInterval(() => { 
+                    window.geserIklanSamping(1); 
+                }, 10000);
+            }
         };
         window.hentikanTimerIklanSamping = function() { if (timerIklanSamping) { clearInterval(timerIklanSamping); timerIklanSamping = null; } };
         window.geserIklanSamping = function(arah) {
@@ -932,6 +968,39 @@
                 console.error("Gagal memuat running text:", error);
             }
         };
+        // === LIGHTBOX IKLAN SAMPING ===
+        window.bukaLightboxIklan = function(id) {
+            const iklan = window.daftarIklanSamping.find(x => x.id === id);
+            if (!iklan) return;
+            
+            // Buat modal lightbox
+            const modal = document.createElement('div');
+            modal.id = 'lightbox-iklan';
+            modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:99999; display:flex; align-items:center; justify-content:center; padding:20px; cursor:pointer;';
+            
+            modal.innerHTML = `
+                <div style="position:relative; max-width:90%; max-height:90%;">
+                    <img src="${iklan.gambar}" style="max-width:100%; max-height:85vh; object-fit:contain; border-radius:8px; box-shadow:0 10px 40px rgba(0,0,0,0.5);">
+                    ${iklan.judul ? `<div style="text-align:center; color:white; margin-top:15px; font-size:18px; font-weight:bold;">${iklan.judul}</div>` : ''}
+                    <button onclick="window.tutupLightboxIklan()" style="position:absolute; top:-15px; right:-15px; background:#e74c3c; color:white; border:none; width:40px; height:40px; border-radius:50%; font-size:20px; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,0.3);">✖</button>
+                </div>
+            `;
+            
+            // Klik background untuk tutup
+            modal.onclick = function(e) {
+                if (e.target === modal) window.tutupLightboxIklan();
+            };
+            
+            document.body.appendChild(modal);
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.tutupLightboxIklan = function() {
+            const modal = document.getElementById('lightbox-iklan');
+            if (modal) modal.remove();
+            document.body.style.overflow = 'auto';
+        };
+        
         document.addEventListener('DOMContentLoaded', () => {
             window.muatBerita();
             window.muatPengaturanAdmin();

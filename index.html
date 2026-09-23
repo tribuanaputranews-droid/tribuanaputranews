@@ -5,27 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tribuana Putra News — Portal Berita Online Priangan Timur</title>
     <style>
-        :root {
-            --web-header-latar: #2c3e50; --web-header-teks: #ffffff;
-            --web-menu-latar: #34495e; --web-menu-teks: #ffffff;
-            --web-running-latar: #f1c40f; --web-running-teks: #222222;
-            --web-footer-latar: #2c3e50; --web-footer-teks: #ffffff;
-        }
+        :root { --web-header-latar: #2c3e50; --web-header-teks: #ffffff; --web-menu-latar: #34495e; --web-menu-teks: #ffffff; --web-running-latar: #f1c40f; --web-running-teks: #222222; --web-footer-latar: #2c3e50; --web-footer-teks: #ffffff; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: Arial, Helvetica, sans-serif; background-color: #f4f6f9; color: #333; line-height: 1.6; }
         body.gelap { background-color: #1a1a1a; color: #e0e0e0; }
         body.gelap .kotak { background-color: #2d2d2d; color: #e0e0e0; }
         body.gelap h2, body.gelap h3, body.gelap h4 { color: #ffffff; }
         body.gelap input, body.gelap textarea { background-color: #3d3d3d; color: #fff; border-color: #555; }
-
         .sticky-top { position: sticky; top: 0; z-index: 1000; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         body.gelap .sticky-top { background: #2d2d2d; }
-
         #header-utama { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: var(--web-header-latar); color: var(--web-header-teks); }
         .logo-area img { max-height: 60px; }
         #iklan-header-tempat { flex: 1; margin: 0 20px; text-align: center; min-height: 90px; display: flex; align-items: center; justify-content: center; background: #eee; border-radius: 4px; overflow: hidden; }
         body.gelap #iklan-header-tempat { background: #444; }
-
         .menu-bar { background: var(--web-menu-latar); color: var(--web-menu-teks); }
         .menu-bar ul { list-style: none; display: flex; flex-wrap: wrap; padding: 0 20px; }
         .menu-bar li { position: relative; }
@@ -36,7 +28,6 @@
         .sub-menu a { padding: 10px 15px; font-weight: normal; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .pencarian { margin-left: auto; display: flex; align-items: center; }
         .pencarian input { padding: 6px 10px; border: none; border-radius: 4px; margin-left: 10px; font-size: 13px; }
-
         .running { background: var(--web-running-latar); color: var(--web-running-teks); padding: 8px 20px; font-weight: bold; font-size: 14px; overflow: hidden; white-space: nowrap; }
         .container { display: flex; max-width: 1200px; margin: 20px auto; padding: 0 15px; gap: 20px; }
         .kiri { flex: 3; }
@@ -44,7 +35,6 @@
         .kotak { background: #fff; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .kotak h3 { border-bottom: 2px solid var(--web-menu-latar); padding-bottom: 8px; margin-bottom: 15px; font-size: 16px; color: #2c3e50; }
         body.gelap .kotak h3 { color: #fff; border-color: #555; }
-
         .grup-kategori { margin-bottom: 20px; }
         .judul-grup-kategori { display: flex; justify-content: space-between; align-items: center; background: #ecf0f1; padding: 8px 12px; border-radius: 4px; margin-bottom: 10px; font-weight: bold; color: #2c3e50; }
         body.gelap .judul-grup-kategori { background: #3d3d3d; color: #fff; }
@@ -52,7 +42,6 @@
         body.gelap .berita-item { border-color: #444; }
         .berita-item img { width: 100px; height: 70px; object-fit: cover; border-radius: 4px; }
         .berita-item:last-child { border-bottom: none; }
-
         .footer-utama { background: var(--web-footer-latar); color: var(--web-footer-teks); padding: 30px 20px 15px; margin-top: 30px; }
         .footer-container { display: flex; justify-content: space-between; max-width: 1200px; margin: 0 auto; flex-wrap: wrap; gap: 20px; }
         .footer-info, .footer-sosmed { flex: 1; min-width: 250px; }
@@ -63,7 +52,6 @@
         .footer-links { text-align: center; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
         .footer-links a { color: #ecf0f1; text-decoration: none; margin: 0 8px; font-size: 14px; }
         .footer-links a:hover { text-decoration: underline; }
-
         @media (max-width: 768px) {
             .container { flex-direction: column; }
             #header-utama { flex-direction: column; gap: 10px; text-align: center; }
@@ -76,16 +64,13 @@
 <body>
     <div class="sticky-top">
         <header id="header-utama">
-            <div class="logo-area">
-                <img src="https://via.placeholder.com/150x60?text=LOGO" alt="Logo" id="logo-website">
-            </div>
+            <div class="logo-area"><img src="" alt="Logo" id="logo-website"></div>
             <div id="iklan-header-tempat"><em style="color:#888; font-size:12px;">Memuat Iklan...</em></div>
             <div>
                 <button onclick="window.ubahMode()" id="tombol-mode" style="padding:4px 8px; cursor:pointer; border:1px solid #ccc; background:#fff; border-radius:4px;">🌙 Mode Gelap</button>
                 <div id="hari-ini" style="font-size:12px; margin-top:6px; color:#666;"></div>
             </div>
         </header>
-
         <nav class="menu-bar">
             <ul>
                 <li><a href="#" onclick="window.tampilSemua(); return false;">🏠 Home</a></li>
@@ -107,16 +92,11 @@
                 <li><a href="#" onclick="window.filterKategori('Kuliner'); return false;">Kuliner</a></li>
                 <li><a href="#" onclick="window.filterKategori('Hiburan'); return false;">Hiburan</a></li>
                 <li><a href="#" onclick="window.filterKategori('Artikel'); return false;">Artikel</a></li>
-                <li class="pencarian">
-                    <input type="text" id="kata-kunci" placeholder="🔍 Cari berita..." oninput="window.cariBerita(this.value)">
-                </li>
+                <li class="pencarian"><input type="text" id="kata-kunci" placeholder="🔍 Cari berita..." oninput="window.cariBerita(this.value)"></li>
             </ul>
         </nav>
-
         <div class="running">
-            <marquee onmouseover="this.stop();" onmouseout="this.start();">
-                <span id="teks-pengumuman">📢 Selamat datang di Tribuana Putra News</span>
-            </marquee>
+            <marquee onmouseover="this.stop();" onmouseout="this.start();"><span id="teks-pengumuman">📢 Selamat datang di Tribuana Putra News</span></marquee>
         </div>
     </div>
 
@@ -257,7 +237,6 @@
         let daftarAktifDiLayar = [];
         const PASSWORD_ADMIN = "admin123";
 
-        // --- TANGGAL & MODE ---
         document.getElementById('hari-ini').textContent = new Date().toLocaleDateString('id-ID', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
         let modeGelap = false;
         window.ubahMode = function() {
@@ -266,7 +245,6 @@
             document.getElementById('tombol-mode').textContent = modeGelap ? "☀️ Mode Terang" : "🌙 Mode Gelap";
         };
 
-        // --- BERITA (Anti-Error Index) ---
         window.muatBerita = async function() {
             try {
                 const querySnapshot = await getDocs(collection(db, "berita"));
@@ -385,7 +363,6 @@
             window.tampilDaftarBerita(hasil);
         };
 
-        // --- SLIDER ---
         window.indeksSliderBerita = 0;
         window.daftarSliderBerita = [];
         let timerSliderBerita = null;
@@ -439,7 +416,6 @@
             if (idx !== -1) window.bacaBerita(idx);
         };
 
-        // --- IKLAN & PENGATURAN ---
         window.muatIklanHeaderWeb = async function() {
             let wadahIklan = document.getElementById('iklan-header-tempat');
             if (!wadahIklan) return;
@@ -532,29 +508,28 @@
             if (total > 1) timerAutoSlideAfiliasi = setInterval(() => { window.slideAfiliasiNext(); }, 4000);
         };
 
-window.muatPengaturanAdmin = async function() {
-    try {
-        const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
-        if (docSnap.exists()) {
-            let d = docSnap.data();
-            let htmlPemred = '';
-            
-            if (d.fotoPemimpinRedaksi) {
-                htmlPemred += `<img src="${d.fotoPemimpinRedaksi}" style="max-width:150px; border-radius:8px; margin-bottom:10px; box-shadow:0 2px 4px rgba(0,0,0,0.1);"><br>`;
-            }
-            if (d.namaAdmin) {
-                htmlPemred += `<b>${d.namaAdmin}</b><br><small style="color:#666;">Pemimpin Redaksi</small>`;
-            }
-            
-            if (htmlPemred) {
-                document.getElementById('pemimpin-redaksi').innerHTML = htmlPemred;
-            }
-            if (d.logoWebsite) {
-                document.getElementById('logo-website').src = d.logoWebsite;
-            }
-        }
-    } catch (e) { console.error("Gagal muat pengaturan:", e); }
-};
+        window.muatPengaturanAdmin = async function() {
+            try {
+                const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
+                if (docSnap.exists()) {
+                    let d = docSnap.data();
+                    let htmlPemred = '';
+                    if (d.fotoPemimpinRedaksi) {
+                        htmlPemred += `<img src="${d.fotoPemimpinRedaksi}" style="max-width:150px; border-radius:8px; margin-bottom:10px; box-shadow:0 2px 4px rgba(0,0,0,0.1);"><br>`;
+                    }
+                    if (d.namaAdmin) {
+                        htmlPemred += `<b>${d.namaAdmin}</b><br><small style="color:#666;">Pemimpin Redaksi</small>`;
+                    }
+                    if (htmlPemred) {
+                        document.getElementById('pemimpin-redaksi').innerHTML = htmlPemred;
+                    }
+                    if (d.logoWebsite) {
+                        document.getElementById('logo-website').src = d.logoWebsite;
+                    }
+                }
+            } catch (e) { console.error("Gagal muat pengaturan:", e); }
+        };
+
         window.muatDataFooter = async function() {
             try {
                 const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
@@ -574,7 +549,80 @@ window.muatPengaturanAdmin = async function() {
             } catch (e) { console.error("Gagal muat footer:", e); }
         };
 
-        // --- FORMULIR ---
+        window.bukaHalamanStatis = async function(jenis) {
+            document.getElementById('halaman-berita-utama').style.display = 'none';
+            document.getElementById('halaman-statis').style.display = 'block';
+            
+            let judul = "";
+            let konten = "<p style='text-align:center; padding:20px; color:#888;'>Memuat data...</p>";
+
+            if (jenis === 'tentang') {
+                judul = "Tentang Perusahaan";
+                konten = "<p style='color:#888;'>Silakan lengkapi data ini melalui Panel Admin.</p>";
+            } 
+            else if (jenis === 'redaksi') {
+                judul = "Data Redaksi";
+                try {
+                    const docSnap = await getDoc(doc(db, "pengaturan", "redaksi"));
+                    if (docSnap.exists() && docSnap.data().anggota && docSnap.data().anggota.length > 0) {
+                        let anggota = docSnap.data().anggota;
+                        let htmlTabel = `<table style="width:100%; border-collapse:collapse; margin-top:10px; background:#fff;" border="1">
+                            <thead><tr style="background:#ecf0f1; color:#2c3e50;"><th style="padding:12px; text-align:center; width:50px;">No</th><th style="padding:12px; text-align:left;">Jabatan</th><th style="padding:12px; text-align:left;">Nama</th></tr></thead><tbody>`;
+                        anggota.forEach((r, idx) => {
+                            htmlTabel += `<tr><td style="padding:12px; text-align:center;">${idx + 1}</td><td style="padding:12px;">${r.jabatan || '-'}</td><td style="padding:12px;"><b>${r.nama || '-'}</b></td></tr>`;
+                        });
+                        htmlTabel += `</tbody></table>`;
+                        konten = htmlTabel;
+                    } else {
+                        konten = "<p style='text-align:center; padding:30px; color:#888;'>📭 Belum ada data redaksi yang diinput dari Panel Admin.</p>";
+                    }
+                } catch (error) {
+                    console.error("Gagal memuat data redaksi:", error);
+                    konten = "<p style='text-align:center; padding:20px; color:red;'>❌ Gagal memuat data.</p>";
+                }
+            } 
+            else if (jenis === 'organisasi') {
+                judul = "Induk Organisasi";
+                try {
+                    const docSnap = await getDoc(doc(db, "pengaturan", "induk_organisasi"));
+                    if (docSnap.exists()) {
+                        const d = docSnap.data();
+                        let kontenHtml = '';
+                        if (d.logo) {
+                            kontenHtml += `<div style="text-align:center; margin-bottom:20px;"><img src="${d.logo}" style="max-width:200px; height:auto; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.1);"></div>`;
+                        }
+                        if (d.nama) {
+                            kontenHtml += `<h4 style="text-align:center; color:#2c3e50; margin-bottom:15px;">${d.nama}</h4>`;
+                        }
+                        if (d.keterangan) {
+                            kontenHtml += `<div style="line-height:1.8; color:#333; text-align:justify;">${d.keterangan.replace(/\n/g, '<br>')}</div>`;
+                        }
+                        konten = kontenHtml || "<p style='text-align:center; color:#888;'>Data belum dilengkapi.</p>";
+                    } else {
+                        konten = "<p style='text-align:center; color:#888;'>Data induk organisasi belum diinput dari Panel Admin.</p>";
+                    }
+                } catch (error) {
+                    console.error("Gagal memuat data organisasi:", error);
+                    konten = "<p style='text-align:center; color:red;'>Gagal memuat data.</p>";
+                }
+            } 
+            else if (jenis === 'pedoman') {
+                judul = "Pedoman Media Siber";
+                konten = "<p style='color:#888;'>Silakan lengkapi data ini melalui Panel Admin.</p>";
+            }
+
+            document.getElementById('judul-halaman-statis').innerHTML = judul;
+            document.getElementById('isi-halaman-statis').innerHTML = konten;
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        };
+
+        window.bukaBeritaUtama = function() {
+            document.getElementById('halaman-statis').style.display = 'none';
+            document.getElementById('halaman-berita-utama').style.display = 'block';
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        };
+        window.bukaTentangOrganisasi = function() { window.bukaHalamanStatis('organisasi'); };
+
         window.simpanKomentar = async function(e) {
             e.preventDefault();
             try {
@@ -641,110 +689,6 @@ window.muatPengaturanAdmin = async function() {
             } else if (pwd !== null) { alert("❌ Password Salah!"); }
         };
 
-window.bukaHalamanStatis = async function(jenis) {
-    document.getElementById('halaman-berita-utama').style.display = 'none';
-    document.getElementById('halaman-statis').style.display = 'block';
-    
-    let judul = "";
-    let konten = "<p style='text-align:center; padding:20px;'>Memuat...</p>";
-
-    if (jenis === 'tentang') {
-        judul = "Tentang Perusahaan";
-        konten = "<p>Data tentang perusahaan.</p>";
-    } 
-    else if (jenis === 'redaksi') {
-        judul = "Data Redaksi";
-        
-        try {
-            const docSnap = await getDoc(doc(db, "pengaturan", "redaksi"));
-            
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                console.log("Data redaksi dari Firebase:", data);
-                
-                if (data.anggota && data.anggota.length > 0) {
-                    let html = '<table style="width:100%; border-collapse:collapse;" border="1">';
-                    html += '<thead><tr style="background:#f4f4f4;"><th style="padding:10px;">No</th><th style="padding:10px;">Jabatan</th><th style="padding:10px;">Nama</th></tr></thead>';
-                    html += '<tbody>';
-                    
-                    data.anggota.forEach((r, idx) => {
-                        html += `<tr>
-                            <td style="padding:10px; text-align:center;">${idx + 1}</td>
-                            <td style="padding:10px;">${r.jabatan}</td>
-                            <td style="padding:10px;">${r.nama}</td>
-                        </tr>`;
-                    });
-                    
-                    html += '</tbody></table>';
-                    konten = html;
-                } else {
-                    konten = "<p>Belum ada data redaksi.</p>";
-                }
-            } else {
-                konten = "<p>Dokumen redaksi tidak ditemukan.</p>";
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            konten = "<p style='color:red;'>Gagal memuat data: " + error.message + "</p>";
-        }
-    } 
-    else if (jenis === 'organisasi') {
-        judul = "Induk Organisasi";
-        try {
-            // Ambil data dari Firebase (dokumen: induk_organisasi)
-            const docSnap = await getDoc(doc(db, "pengaturan", "induk_organisasi"));
-            
-            if (docSnap.exists()) {
-                const d = docSnap.data();
-                let kontenHtml = '';
-                
-                // Tampilkan Logo jika ada
-                if (d.logo) {
-                    kontenHtml += `<div style="text-align:center; margin-bottom:20px;">
-                        <img src="${d.logo}" style="max-width:200px; height:auto; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.1);">
-                    </div>`;
-                }
-                
-                // Tampilkan Nama Organisasi
-                if (d.nama) {
-                    kontenHtml += `<h4 style="text-align:center; color:#2c3e50; margin-bottom:15px;">${d.nama}</h4>`;
-                }
-                
-                // Tampilkan Keterangan
-                if (d.keterangan) {
-                    kontenHtml += `<div style="line-height:1.8; color:#333; text-align:justify;">${d.keterangan.replace(/\n/g, '<br>')}</div>`;
-                }
-                
-                if (kontenHtml) {
-                    konten = kontenHtml;
-                } else {
-                    konten = "<p style='text-align:center; color:#888;'>Data induk organisasi belum dilengkapi.</p>";
-                }
-            } else {
-                konten = "<p style='text-align:center; color:#888;'>Data induk organisasi belum diinput dari Panel Admin.</p>";
-            }
-        } catch (error) {
-            console.error("Gagal memuat data organisasi:", error);
-            konten = "<p style='text-align:center; color:red;'>Gagal memuat data. Silakan refresh halaman.</p>";
-        }
-    } 
-    else if (jenis === 'pedoman') {
-        judul = "Pedoman Media Siber";
-        konten = "<p>Pedoman media siber.</p>";
-    }
-
-    document.getElementById('judul-halaman-statis').innerHTML = judul;
-    document.getElementById('isi-halaman-statis').innerHTML = konten;
-    window.scrollTo({top: 0, behavior: 'smooth'});
-};
-        window.bukaBeritaUtama = function() {
-            document.getElementById('halaman-statis').style.display = 'none';
-            document.getElementById('halaman-berita-utama').style.display = 'block';
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        };
-        window.bukaTentangOrganisasi = function() { window.bukaHalamanStatis('organisasi'); };
-
-        // --- INIT ---
         document.addEventListener('DOMContentLoaded', () => {
             window.muatBerita();
             window.muatPengaturanAdmin();

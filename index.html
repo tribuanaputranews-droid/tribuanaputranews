@@ -629,68 +629,66 @@
             } else if (pwd !== null) { alert("❌ Password Salah!"); }
         };
 
-   window.bukaHalamanStatis = async function(jenis) {
-       document.getElementById('halaman-berita-utama').style.display = 'none';
-       document.getElementById('halaman-statis').style.display = 'block';
-       
-       let judul = "";
-       let konten = "<p style='text-align:center; padding:20px; color:#888;'>Memuat data...</p>";
+window.bukaHalamanStatis = async function(jenis) {
+    document.getElementById('halaman-berita-utama').style.display = 'none';
+    document.getElementById('halaman-statis').style.display = 'block';
+    
+    let judul = "";
+    let konten = "<p style='text-align:center; padding:20px;'>Memuat...</p>";
 
-       if (jenis === 'tentang') {
-           judul = "Tentang Perusahaan";
-           konten = "<p style='color:#888;'>Silakan lengkapi data ini melalui Panel Admin.</p>";
-       } 
-       else if (jenis === 'redaksi') {
-           judul = "Data Redaksi";
-           try {
-               // Mengambil data dari Firebase sesuai cara admin menyimpannya
-               const docSnap = await getDoc(doc(db, "pengaturan", "redaksi"));
-               
-               if (docSnap.exists() && docSnap.data().anggota && docSnap.data().anggota.length > 0) {
-                   let anggota = docSnap.data().anggota;
-                   let htmlTabel = `
-                       <table style="width:100%; border-collapse:collapse; margin-top:10px; background:#fff;" border="1">
-                           <thead>
-                               <tr style="background:#ecf0f1; color:#2c3e50;">
-                                   <th style="padding:12px; text-align:center; width:50px;">No</th>
-                                   <th style="padding:12px; text-align:left;">Jabatan</th>
-                                   <th style="padding:12px; text-align:left;">Nama</th>
-                               </tr>
-                           </thead>
-                           <tbody>`;
-                   
-                   anggota.forEach((r, idx) => {
-                       htmlTabel += `
-                           <tr>
-                               <td style="padding:12px; text-align:center;">${idx + 1}</td>
-                               <td style="padding:12px;">${r.jabatan || '-'}</td>
-                               <td style="padding:12px;"><b>${r.nama || '-'}</b></td>
-                           </tr>`;
-                   });
-                   
-                   htmlTabel += `</tbody></table>`;
-                   konten = htmlTabel;
-               } else {
-                   konten = "<p style='text-align:center; padding:30px; color:#888;'>📭 Belum ada data redaksi yang diinput dari Panel Admin.</p>";
-               }
-           } catch (error) {
-               console.error("Gagal memuat data redaksi:", error);
-               konten = "<p style='text-align:center; padding:20px; color:red;'>❌ Gagal memuat data. Silakan refresh halaman.</p>";
-           }
-       } 
-       else if (jenis === 'organisasi') {
-           judul = "Induk Organisasi";
-           konten = "<p style='color:#888;'>Silakan lengkapi data ini melalui Panel Admin.</p>";
-       } 
-       else if (jenis === 'pedoman') {
-           judul = "Pedoman Media Siber";
-           konten = "<p style='color:#888;'>Silakan lengkapi data ini melalui Panel Admin.</p>";
-       }
+    if (jenis === 'tentang') {
+        judul = "Tentang Perusahaan";
+        konten = "<p>Data tentang perusahaan.</p>";
+    } 
+    else if (jenis === 'redaksi') {
+        judul = "Data Redaksi";
+        
+        try {
+            const docSnap = await getDoc(doc(db, "pengaturan", "redaksi"));
+            
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                console.log("Data redaksi dari Firebase:", data);
+                
+                if (data.anggota && data.anggota.length > 0) {
+                    let html = '<table style="width:100%; border-collapse:collapse;" border="1">';
+                    html += '<thead><tr style="background:#f4f4f4;"><th style="padding:10px;">No</th><th style="padding:10px;">Jabatan</th><th style="padding:10px;">Nama</th></tr></thead>';
+                    html += '<tbody>';
+                    
+                    data.anggota.forEach((r, idx) => {
+                        html += `<tr>
+                            <td style="padding:10px; text-align:center;">${idx + 1}</td>
+                            <td style="padding:10px;">${r.jabatan}</td>
+                            <td style="padding:10px;">${r.nama}</td>
+                        </tr>`;
+                    });
+                    
+                    html += '</tbody></table>';
+                    konten = html;
+                } else {
+                    konten = "<p>Belum ada data redaksi.</p>";
+                }
+            } else {
+                konten = "<p>Dokumen redaksi tidak ditemukan.</p>";
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            konten = "<p style='color:red;'>Gagal memuat data: " + error.message + "</p>";
+        }
+    } 
+    else if (jenis === 'organisasi') {
+        judul = "Induk Organisasi";
+        konten = "<p>Data induk organisasi.</p>";
+    } 
+    else if (jenis === 'pedoman') {
+        judul = "Pedoman Media Siber";
+        konten = "<p>Pedoman media siber.</p>";
+    }
 
-       document.getElementById('judul-halaman-statis').innerHTML = judul;
-       document.getElementById('isi-halaman-statis').innerHTML = konten;
-       window.scrollTo({top: 0, behavior: 'smooth'});
-   };
+    document.getElementById('judul-halaman-statis').innerHTML = judul;
+    document.getElementById('isi-halaman-statis').innerHTML = konten;
+    window.scrollTo({top: 0, behavior: 'smooth'});
+};
         window.bukaBeritaUtama = function() {
             document.getElementById('halaman-statis').style.display = 'none';
             document.getElementById('halaman-berita-utama').style.display = 'block';

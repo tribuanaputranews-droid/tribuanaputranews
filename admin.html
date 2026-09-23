@@ -189,8 +189,26 @@
         <div id="daftar-afiliasi" style="margin-top:15px;"></div>
       </div>
     </div>
-  </div>
+    <!-- MODAL LIHAT BERITA & PDF -->
+    <div id="modal-lihat-berita" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; overflow-y:auto; padding:20px;">
+      <div style="background:white; max-width:800px; margin:20px auto; padding:30px; border-radius:8px; position:relative;">
+        <button onclick="window.tutupModalBerita()" style="position:absolute; top:15px; right:20px; background:#e74c3c; color:white; border:none; padding:8px 12px; border-radius:4px; cursor:pointer; font-weight:bold;">✖ Tutup</button>
+        
+        <!-- Area yang akan di-print/save PDF -->
+        <div id="area-cetak-berita" style="padding:20px;">
+          <div id="detail-judul-berita" style="font-size:24px; font-weight:bold; color:#2c3e50; margin-bottom:10px; line-height:1.3;"></div>
+          <div id="detail-meta-berita" style="font-size:13px; color:#7f8c8d; margin-bottom:20px; padding-bottom:10px; border-bottom:2px solid #ecf0f1;"></div>
+          <div id="detail-gambar-berita" style="text-align:center; margin-bottom:20px;"></div>
+          <div id="detail-isi-berita" style="font-size:15px; line-height:1.8; color:#333; text-align:justify;"></div>
+        </div>
 
+        <!-- Tombol Download PDF (tidak ikut tercetak) -->
+        <div style="text-align:center; margin-top:30px; padding-top:20px; border-top:1px solid #eee;">
+          <button onclick="window.downloadBeritaPDF()" style="background:#27ae60; color:white; border:none; padding:12px 24px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:16px;">📥 Download / Save sebagai PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -435,8 +453,12 @@
           html += `<tr><td>${i++}</td><td><b>${b.judul}</b></td><td>${Array.isArray(b.kategori) ? b.kategori.join(', ') : '-'}</td>
             <td>${b.tglPublish || '-'}</td><td style="text-align:center">${b.beritaUtama ? '⭐' : '-'}</td>
             <td style="text-align:center">${b.tampilkanDiWeb ? '✅' : '❌'}</td>
-            <td style="text-align:center"><button onclick="window.editBeritaGlobal('${id}')" style="cursor:pointer;">✏️</button>
-            <button class="btn-hapus" onclick="window.hapusBeritaGlobal('${id}')">✖</button></td></tr>`;
+            <td style="text-align:center">
+              <button onclick="window.lihatBeritaPDF('${id}')" style="cursor:pointer; background:#9b59b6; color:white; border:none; padding:4px 8px; border-radius:3px; margin-right:4px;">👁️ Lihat</button>
+              <button onclick="window.editBeritaGlobal('${id}')" style="cursor:pointer; background:#f39c12; color:white; border:none; padding:4px 8px; border-radius:3px; margin-right:4px;">✏️</button>
+              <button class="btn-hapus" onclick="window.hapusBeritaGlobal('${id}')">✖</button>
+            </td>
+          </tr>`;
         });
         tb.innerHTML = html;
         document.getElementById('total-berita').innerText = total;
@@ -532,7 +554,83 @@
     window.hapusIklanGlobal = async function(koleksi, id) {
       if (confirm("Hapus item ini?")) { await deleteDoc(doc(db, koleksi, id)); if (koleksi === 'iklan_header') window.muatDaftarIklanHeader(); else window.muatDaftarAfiliasi(); }
     };
+    // === FUNGSI LIHAT BERITA & DOWNLOAD PDF ===
+    let dataBeritaAktif = null;
 
+    window.lihatBeritaPDF = async function(id) {
+      try {
+        const snap = await getDoc(doc(db, "berita", id));
+        if (!snap.exists()) { alert("Berita tidak ditemukan!"); return; }
+        
+        dataBeritaAktif = snap.data();
+        const b = dataBeritaAktif;
+        
+        // Tampilkan Judul
+        document.getElementById('detail-judul-berita').innerText = b.judul || 'Tanpa Judul';
+        
+        // Tampilkan Meta (Tanggal, Kategori, Viewer)
+        let kategori = Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || '-');
+        let meta = `📅 Dipublish: ${b.tglPublish || '-'} ${b.jamPublish || ''} | 📂 Kategori: ${kategori} | 👁️ Dibaca: ${b.viewer || 0} kali`;
+        document.getElementById('detail-meta-berita').innerText = meta;
+        
+        // Tampilkan Gambar Utama (ambil dari isi berita)
+        let gambarHTML = '';
+        if (b.isiBerita) {
+          let match = b.isiBerita.match(/<img[^>]+src="([^">]+)"/);
+          if (match && match[1]) {
+            gambarHTML = `<img src="${match[1]}" style="max-width:100%; height:auto; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">`;
+          }
+        }
+        document.getElementById('detail-gambar-berita').innerHTML = gambarHTML;
+        
+        // Tampilkan Isi Berita
+        document.getElementById('detail-isi-berita').innerHTML = b.isiBerita || '<p style="color:#888;">Isi berita kosong.</p>';
+        
+        // Tampilkan Modal
+        document.getElementById('modal-lihat-berita').style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Cegah scroll di belakang modal
+      } catch (error) {
+        console.error("Gagal memuat berita:", error);
+        alert("Gagal memuat detail berita.");
+      }
+    };
+
+    window.tutupModalBerita = function() {
+      document.getElementById('modal-lihat-berita').style.display = 'none';
+      document.body.style.overflow = 'auto';
+      dataBeritaAktif = null;
+    };
+
+    window.downloadBeritaPDF = function() {
+      if (!dataBeritaAktif) { alert("Tidak ada data berita!"); return; }
+      
+      const element = document.getElementById('area-cetak-berita');
+      const namaFile = (dataBeritaAktif.judul || 'Berita').replace(/[^a-z0-9]/gi, '_').toLowerCase();
+      
+      const opt = {
+        margin: 10,
+        filename: `TribuanaPutraNews_${namaFile}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      // Tampilkan loading
+      const btn = event.target;
+      const teksAsli = btn.innerText;
+      btn.innerText = '⏳ Memproses PDF...';
+      btn.disabled = true;
+
+      html2pdf().set(opt).from(element).save().then(() => {
+        btn.innerText = teksAsli;
+        btn.disabled = false;
+      }).catch(err => {
+        console.error("Gagal membuat PDF:", err);
+        alert("Gagal membuat PDF. Pastikan gambar tidak terlalu besar.");
+        btn.innerText = teksAsli;
+        btn.disabled = false;
+      });
+    };
     document.addEventListener('DOMContentLoaded', () => {
       console.log("Admin panel dimuat. Memulai inisialisasi...");
       window.muatSettingUtama();

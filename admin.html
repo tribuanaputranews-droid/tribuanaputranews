@@ -49,7 +49,6 @@
   </div>
 
   <div class="content">
-    <!-- DASHBOARD -->
     <div id="beranda" class="halaman aktif">
       <h2>Hai, Administrator 👋</h2>
       <p>Selamat datang di Panel Admin Tribuana Putra News.</p>
@@ -60,7 +59,6 @@
       </div>
     </div>
 
-    <!-- SETTING UTAMA -->
     <div id="setting-utama" class="halaman">
       <h3>⚙️ Setting Utama</h3>
       <div class="card">
@@ -72,20 +70,16 @@
         <label>Link Facebook</label><input type="url" id="fb-link">
         <label>Link Instagram</label><input type="url" id="ig-link">
         <label>Link Youtube</label><input type="url" id="yt-link">
-        
         <label>Logo Website</label>
         <input type="file" id="logo-website" accept="image/*" onchange="window.pratinjauLogo(this)">
         <div id="pratinjau-logo" style="margin-top:10px;"></div>
-
         <label style="margin-top:20px;">Foto Pemimpin Redaksi</label>
         <input type="file" id="foto-pemimpin-redaksi" accept="image/*" onchange="window.pratinjauFotoPemred(this)">
         <div id="pratinjau-foto-pemred" style="margin-top:10px;"></div>
-
         <button class="btn-utama" onclick="window.simpanSettingUtama()">💾 Simpan Setting Utama</button>
       </div>
     </div>
 
-    <!-- DATA REDAKSI -->
     <div id="data-redaksi" class="halaman">
       <h3>👥 Data Redaksi</h3>
       <div class="card">
@@ -101,7 +95,6 @@
       </div>
     </div>
 
-    <!-- INDUK ORGANISASI -->
     <div id="induk-organisasi" class="halaman">
       <h3>🏛️ Induk Organisasi</h3>
       <div class="card">
@@ -116,7 +109,6 @@
       </div>
     </div>
 
-    <!-- KONTEN BERITA -->
     <div id="konten-berita" class="halaman">
       <h3>📝 Konten Berita</h3>
       <div class="card">
@@ -152,7 +144,6 @@
       </div>
     </div>
 
-    <!-- ARSIP BERITA -->
     <div id="arsip-berita" class="halaman">
       <h3>📂 Arsip Berita</h3>
       <div class="card">
@@ -163,7 +154,6 @@
       </div>
     </div>
 
-    <!-- IKLAN HEADER -->
     <div id="iklan-header" class="halaman">
       <h3>📢 Iklan Header</h3>
       <div class="card">
@@ -183,7 +173,6 @@
       </div>
     </div>
 
-    <!-- AFILIASI -->
     <div id="afiliasi" class="halaman">
       <h3>🔗 Iklan Afiliasi</h3>
       <div class="card">
@@ -214,12 +203,8 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    let sedangEdit = false;
-    let idBeritaDiedit = null;
-    let daftarRedaksi = [];
-    let imgHeaderBase64 = "";
+    let sedangEdit = false, idBeritaDiedit = null, daftarRedaksi = [], imgHeaderBase64 = "";
 
-    // --- NAVIGASI ---
     window.tampilHalaman = function(id) {
       document.querySelectorAll('.halaman').forEach(h => h.classList.remove('aktif'));
       const el = document.getElementById(id);
@@ -234,25 +219,17 @@
       }
     };
 
-    // --- STATISTIK DASHBOARD ---
     window.muatStatistikDashboard = async function() {
       try {
         const snap = await getDocs(collection(db, "berita"));
         let total = 0, pub = 0, unpub = 0;
-        snap.forEach(d => {
-          const b = d.data();
-          total++;
-          if (b.tampilkanDiWeb) pub++; else unpub++;
-        });
+        snap.forEach(d => { const b = d.data(); total++; if (b.tampilkanDiWeb) pub++; else unpub++; });
         document.getElementById('total-berita').innerText = total;
         document.getElementById('berita-publish').innerText = pub;
         document.getElementById('berita-unpublish').innerText = unpub;
-      } catch (error) {
-        console.error("Gagal muat statistik:", error);
-      }
+      } catch (error) { console.error("Gagal muat statistik:", error); }
     };
 
-    // --- SETTING UTAMA (Logo + Foto Pemred) ---
     window.pratinjauLogo = function(input) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
@@ -272,40 +249,26 @@
 
     window.simpanSettingUtama = async function() {
       const data = {
-        namaAdmin: document.getElementById('nama-admin').value,
-        namaPerusahaan: document.getElementById('nama-perusahaan').value,
-        alamatPerusahaan: document.getElementById('alamat-perusahaan').value,
-        telp: document.getElementById('telp').value,
-        emailKontak: document.getElementById('email-kontak').value,
-        fbLink: document.getElementById('fb-link').value,
-        igLink: document.getElementById('ig-link').value,
-        ytLink: document.getElementById('yt-link').value,
-        updatedAt: new Date()
+        namaAdmin: document.getElementById('nama-admin').value, namaPerusahaan: document.getElementById('nama-perusahaan').value,
+        alamatPerusahaan: document.getElementById('alamat-perusahaan').value, telp: document.getElementById('telp').value,
+        emailKontak: document.getElementById('email-kontak').value, fbLink: document.getElementById('fb-link').value,
+        igLink: document.getElementById('ig-link').value, ytLink: document.getElementById('yt-link').value, updatedAt: new Date()
       };
-
       const fileLogo = document.getElementById('logo-website').files[0];
       const fileFoto = document.getElementById('foto-pemimpin-redaksi').files[0];
-
       try {
         if (fileLogo) {
           if (fileLogo.size > 1000000) { alert("Logo maksimal 1MB!"); return; }
-          data.logoWebsite = await new Promise((resolve, reject) => {
-            const r = new FileReader(); r.onload = () => resolve(r.result); r.onerror = reject; r.readAsDataURL(fileLogo);
-          });
+          data.logoWebsite = await new Promise((resolve, reject) => { const r = new FileReader(); r.onload = () => resolve(r.result); r.onerror = reject; r.readAsDataURL(fileLogo); });
         }
         if (fileFoto) {
           if (fileFoto.size > 1000000) { alert("Foto Pemred maksimal 1MB!"); return; }
-          data.fotoPemimpinRedaksi = await new Promise((resolve, reject) => {
-            const r = new FileReader(); r.onload = () => resolve(r.result); r.onerror = reject; r.readAsDataURL(fileFoto);
-          });
+          data.fotoPemimpinRedaksi = await new Promise((resolve, reject) => { const r = new FileReader(); r.onload = () => resolve(r.result); r.onerror = reject; r.readAsDataURL(fileFoto); });
         }
-
         await setDoc(doc(db, "pengaturan", "utama"), data, { merge: true });
         alert("✅ Setting Utama, Logo & Foto Pemred tersimpan!");
-        window.muatSettingUtama(); // Refresh tampilan
-      } catch (error) {
-        alert("❌ Gagal menyimpan: " + error.message);
-      }
+        window.muatSettingUtama();
+      } catch (error) { alert("❌ Gagal menyimpan: " + error.message); }
     };
 
     window.muatSettingUtama = async function() {
@@ -325,31 +288,23 @@
       }
     };
 
-    // --- DATA REDAKSI ---
     window.tampilTabelRedaksi = function() {
       const tb = document.getElementById('isi-tabel-redaksi');
       if (!tb) return;
-      if (daftarRedaksi.length === 0) {
-        tb.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#888;">Belum ada data redaksi.</td></tr>';
-        return;
-      }
+      if (daftarRedaksi.length === 0) { tb.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#888;">Belum ada data redaksi.</td></tr>'; return; }
       let html = '';
       daftarRedaksi.forEach((r, i) => {
-        html += `<tr>
-          <td style="text-align:center">${i+1}</td>
+        html += `<tr><td style="text-align:center">${i+1}</td>
           <td><input type="text" value="${r.jabatan||''}" onchange="window.updateRedaksi(${i},'jabatan',this.value)" style="width:100%; padding:6px;"></td>
           <td><input type="text" value="${r.nama||''}" onchange="window.updateRedaksi(${i},'nama',this.value)" style="width:100%; padding:6px;"></td>
-          <td style="text-align:center"><button class="btn-hapus" onclick="window.hapusBarisRedaksi(${i})">✖</button></td>
-        </tr>`;
+          <td style="text-align:center"><button class="btn-hapus" onclick="window.hapusBarisRedaksi(${i})">✖</button></td></tr>`;
       });
       tb.innerHTML = html;
     };
     window.updateRedaksi = function(index, field, value) { if (daftarRedaksi[index]) daftarRedaksi[index][field] = value; };
     window.tambahBarisRedaksi = function() { 
-      daftarRedaksi.push({ jabatan: '', nama: '' }); 
-      window.tampilTabelRedaksi(); 
-      const statusEl = document.getElementById('status-redaksi');
-      if (statusEl) statusEl.innerText = "✅ Baris baru ditambahkan. Jangan lupa klik Simpan!";
+      daftarRedaksi.push({ jabatan: '', nama: '' }); window.tampilTabelRedaksi(); 
+      const statusEl = document.getElementById('status-redaksi'); if (statusEl) statusEl.innerText = "✅ Baris baru ditambahkan. Jangan lupa klik Simpan!";
     };
     window.hapusBarisRedaksi = function(i) { if (confirm("Hapus baris ini?")) { daftarRedaksi.splice(i, 1); window.tampilTabelRedaksi(); } };
     
@@ -360,7 +315,6 @@
         if (statusEl) { statusEl.innerText = "✅ Data Redaksi Tersimpan di Firebase!"; statusEl.style.color = "#27ae60"; }
         alert("✅ Data Redaksi Tersimpan!");
       } catch (error) {
-        console.error("Gagal simpan redaksi:", error);
         if (statusEl) { statusEl.innerText = "❌ Gagal menyimpan: " + error.message; statusEl.style.color = "#e74c3c"; }
         alert("❌ Gagal menyimpan: " + error.message);
       }
@@ -379,19 +333,15 @@
         }
         window.tampilTabelRedaksi();
       } catch (error) {
-        console.error("Gagal muat redaksi:", error);
         if (statusEl) { statusEl.innerText = "❌ Gagal memuat: " + error.message; statusEl.style.color = "#e74c3c"; }
       }
     };
 
-    // --- INDUK ORGANISASI ---
     window.pratinjauLogoOrganisasi = function(input) {
       if (input.files && input.files[0]) {
         if (input.files[0].size > 1000000) { alert("⚠️ Ukuran logo terlalu besar! Maksimal 1MB."); input.value = ''; return; }
         const reader = new FileReader();
-        reader.onload = e => {
-          document.getElementById('pratinjau-logo-organisasi').innerHTML = `<img src="${e.target.result}" class="img-preview" style="max-width:150px;">`;
-        };
+        reader.onload = e => { document.getElementById('pratinjau-logo-organisasi').innerHTML = `<img src="${e.target.result}" class="img-preview" style="max-width:150px;">`; };
         reader.readAsDataURL(input.files[0]);
       }
     };
@@ -400,29 +350,17 @@
       const nama = document.getElementById('nama-organisasi').value;
       const keterangan = document.getElementById('keterangan-organisasi').value;
       const fileLogo = document.getElementById('logo-organisasi').files[0];
-
       if (!nama) { alert("⚠️ Nama Induk Organisasi wajib diisi!"); return; }
-
       const data = { nama: nama, keterangan: keterangan, updatedAt: new Date() };
-
       try {
         if (fileLogo) {
           if (fileLogo.size > 1000000) { alert("Logo maksimal 1MB!"); return; }
-          const base64 = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(fileLogo);
-          });
-          data.logo = base64;
+          data.logo = await new Promise((resolve, reject) => { const r = new FileReader(); r.onload = () => resolve(r.result); r.onerror = reject; r.readAsDataURL(fileLogo); });
         }
         await setDoc(doc(db, "pengaturan", "induk_organisasi"), data, { merge: true });
         alert("✅ Data Induk Organisasi berhasil disimpan!");
         window.muatIndukOrganisasi();
-      } catch (error) {
-        console.error("Gagal menyimpan:", error);
-        alert("❌ Gagal menyimpan data: " + error.message);
-      }
+      } catch (error) { alert("❌ Gagal menyimpan data: " + error.message); }
     };
 
     window.muatIndukOrganisasi = async function() {
@@ -432,27 +370,16 @@
           const d = docSnap.data();
           document.getElementById('nama-organisasi').value = d.nama || '';
           document.getElementById('keterangan-organisasi').value = d.keterangan || '';
-          if (d.logo) {
-            document.getElementById('pratinjau-logo-organisasi').innerHTML = `<img src="${d.logo}" class="img-preview" style="max-width:150px;">`;
-          } else {
-            document.getElementById('pratinjau-logo-organisasi').innerHTML = '';
-          }
+          document.getElementById('pratinjau-logo-organisasi').innerHTML = d.logo ? `<img src="${d.logo}" class="img-preview" style="max-width:150px;">` : '';
         }
-      } catch (error) {
-        console.error("Gagal memuat data induk organisasi:", error);
-      }
+      } catch (error) { console.error("Gagal memuat data induk organisasi:", error); }
     };
 
-    // --- BERITA ---
     window.sisipkanFotoBerita = function(input) {
       if (!input.files[0]) return;
       if (input.files[0].size > 500000) { alert("Gambar maksimal 500KB!"); input.value = ''; return; }
       const reader = new FileReader();
-      reader.onload = function(e) {
-        document.getElementById('isi-berita').focus();
-        document.execCommand('insertImage', false, e.target.result);
-        input.value = '';
-      };
+      reader.onload = function(e) { document.getElementById('isi-berita').focus(); document.execCommand('insertImage', false, e.target.result); input.value = ''; };
       reader.readAsDataURL(input.files[0]);
     };
 
@@ -462,12 +389,9 @@
       const kategori = Array.from(document.getElementById('kategori-berita').selectedOptions).map(o => o.value);
       const data = {
         judul, urlSlug: judul.toLowerCase().replace(/[^a-z0-9]+/g, '-'), kategori,
-        tglPublish: document.getElementById('tgl-publish').value,
-        jamPublish: document.getElementById('jam-publish').value,
-        metaKataKunci: document.getElementById('meta-kata-kunci').value,
-        beritaUtama: document.getElementById('berita-utama').checked,
-        tampilkanDiWeb: document.getElementById('tampilkan-berita').checked,
-        isiBerita: document.getElementById('isi-berita').innerHTML,
+        tglPublish: document.getElementById('tgl-publish').value, jamPublish: document.getElementById('jam-publish').value,
+        metaKataKunci: document.getElementById('meta-kata-kunci').value, beritaUtama: document.getElementById('berita-utama').checked,
+        tampilkanDiWeb: document.getElementById('tampilkan-berita').checked, isiBerita: document.getElementById('isi-berita').innerHTML,
         viewer: 0, updatedAt: new Date()
       };
       try {
@@ -493,27 +417,17 @@
         snap.forEach(d => {
           const b = d.data(); const id = d.id;
           total++; if(b.tampilkanDiWeb) pub++; else unpub++;
-          html += `<tr>
-            <td>${i++}</td><td><b>${b.judul}</b></td>
-            <td>${Array.isArray(b.kategori) ? b.kategori.join(', ') : '-'}</td>
-            <td>${b.tglPublish || '-'}</td>
-            <td style="text-align:center">${b.beritaUtama ? '⭐' : '-'}</td>
+          html += `<tr><td>${i++}</td><td><b>${b.judul}</b></td><td>${Array.isArray(b.kategori) ? b.kategori.join(', ') : '-'}</td>
+            <td>${b.tglPublish || '-'}</td><td style="text-align:center">${b.beritaUtama ? '⭐' : '-'}</td>
             <td style="text-align:center">${b.tampilkanDiWeb ? '✅' : '❌'}</td>
-            <td style="text-align:center">
-              <button onclick="window.editBeritaGlobal('${id}')" style="cursor:pointer;">✏️</button>
-              <button class="btn-hapus" onclick="window.hapusBeritaGlobal('${id}')">✖</button>
-            </td>
-          </tr>`;
+            <td style="text-align:center"><button onclick="window.editBeritaGlobal('${id}')" style="cursor:pointer;">✏️</button>
+            <button class="btn-hapus" onclick="window.hapusBeritaGlobal('${id}')">✖</button></td></tr>`;
         });
         tb.innerHTML = html;
-        // Update dashboard stats juga saat arsip dimuat
         document.getElementById('total-berita').innerText = total;
         document.getElementById('berita-publish').innerText = pub;
         document.getElementById('berita-unpublish').innerText = unpub;
-      } catch (error) {
-        console.error("Gagal muat arsip:", error);
-        tb.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Gagal memuat data.</td></tr>';
-      }
+      } catch (error) { tb.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Gagal memuat data.</td></tr>'; }
     };
 
     window.editBeritaGlobal = async function(id) {
@@ -550,29 +464,19 @@
       document.getElementById('isi-berita').innerHTML = '';
     };
 
-    // --- IKLAN ---
     window.pratinjauIklanHeader = function(input) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
-        reader.onload = e => { 
-          imgHeaderBase64 = e.target.result; 
-          document.getElementById('pratinjau-iklan-header').innerHTML = `<img src="${e.target.result}" class="img-preview">`; 
-        };
+        reader.onload = e => { imgHeaderBase64 = e.target.result; document.getElementById('pratinjau-iklan-header').innerHTML = `<img src="${e.target.result}" class="img-preview">`; };
         reader.readAsDataURL(input.files[0]);
       }
     };
 
     window.simpanIklanHeader = async function() {
       if (!imgHeaderBase64) { alert("Pilih gambar dulu!"); return; }
-      await addDoc(collection(db, "iklan_header"), {
-        judul: document.getElementById('judul-iklan-header').value,
-        link: document.getElementById('link-iklan-header').value,
-        gambar: imgHeaderBase64, createdAt: new Date()
-      });
+      await addDoc(collection(db, "iklan_header"), { judul: document.getElementById('judul-iklan-header').value, link: document.getElementById('link-iklan-header').value, gambar: imgHeaderBase64, createdAt: new Date() });
       alert("✅ Iklan Header Disimpan!");
-      imgHeaderBase64 = ""; 
-      document.getElementById('gambar-iklan-header').value = ""; 
-      document.getElementById('pratinjau-iklan-header').innerHTML = "";
+      imgHeaderBase64 = ""; document.getElementById('gambar-iklan-header').value = ""; document.getElementById('pratinjau-iklan-header').innerHTML = "";
       window.muatDaftarIklanHeader();
     };
 
@@ -581,26 +485,19 @@
       const tb = document.getElementById('tabel-daftar-iklan-header');
       if (snap.empty) { tb.innerHTML = '<tr><td colspan="4" style="text-align:center;">Kosong</td></tr>'; return; }
       let html = '';
-      snap.forEach(d => {
-        const x = d.data(); const id = d.id;
-        html += `<tr><td><img src="${x.gambar}" class="img-thumb"></td><td>${x.judul||'-'}</td><td><a href="${x.link}" target="_blank">Link</a></td><td><button class="btn-hapus" onclick="window.hapusIklanGlobal('iklan_header','${id}')">✖</button></td></tr>`;
-      });
+      snap.forEach(d => { const x = d.data(); const id = d.id; html += `<tr><td><img src="${x.gambar}" class="img-thumb"></td><td>${x.judul||'-'}</td><td><a href="${x.link}" target="_blank">Link</a></td><td><button class="btn-hapus" onclick="window.hapusIklanGlobal('iklan_header','${id}')">✖</button></td></tr>`; });
       tb.innerHTML = html;
     };
 
     window.simpanAfiliasi = async function() {
-      const nama = document.getElementById('nama-afiliasi').value;
-      const link = document.getElementById('link-afiliasi').value;
-      const file = document.getElementById('file-gambar-afiliasi').files[0];
+      const nama = document.getElementById('nama-afiliasi').value, link = document.getElementById('link-afiliasi').value, file = document.getElementById('file-gambar-afiliasi').files[0];
       if (!nama || !link || !file) { alert("Lengkapi semua data!"); return; }
       if (file.size > 500000) { alert("Gambar maksimal 500KB!"); return; }
       const reader = new FileReader();
       reader.onload = async function(e) {
         await addDoc(collection(db, "afiliasi"), { nama, link, gambar: e.target.result, createdAt: new Date() });
         alert("✅ Afiliasi Disimpan!");
-        document.getElementById('nama-afiliasi').value = ''; 
-        document.getElementById('link-afiliasi').value = ''; 
-        document.getElementById('file-gambar-afiliasi').value = '';
+        document.getElementById('nama-afiliasi').value = ''; document.getElementById('link-afiliasi').value = ''; document.getElementById('file-gambar-afiliasi').value = '';
         window.muatDaftarAfiliasi();
       };
       reader.readAsDataURL(file);
@@ -611,31 +508,21 @@
       const wadah = document.getElementById('daftar-afiliasi');
       if (snap.empty) { wadah.innerHTML = '<p>Belum ada afiliasi.</p>'; return; }
       let html = '';
-      snap.forEach(d => {
-        const x = d.data(); const id = d.id;
-        html += `<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; padding:10px; background:#f9f9f9; border:1px solid #ddd;">
-          <img src="${x.gambar}" style="width:60px; height:60px; object-fit:cover;">
-          <div style="flex:1;"><b>${x.nama}</b><br><small>${x.link}</small></div>
-          <button class="btn-hapus" onclick="window.hapusIklanGlobal('afiliasi','${id}')">✖</button>
-        </div>`;
-      });
+      snap.forEach(d => { const x = d.data(); const id = d.id; html += `<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; padding:10px; background:#f9f9f9; border:1px solid #ddd;">
+        <img src="${x.gambar}" style="width:60px; height:60px; object-fit:cover;"><div style="flex:1;"><b>${x.nama}</b><br><small>${x.link}</small></div>
+        <button class="btn-hapus" onclick="window.hapusIklanGlobal('afiliasi','${id}')">✖</button></div>`; });
       wadah.innerHTML = html;
     };
 
     window.hapusIklanGlobal = async function(koleksi, id) {
-      if (confirm("Hapus item ini?")) {
-        await deleteDoc(doc(db, koleksi, id));
-        if (koleksi === 'iklan_header') window.muatDaftarIklanHeader();
-        else window.muatDaftarAfiliasi();
-      }
+      if (confirm("Hapus item ini?")) { await deleteDoc(doc(db, koleksi, id)); if (koleksi === 'iklan_header') window.muatDaftarIklanHeader(); else window.muatDaftarAfiliasi(); }
     };
 
-    // --- INIT ---
     document.addEventListener('DOMContentLoaded', () => {
       console.log("Admin panel dimuat. Memulai inisialisasi...");
       window.muatSettingUtama();
       window.muatDataRedaksi();
-      window.muatStatistikDashboard(); // <-- INI YANG MEMPERBAIKI DASHBOARD
+      window.muatStatistikDashboard();
     });
   </script>
 </body>

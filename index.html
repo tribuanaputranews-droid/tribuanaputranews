@@ -315,22 +315,35 @@
             document.getElementById('tombol-mode').textContent = modeGelap ? "☀️ Mode Terang" : "🌙 Mode Gelap";
         }
 
-        // === FUNGSI BERITA ===
+        // === FUNGSI BERITA (Versi Baru Anti-Error Index) ===
         window.muatBerita = async function() {
             try {
-                const q = query(collection(db, "berita"), where("tampilkanDiWeb", "==", true), orderBy("createdAt", "desc"));
-                const querySnapshot = await getDocs(q);
-                daftarBerita = [];
-                querySnapshot.forEach((docSnap) => {
-                    daftarBerita.push({ id: docSnap.id, ...docSnap.data() });
-                });
+                // Ambil SEMUA data berita tanpa filter rumit di database
+                const querySnapshot = await getDocs(collection(db, "berita"));
                 
-                let beritaAktif = daftarBerita.filter(b => b.tampilkanDiWeb !== false);
+                let semuaData = [];
+                querySnapshot.forEach((docSnap) => {
+                    semuaData.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                // Filter dan urutkan langsung di JavaScript
+                let beritaAktif = semuaData.filter(b => {
+                    return b.tampilkanDiWeb === true || b.tampilkanDiWeb === "true" || b.tampilkanDiWeb === undefined;
+                });
+
+                beritaAktif.sort((a, b) => {
+                    let waktuA = a.createdAt ? new Date(a.createdAt.seconds * 1000 || a.createdAt) : new Date(a.tglPublish || 0);
+                    let waktuB = b.createdAt ? new Date(b.createdAt.seconds * 1000 || b.createdAt) : new Date(b.tglPublish || 0);
+                    return waktuB - waktuA; 
+                });
+
+                daftarBerita = semuaData;
                 window.tampilDaftarBerita(beritaAktif);
                 window.muatSliderBeritaUtama();
+                
             } catch (error) {
                 console.error("Gagal memuat berita:", error);
-                document.getElementById('daftar-berita').innerHTML = '<p style="color:red; padding:10px;">Gagal memuat berita. Periksa koneksi internet Anda.</p>';
+                document.getElementById('daftar-berita').innerHTML = '<p style="color:red; padding:10px;">Gagal memuat data. Cek koneksi internet atau Console (F12).</p>';
             }
         }
 

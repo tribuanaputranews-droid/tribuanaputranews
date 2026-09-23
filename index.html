@@ -18,505 +18,64 @@
             --web-footer-teks: #ffffff;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        /* === PERBAIKAN TAMPILAN LIST SEJAJAR === */
-        ul,
-        ol {
-            padding-left: 1.5rem;
-            margin-top: 8px;
-            margin-bottom: 12px;
-        }
-
-        li {
-            margin-bottom: 4px;
-            line-height: 1.6;
-            text-align: left;
-        }
-
-        .isi-berita-konten ul,
-        .isi-berita-konten ol,
-        #isi-halaman-statis ul,
-        #isi-halaman-statis ol {
-            padding-left: 20px;
-            margin-left: 5px;
-        }
-
-        .isi-berita-konten li,
-        #isi-halaman-statis li {
-            list-style-position: inside;
-            text-indent: -1em;
-            padding-left: 1em;
-        }
-
-        /* HEADER */
-        header {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 15px;
-            background-color: var(--web-header-latar);
-            color: var(--web-header-teks);
-        }
-
-        #logo-area,
-        .logo-area {
-            flex: 0 0 auto;
-            max-width: 300px;
-        }
-
-        .logo-area img,
-        #logo-area img {
-            max-height: 80px;
-            width: auto;
-            max-width: 100%;
-            object-fit: contain;
-            display: block;
-        }
-
-        #iklan-header-tempat {
-            flex: 1 1 400px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            max-height: 90px;
-            overflow: hidden;
-        }
-
-        #iklan-header-tempat a {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-
-        #iklan-header-tempat img {
-            width: 100%;
-            height: 100%;
-            max-height: 80px;
-            object-fit: contain;
-            border-radius: 4px;
-            display: block;
-        }
-
-        /* MENU BAR */
-        .menu-bar {
-            background-color: var(--web-menu-latar);
-        }
-
-        .menu-bar ul {
-            max-width: 1200px;
-            margin: 0 auto;
-            list-style: none;
-            padding-left: 0;
-            /* Khusus menu navigasi tanpa padding list bawaan */
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .menu-bar li {
-            position: relative;
-            margin-bottom: 0;
-        }
-
-        .menu-bar a {
-            color: var(--web-menu-teks);
-            padding: 10px 15px;
-            display: block;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .menu-bar a:hover {
-            background-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .menu-bar .sub-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: var(--web-menu-latar) !important;
-            min-width: 180px;
-            display: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 9999;
-            padding-left: 0;
-        }
-
-        .menu-bar .sub-menu a {
-            padding: 10px 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--web-menu-teks);
-        }
-
-        .menu-bar li:hover>.sub-menu {
-            display: block !important;
-        }
-
-        .pencarian {
-            margin-left: auto;
-            padding: 6px 12px;
-        }
-
-        .pencarian input {
-            padding: 6px 10px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            width: 180px;
-            outline: none;
-        }
-
-        /* RUNNING TEXT */
-        .running {
-            background-color: var(--web-running-latar);
-            color: var(--web-running-teks);
-            padding: 6px 15px;
-            font-size: 13px;
-            overflow: hidden;
-        }
-
-        .running span {
-            display: inline-block;
-            animation: gerakPenuh 25s linear infinite;
-        }
-
-        @keyframes gerakPenuh {
-            from {
-                transform: translateX(100%);
-            }
-
-            to {
-                transform: translateX(-100%);
-            }
-        }
-
-        .sticky-top {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background-color: #ffffff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-        }
-
-        /* KONTEN TENGAH & LAYOUT */
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 15px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .kiri {
-            flex: 1 1 68%;
-            min-width: 300px;
-        }
-
-        .kanan {
-            flex: 1 1 32%;
-            min-width: 280px;
-            position: sticky;
-            top: 10px;
-            max-height: calc(100vh - 20px);
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        aside.kanan {
-            flex: 1 1 28%;
-            min-width: 260px;
-        }
-
-        .kanan::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .kanan::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 3px;
-        }
-
-        .kotak {
-            background: #ffffff;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border: 1px solid #e1e8ed;
-        }
-
-        .kotak h3 {
-            display: block !important;
-            width: 100% !important;
-            border-bottom: 2px solid #2c3e50;
-            padding-bottom: 8px;
-            margin-top: 0;
-            margin-bottom: 12px;
-            color: #2c3e50;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: left !important;
-            white-space: normal !important;
-            word-wrap: break-word !important;
-            overflow: visible !important;
-        }
-
-        /* GAYA KATEGORI BERITA */
-        .grup-kategori {
-            margin-bottom: 20px;
-            border: 1px solid #e1e8ed;
-            border-radius: 6px;
-            overflow: hidden;
-            background: #fff;
-        }
-
-        .judul-grup-kategori {
-            background-color: #2c3e50;
-            color: #ffffff;
-            padding: 8px 12px;
-            font-size: 15px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .berita-item {
-            display: flex;
-            gap: 12px;
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-            align-items: center;
-        }
-
-        .berita-item:last-child {
-            border-bottom: none;
-        }
-
-        .berita-item img {
-            width: 100px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 4px;
-            flex-shrink: 0;
-        }
-
-        /* MODE GELAP */
-        .gelap {
-            background: #1a1a1a;
-            color: #ddd;
-        }
-
-        .gelap .kotak,
-        .gelap .grup-kategori {
-            background: #2b2b2b;
-            color: #ddd;
-            border-color: #444;
-        }
-
-        .gelap .berita-item {
-            border-bottom-color: #444;
-        }
-
-        .gelap header,
-        .gelap footer {
-            background: #111 !important;
-            color: #fff !important;
-        }
-
-        .card-statis {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .btn-kembali {
-            background: #2c3e50;
-            color: #fff;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .btn-kembali:hover {
-            background: #34495e;
-        }
-
-        /* FOOTER UTAMA */
-        footer,
-        .footer-utama {
-            background-color: var(--web-footer-latar);
-            color: var(--web-footer-teks);
-            margin-top: 30px;
-            padding: 30px 15px 15px 15px;
-        }
-
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            justify-content: space-between;
-        }
-
-        .footer-info,
-        .footer-sosmed {
-            flex: 1 1 300px;
-        }
-
-        .footer-info h4,
-        .footer-sosmed h4 {
-            color: var(--web-footer-teks) !important;
-            margin-bottom: 12px;
-            font-size: 18px;
-            border-bottom: 2px solid var(--web-footer-teks);
-            display: inline-block;
-            padding-bottom: 4px;
-        }
-
-        .footer-info p {
-            margin: 6px 0;
-            font-size: 14px;
-            line-height: 1.5;
-            color: var(--web-footer-teks) !important;
-            opacity: 0.9;
-        }
-
-        .sosmed-links {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .sosmed-links a,
-        .footer-links a {
-            color: var(--web-footer-teks) !important;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            opacity: 0.9;
-            transition: opacity 0.2s ease;
-        }
-
-        .sosmed-links a:hover,
-        .footer-links a:hover {
-            opacity: 1;
-            text-decoration: underline;
-        }
-
-        .icon-sosmed {
-            width: 20px;
-            height: 20px;
-        }
-
-        .footer-copyright {
-            max-width: 1200px;
-            margin: 20px auto 0 auto;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            text-align: center;
-            font-size: 12px;
-            color: var(--web-footer-teks);
-            opacity: 0.8;
-        }
-
-        #logo-induk-organisasi {
-            cursor: pointer;
-            transition: transform 0.2s ease, opacity 0.2s ease;
-        }
-
-        #logo-induk-organisasi:hover {
-            opacity: 0.85;
-            transform: scale(0.99);
-        }
-
-        #logo-induk-organisasi img {
-            width: 100% !important;
-            max-width: 100% !important;
-            height: auto !important;
-            display: block;
-            margin: 0 auto;
-            border-radius: 4px;
-            object-fit: contain;
-        }
-
-        /* === TAMPILAN KHUSUS LAYAR HP (RESPONSIF) === */
-        @media screen and (max-width: 768px) {
-
-            /* Layout utama jadi 1 kolom ke bawah */
-            body,
-            .container,
-            .main-layout,
-            .content-wrapper {
-                flex-direction: column !important;
-                width: 100% !important;
-                padding: 10px !important;
-            }
-
-            /* Sidebar/Iklan Samping pindah ke bawah */
-            .sidebar,
-            .aside,
-            .iklan-samping {
-                width: 100% !important;
-                margin-top: 20px;
-            }
-
-            /* Semua elemen gambar, video, iframe otomatis pas dengan layar HP */
-            img,
-            iframe,
-            video {
-                max-width: 100% !important;
-                height: auto !important;
-            }
-
-            /* Menu navigasi bisa di-scroll kesamping kalau panjang */
-            .menu-bar,
-            nav {
-                display: flex;
-                overflow-x: auto;
-                white-space: nowrap;
-                padding: 8px 5px;
-            }
-
-            .menu-bar a,
-            nav a {
-                padding: 8px 12px;
-                font-size: 14px;
-            }
-
-            /* Penyesuaian ukuran judul agar pas di layar HP */
-            h1 {
-                font-size: 20px !important;
-                line-height: 1.3;
-            }
-
-            h2 {
-                font-size: 18px !important;
-            }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, Helvetica, sans-serif; background-color: #f4f6f9; color: #333; line-height: 1.6; }
+        body.gelap { background-color: #1a1a1a; color: #e0e0e0; }
+        body.gelap .kotak { background-color: #2d2d2d; color: #e0e0e0; }
+        body.gelap h2, body.gelap h3, body.gelap h4 { color: #ffffff; }
+        body.gelap input, body.gelap textarea { background-color: #3d3d3d; color: #fff; border-color: #555; }
+
+        .sticky-top { position: sticky; top: 0; z-index: 1000; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        body.gelap .sticky-top { background: #2d2d2d; }
+
+        #header-utama { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: var(--web-header-latar); color: var(--web-header-teks); }
+        .logo-area img { max-height: 60px; }
+        #iklan-header-tempat { flex: 1; margin: 0 20px; text-align: center; min-height: 90px; display: flex; align-items: center; justify-content: center; background: #eee; border-radius: 4px; overflow: hidden; }
+        body.gelap #iklan-header-tempat { background: #444; }
+
+        .menu-bar { background: var(--web-menu-latar); color: var(--web-menu-teks); }
+        .menu-bar ul { list-style: none; display: flex; flex-wrap: wrap; padding: 0 20px; }
+        .menu-bar li { position: relative; }
+        .menu-bar a { display: block; padding: 12px 15px; color: inherit; text-decoration: none; font-weight: bold; font-size: 14px; }
+        .menu-bar a:hover { background: rgba(255,255,255,0.1); }
+        .sub-menu { display: none; position: absolute; top: 100%; left: 0; background: var(--web-menu-latar); min-width: 180px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 1001; }
+        .menu-bar li:hover .sub-menu { display: block; }
+        .sub-menu a { padding: 10px 15px; font-weight: normal; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .pencarian { margin-left: auto; display: flex; align-items: center; }
+        .pencarian input { padding: 6px 10px; border: none; border-radius: 4px; margin-left: 10px; font-size: 13px; }
+
+        .running { background: var(--web-running-latar); color: var(--web-running-teks); padding: 8px 20px; font-weight: bold; font-size: 14px; overflow: hidden; white-space: nowrap; }
+        .container { display: flex; max-width: 1200px; margin: 20px auto; padding: 0 15px; gap: 20px; }
+        .kiri { flex: 3; }
+        .kanan { flex: 1; }
+        .kotak { background: #fff; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .kotak h3 { border-bottom: 2px solid var(--web-menu-latar); padding-bottom: 8px; margin-bottom: 15px; font-size: 16px; color: #2c3e50; }
+        body.gelap .kotak h3 { color: #fff; border-color: #555; }
+
+        .grup-kategori { margin-bottom: 20px; }
+        .judul-grup-kategori { display: flex; justify-content: space-between; align-items: center; background: #ecf0f1; padding: 8px 12px; border-radius: 4px; margin-bottom: 10px; font-weight: bold; color: #2c3e50; }
+        body.gelap .judul-grup-kategori { background: #3d3d3d; color: #fff; }
+        .berita-item { display: flex; gap: 15px; padding: 10px 0; border-bottom: 1px solid #eee; }
+        body.gelap .berita-item { border-color: #444; }
+        .berita-item img { width: 100px; height: 70px; object-fit: cover; border-radius: 4px; }
+        .berita-item:last-child { border-bottom: none; }
+
+        .footer-utama { background: var(--web-footer-latar); color: var(--web-footer-teks); padding: 30px 20px 15px; margin-top: 30px; }
+        .footer-container { display: flex; justify-content: space-between; max-width: 1200px; margin: 0 auto; flex-wrap: wrap; gap: 20px; }
+        .footer-info, .footer-sosmed { flex: 1; min-width: 250px; }
+        .footer-sosmed h4 { margin-bottom: 10px; }
+        .sosmed-links a { display: inline-flex; align-items: center; gap: 6px; color: #ecf0f1; text-decoration: none; margin-right: 15px; font-size: 14px; }
+        .icon-sosmed { width: 18px; height: 18px; }
+        .footer-copyright { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 13px; opacity: 0.8; }
+        .footer-links { text-align: center; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        .footer-links a { color: #ecf0f1; text-decoration: none; margin: 0 8px; font-size: 14px; }
+        .footer-links a:hover { text-decoration: underline; }
+
+        @media (max-width: 768px) {
+            .container { flex-direction: column; }
+            #header-utama { flex-direction: column; gap: 10px; text-align: center; }
+            .menu-bar ul { flex-direction: column; }
+            .sub-menu { position: static; box-shadow: none; padding-left: 15px; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -526,15 +85,14 @@
     <div class="sticky-top">
         <header id="header-utama">
             <div class="logo-area">
-                <img src="" alt="Logo Tribuana Putra News" id="logo-website">
+                <img src="https://via.placeholder.com/150x60?text=LOGO" alt="Logo Tribuana Putra News" id="logo-website">
             </div>
             <div id="iklan-header-tempat">
-                <em style="color:#ccc; font-size:12px;">Iklan Header</em>
+                <em style="color:#888; font-size:12px;">Memuat Iklan...</em>
             </div>
             <div>
-                <button onclick="ubahMode()" id="tombol-mode" style="padding:4px 8px; cursor:pointer;">🌙 Mode
-                    Gelap</button>
-                <div id="hari-ini" style="font-size:12px; margin-top:4px;"></div>
+                <button onclick="ubahMode()" id="tombol-mode" style="padding:4px 8px; cursor:pointer; border:1px solid #ccc; background:#fff; border-radius:4px;">🌙 Mode Gelap</button>
+                <div id="hari-ini" style="font-size:12px; margin-top:6px; color:#666;"></div>
             </div>
         </header>
 
@@ -559,7 +117,6 @@
                 <li><a href="#" onclick="filterKategori('Kuliner'); return false;">Kuliner</a></li>
                 <li><a href="#" onclick="filterKategori('Hiburan'); return false;">Hiburan</a></li>
                 <li><a href="#" onclick="filterKategori('Artikel'); return false;">Artikel</a></li>
-
                 <li class="pencarian">
                     <input type="text" id="kata-kunci" placeholder="🔍 Cari berita..." oninput="cariBerita(this.value)">
                 </li>
@@ -568,11 +125,13 @@
 
         <div class="running">
             <marquee onmouseover="this.stop();" onmouseout="this.start();">
-                <a id="link-pengumuman" href="#" target="_blank"
-                    style="text-decoration: none; color: inherit; display: inline-block;">
+                <a id="link-pengumuman" href="#" target="_blank" style="text-decoration: none; color: inherit; display: inline-block;">
                     <span id="teks-pengumuman">📢 Selamat datang di Tribuana Putra News</span>
                 </a>
             </marquee>
+        </div this.stop();" onmouseout="this.start();">
+            <span id="teks-pengumuman">📢 Selamat datang di Tribuana Putra News</span>
+        </marquee>
         </div>
     </div>
 
@@ -581,40 +140,34 @@
             <div id="halaman-berita-utama">
                 <div class="kotak">
                     <h3>📖 Baca Berita Utama</h3>
-                    <div id="area-slider-berita"
-                        style="position:relative; background:#000; color:#fff; border-radius:6px; overflow:hidden;">
-                        <img id="gambar-slider-berita" src=""
-                            style="width:100%; height:auto; object-fit:cover; opacity:0.8;">
-                        <div
-                            style="position:absolute; bottom:0; padding:15px; background:linear-gradient(transparent, rgba(0,0,0,0.8)); width:100%;">
-                            <h4 id="judul-slider-berita" style="font-size:18px; cursor:pointer;"
-                                onclick="bukaBeritaDariSlider()"></h4>
-                            <small id="kategori-slider-berita"></small>
+                    <div id="area-slider-berita" style="position:relative; background:#000; color:#fff; border-radius:6px; overflow:hidden; min-height:200px;">
+                        <img id="gambar-slider-berita" src="" style="width:100%; height:250px; object-fit:cover; opacity:0.9;">
+                        <div style="position:absolute; bottom:0; padding:15px; background:linear-gradient(transparent, rgba(0,0,0,0.9)); width:100%;">
+                            <h4 id="judul-slider-berita" style="font-size:18px; cursor:pointer; margin:0;" onclick="bukaBeritaDariSlider()"></h4>
+                            <small id="kategori-slider-berita" style="color:#ddd;"></small>
                         </div>
-                        <button onclick="tombolPanahKiri()"
-                            style="position:absolute; left:10px; top:45%; padding:5px 10px; cursor:pointer; background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:3px;">◀</button>
-                        <button onclick="tombolPanahKanan()"
-                            style="position:absolute; right:10px; top:45%; padding:5px 10px; cursor:pointer; background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:3px;">▶</button>
+                        <button onclick="tombolPanahKiri()" style="position:absolute; left:10px; top:45%; padding:8px 12px; cursor:pointer; background:rgba(0,0,0,0.6); color:#fff; border:none; border-radius:3px; font-size:16px;">◀</button>
+                        <button onclick="tombolPanahKanan()" style="position:absolute; right:10px; top:45%; padding:8px 12px; cursor:pointer; background:rgba(0,0,0,0.6); color:#fff; border:none; border-radius:3px; font-size:16px;">▶</button>
                     </div>
 
                     <div id="area-berita-penuh" style="display:none; margin-top:15px;">
-                        <button onclick="kembaliKeSlider()"
-                            style="padding:4px 10px; cursor:pointer; margin-bottom:10px;">← Kembali</button>
+                        <button onclick="kembaliKeSlider()" style="padding:6px 12px; cursor:pointer; margin-bottom:10px; background:#34495e; color:#fff; border:none; border-radius:4px;">← Kembali ke Daftar Berita</button>
                         <div id="isi-berita-penuh"></div>
                     </div>
                 </div>
 
                 <div class="kotak">
                     <h3>📰 Daftar Berita Per Kategori</h3>
-                    <div id="daftar-berita"></div>
+                    <div id="daftar-berita" style="min-height:100px;">
+                        <p style="text-align:center; color:#888; padding:20px;">Memuat berita dari server...</p>
+                    </div>
                 </div>
             </div>
 
             <div id="halaman-statis" class="kotak" style="display: none;">
                 <h3 id="judul-halaman-statis">Judul Halaman</h3>
                 <div id="isi-halaman-statis" style="margin-top: 15px; line-height: 1.6;"></div>
-                <button class="btn-kembali" onclick="bukaBeritaUtama()"
-                    style="margin-top: 15px; padding: 6px 12px; cursor: pointer;">← Kembali ke Berita Utama</button>
+                <button class="btn-kembali" onclick="bukaBeritaUtama()" style="margin-top: 15px; padding: 6px 12px; cursor: pointer; background:#34495e; color:#fff; border:none; border-radius:4px;">← Kembali ke Berita Utama</button>
             </div>
         </main>
 
@@ -622,119 +175,79 @@
             <div class="kotak">
                 <h3>👤 Pemimpin Redaksi</h3>
                 <div id="pemimpin-redaksi" style="text-align:center;">
-                    <p style="color:#888;">Data belum diisi</p>
+                    <p style="color:#888;">Memuat data...</p>
                 </div>
             </div>
 
             <div class="kotak">
                 <h3>🤝 Induk Organisasi</h3>
-                <div id="logo-induk-organisasi" style="text-align:center;" onclick="bukaTentangOrganisasi()"
-                    title="Klik untuk membaca keterangan organisasi">
-                    <p style="color:#888;">Logo belum diisi</p>
+                <div id="logo-induk-organisasi" style="text-align:center; cursor:pointer;" onclick="bukaTentangOrganisasi()" title="Klik untuk membaca keterangan organisasi">
+                    <p style="color:#888;">Memuat data...</p>
                 </div>
             </div>
 
             <div class="kotak">
                 <h3>📢 Data Iklan</h3>
-                <div id="wadah-iklan-samping"
-                    style="position:relative; width:100%; min-height:180px; background:#f9f9f9; border-radius:4px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+                <div id="wadah-iklan-samping" style="position:relative; width:100%; min-height:180px; background:#f9f9f9; border-radius:4px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
                     <div id="konten-iklan-samping" style="width:100%; text-align:center;">
-                        <span style="color:#888;">Belum ada iklan</span>
+                        <span style="color:#888;">Memuat iklan...</span>
                     </div>
-                    <button onclick="tombolIklanKiri()"
-                        style="position:absolute; left:5px; top:40%; padding:4px 8px; cursor:pointer; background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:3px; display:none;"
-                        id="btn-iklan-kiri">◀</button>
-                    <button onclick="tombolIklanKanan()"
-                        style="position:absolute; right:5px; top:40%; padding:4px 8px; cursor:pointer; background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:3px; display:none;"
-                        id="btn-iklan-kanan">▶</button>
+                    <button onclick="tombolIklanKiri()" style="position:absolute; left:5px; top:40%; padding:4px 8px; cursor:pointer; background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:3px; display:none;" id="btn-iklan-kiri">◀</button>
+                    <button onclick="tombolIklanKanan()" style="position:absolute; right:5px; top:40%; padding:4px 8px; cursor:pointer; background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:3px; display:none;" id="btn-iklan-kanan">▶</button>
                 </div>
             </div>
 
             <div class="kotak">
                 <h3>🔗 Iklan Afiliasi</h3>
-                <div class="slider-afiliasi-container"
-                    style="position:relative; overflow:hidden; border-radius:6px; background:#f4f4f4;">
+                <div class="slider-afiliasi-container" style="position:relative; overflow:hidden; border-radius:6px; background:#f4f4f4; min-height:150px;">
                     <div id="slider-afiliasi" style="display:flex; transition:transform 0.5s ease-in-out;"></div>
-                    <button onclick="slideAfiliasiPrev()"
-                        style="position:absolute; left:5px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:6px 10px; cursor:pointer; border-radius:3px; z-index:2;">❮</button>
-                    <button onclick="slideAfiliasiNext()"
-                        style="position:absolute; right:5px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:6px 10px; cursor:pointer; border-radius:3px; z-index:2;">❯</button>
-                </div>
-            </div>
-
-            <div class="kotak">
-                <h3>🎬 Video Berita Terbaru</h3>
-                <div id="wadah-video-berita" style="text-align:center;">
-                    <span style="color:#888;">Belum ada video</span>
+                    <button onclick="slideAfiliasiPrev()" style="position:absolute; left:5px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:6px 10px; cursor:pointer; border-radius:3px; z-index:2;">❮</button>
+                    <button onclick="slideAfiliasiNext()" style="position:absolute; right:5px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:6px 10px; cursor:pointer; border-radius:3px; z-index:2;">❯</button>
                 </div>
             </div>
 
             <div class="kotak">
                 <h3>💬 Kolom Komentar</h3>
                 <form id="form-komentar" onsubmit="simpanKomentar(event)">
-                    <input type="text" id="kom_nama" placeholder="Nama Lengkap" required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
-                    <input type="email" id="kom_email" placeholder="Email" required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
-                    <input type="tel" id="kom_wa" placeholder="No. WhatsApp" required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
-                    <textarea id="kom_isi" placeholder="Isi Komentar..." rows="3" required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;"></textarea>
-                    <button type="submit"
-                        style="width:100%; padding:8px; background:#27ae60; color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Kirim
-                        Komentar</button>
+                    <input type="text" id="kom_nama" placeholder="Nama Lengkap" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
+                    <input type="email" id="kom_email" placeholder="Email" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
+                    <input type="tel" id="kom_wa" placeholder="No. WhatsApp" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
+                    <textarea id="kom_isi" placeholder="Isi Komentar..." rows="3" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;"></textarea>
+                    <button type="submit" style="width:100%; padding:10px; background:#27ae60; color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Kirim Komentar</button>
                 </form>
-
                 <div style="margin-top:10px; text-align:center;">
-                    <button onclick="bukaKomentarAdmin()"
-                        style="background:none; border:none; color:#2980b9; cursor:pointer; text-decoration:underline; font-size:13px;">🔒
-                        Lihat Komentar (Admin)</button>
+                    <button onclick="bukaKomentarAdmin()" style="background:none; border:none; color:#2980b9; cursor:pointer; text-decoration:underline; font-size:13px;">🔒 Lihat Komentar (Admin)</button>
                 </div>
             </div>
 
             <div class="kotak">
                 <h3>📢 Pasang / Berlangganan Iklan</h3>
                 <form id="form-iklan-langganan" onsubmit="simpanLanggananIklan(event)">
-                    <input type="text" id="iklan_instansi" placeholder="Nama / Instansi" required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
-                    <input type="email" id="iklan_email" placeholder="Email" required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
-                    <input type="tel" id="iklan_wa" placeholder="No. WhatsApp" required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
-                    <textarea id="iklan_keterangan" placeholder="Keterangan Iklan (Jenis/Durasi/Posisi)..." rows="3"
-                        required
-                        style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;"></textarea>
-                    <button type="submit"
-                        style="width:100%; padding:8px; background:#e67e22; color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Kirim
-                        Pengajuan Iklan</button>
+                    <input type="text" id="iklan_instansi" placeholder="Nama / Instansi" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
+                    <input type="email" id="iklan_email" placeholder="Email" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
+                    <input type="tel" id="iklan_wa" placeholder="No. WhatsApp" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
+                    <textarea id="iklan_keterangan" placeholder="Keterangan Iklan (Jenis/Durasi/Posisi)..." rows="3" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;"></textarea>
+                    <button type="submit" style="width:100%; padding:10px; background:#e67e22; color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Kirim Pengajuan Iklan</button>
                 </form>
-
                 <div style="margin-top:10px; text-align:center;">
-                    <button onclick="bukaPelangganAdmin()"
-                        style="background:none; border:none; color:#2980b9; cursor:pointer; text-decoration:underline; font-size:13px;">🔒
-                        Lihat Pelanggan (Admin)</button>
+                    <button onclick="bukaPelangganAdmin()" style="background:none; border:none; color:#2980b9; cursor:pointer; text-decoration:underline; font-size:13px;">🔒 Lihat Pelanggan (Admin)</button>
                 </div>
             </div>
         </aside>
     </div>
 
     <footer class="footer-utama">
-        <div class="footer-links"
-            style="text-align: center; padding-bottom: 20px; border-bottom: 1px solid #34495e; margin-bottom: 20px;">
-            <a href="#" onclick="bukaHalamanStatis('tentang'); return false;"
-                style="color: #ecf0f1; text-decoration: none; margin: 0 8px;">Tentang Perusahaan</a> |
-            <a href="#" onclick="bukaHalamanStatis('redaksi'); return false;"
-                style="color: #ecf0f1; text-decoration: none; margin: 0 8px;">Data Redaksi</a> |
-            <a href="#" onclick="bukaHalamanStatis('organisasi'); return false;"
-                style="color: #ecf0f1; text-decoration: none; margin: 0 8px;">Induk Organisasi</a> |
-            <a href="#" onclick="bukaHalamanStatis('pedoman'); return false;"
-                style="color: #ecf0f1; text-decoration: none; margin: 0 8px;">Pedoman Media Siber</a>
+        <div class="footer-links">
+            <a href="#" onclick="bukaHalamanStatis('tentang'); return false;">Tentang Perusahaan</a> |
+            <a href="#" onclick="bukaHalamanStatis('redaksi'); return false;">Data Redaksi</a> |
+            <a href="#" onclick="bukaHalamanStatis('organisasi'); return false;">Induk Organisasi</a> |
+            <a href="#" onclick="bukaHalamanStatis('pedoman'); return false;">Pedoman Media Siber</a>
         </div>
 
         <div class="footer-container">
             <div class="footer-info">
-                <h4 id="footer-nama-perusahaan">Nama Perusahaan</h4>
-                <p id="footer-alamat-perusahaan">Alamat Perusahaan</p>
+                <h4 id="footer-nama-perusahaan">Tribuana Putra News</h4>
+                <p id="footer-alamat-perusahaan">Priangan Timur, Jawa Barat</p>
                 <p><strong>Telp/WA:</strong> <span id="footer-telp">--</span></p>
                 <p><strong>Email:</strong> <span id="footer-email">--</span></p>
             </div>
@@ -743,24 +256,15 @@
                 <h4>Ikuti Kami</h4>
                 <div class="sosmed-links">
                     <a id="link-fb" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">
-                        <svg class="icon-sosmed" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                        </svg>
+                        <svg class="icon-sosmed" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>
                         <span id="teks-fb">Facebook</span>
                     </a>
                     <a id="link-ig" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">
-                        <svg class="icon-sosmed" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                        </svg>
+                        <svg class="icon-sosmed" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" /></svg>
                         <span id="teks-ig">Instagram</span>
                     </a>
                     <a id="link-yt" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">
-                        <svg class="icon-sosmed" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                        </svg>
+                        <svg class="icon-sosmed" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>
                         <span id="teks-yt">YouTube</span>
                     </a>
                 </div>
@@ -768,53 +272,71 @@
         </div>
 
         <div class="footer-copyright">
-            <p>&copy; <span id="tahun-copyright"></span> <span id="copyright-nama-perusahaan">Nama Perusahaan</span>.
-                All Rights Reserved.</p>
+            <p>&copy; <span id="tahun-copyright"></span> <span id="copyright-nama-perusahaan">Tribuana Putra News</span>. All Rights Reserved.</p>
         </div>
     </footer>
 
-    <script>
-        // TANGGAL & MODE GELAP
+    <!-- SCRIPT UTAMA DENGAN FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getFirestore, collection, getDocs, doc, getDoc, updateDoc, increment, addDoc, query, where, orderBy 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCc1rUgdchrZ8vxk3HF6-yQKMZze-dNwzE",
+            authDomain: "tribuanaputra-1968.firebaseapp.com",
+            databaseURL: "https://tribuanaputra-1968-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "tribuanaputra-1968",
+            storageBucket: "tribuanaputra-1968.firebasestorage.app",
+            messagingSenderId: "772922168211",
+            appId: "1:772922168211:web:5bb280501e3d3e6fc50e66",
+            measurementId: "G-5Z8E2GWDHZ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // === STATE DATA ===
+        let daftarBerita = [];
+        let daftarAktifDiLayar = [];
+        const PASSWORD_ADMIN = "admin123"; // Ganti dengan password yang lebih aman nantinya
+
+        // === TANGGAL & MODE GELAP ===
         let tglEl = document.getElementById('hari-ini');
         if (tglEl) {
             tglEl.textContent = new Date().toLocaleDateString('id-ID', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
         }
 
         let modeGelap = false;
-        function ubahMode() {
+        window.ubahMode = function() {
             modeGelap = !modeGelap;
             document.body.classList.toggle('gelap', modeGelap);
             document.getElementById('tombol-mode').textContent = modeGelap ? "☀️ Mode Terang" : "🌙 Mode Gelap";
         }
 
-        // STATE DATA
-        let daftarBerita = JSON.parse(localStorage.getItem('daftarBerita') || '[]');
-        let daftarAktifDiLayar = [];
-
-        function terapkanWarnaWeb() {
-            let w = JSON.parse(localStorage.getItem('pengaturanWarna') || '{}');
-            let root = document.documentElement;
-
-            root.style.setProperty('--web-menu-latar', w.web_menu_latar || '#34495e');
-            root.style.setProperty('--web-menu-teks', w.web_menu_teks || '#ffffff');
-            root.style.setProperty('--web-header-latar', w.web_header_latar || '#2c3e50');
-            root.style.setProperty('--web-header-teks', w.web_header_teks || '#ffffff');
-            root.style.setProperty('--web-running-latar', w.web_running_latar || '#f1c40f');
-            root.style.setProperty('--web-running-teks', w.web_running_teks || '#222222');
-            root.style.setProperty('--web-footer-latar', w.web_footer_latar || '#2c3e50');
-            root.style.setProperty('--web-footer-teks', w.web_footer_teks || '#ffffff');
+        // === FUNGSI BERITA ===
+        window.muatBerita = async function() {
+            try {
+                const q = query(collection(db, "berita"), where("tampilkanDiWeb", "==", true), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                daftarBerita = [];
+                querySnapshot.forEach((docSnap) => {
+                    daftarBerita.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                
+                let beritaAktif = daftarBerita.filter(b => b.tampilkanDiWeb !== false);
+                window.tampilDaftarBerita(beritaAktif);
+                window.muatSliderBeritaUtama();
+            } catch (error) {
+                console.error("Gagal memuat berita:", error);
+                document.getElementById('daftar-berita').innerHTML = '<p style="color:red; padding:10px;">Gagal memuat berita. Periksa koneksi internet Anda.</p>';
+            }
         }
 
-        function muatBerita() {
-            let beritaAktif = daftarBerita.filter(b => b.tampilkanDiWeb !== false);
-            tampilDaftarBerita(beritaAktif);
-            muatSliderBeritaUtama();
-        }
-
-        function tampilDaftarBerita(list) {
+        window.tampilDaftarBerita = function(list) {
             let area = document.getElementById('daftar-berita');
             if (!area) return;
-
             area.innerHTML = "";
             daftarAktifDiLayar = list || [];
 
@@ -828,9 +350,7 @@
                 let katList = Array.isArray(b.kategori) ? b.kategori : [b.kategori || 'Umum'];
                 katList.forEach(kat => {
                     let k = kat || 'Umum';
-                    if (!terkelompok[k]) {
-                        terkelompok[k] = [];
-                    }
+                    if (!terkelompok[k]) terkelompok[k] = [];
                     terkelompok[k].push(b);
                 });
             });
@@ -849,40 +369,49 @@
                     let div = document.createElement('div');
                     div.className = "berita-item";
 
-                    let gmb = b.isiBerita?.match(/src=["']([^"']+)["']/i)?.[1] ||
-                        b.isi?.match(/src=["']([^"']+)["']/i)?.[1] ||
-                        'https://via.placeholder.com/100x70?text=No+Image';
+                    // Ekstrak gambar pertama dari isi berita
+                    let gmb = 'https://via.placeholder.com/100x70?text=No+Image';
+                    if (b.isiBerita) {
+                        let match = b.isiBerita.match(/src\s*=\s*["']([^"']+)["']/i);
+                        if (match && match[1]) gmb = match[1];
+                    }
 
                     div.innerHTML = `
                         <img src="${gmb}" alt="Gambar Berita">
                         <div style="flex:1;">
-                            <h4 style="font-size:15px; margin-bottom:4px; color:#2c3e50;">${b.judul || 'Tanpa Judul'}</h4>
-                            <small style="color:#666;">📅 ${b.tglPublish || b.tanggal || '-'} | 👁️ ${b.viewer || b.view || 0} kali dibaca</small><br>
-                            <button onclick="bacaBerita(${idxSistem})" style="padding:4px 10px; font-size:12px; margin-top:6px; cursor:pointer; background:#27ae60; color:#fff; border:none; border-radius:3px;">Baca Berita</button>
+                            <h4 style="font-size:15px; margin-bottom:4px; color:var(--web-header-latar);">${b.judul || 'Tanpa Judul'}</h4>
+                            <small style="color:#666;">📅 ${b.tglPublish || '-'} | 👁️ ${b.viewer || 0} kali dibaca</small><br>
+                            <button onclick="window.bacaBerita(${idxSistem})" style="padding:4px 10px; font-size:12px; margin-top:6px; cursor:pointer; background:#27ae60; color:#fff; border:none; border-radius:3px;">Baca Berita</button>
                         </div>
                     `;
                     wadahGrup.appendChild(div);
                 });
-
                 area.appendChild(wadahGrup);
             });
         }
 
-        function bacaBerita(indeks) {
+        window.bacaBerita = async function(indeks) {
             let b = daftarAktifDiLayar[indeks];
-            if (!b) return;
+            if (!b || !b.id) return;
 
-            b.viewer = (b.viewer || b.view || 0) + 1;
-            localStorage.setItem('daftarBerita', JSON.stringify(daftarBerita));
+            // Update viewer di Firebase
+            try {
+                await updateDoc(doc(db, "berita", b.id), {
+                    viewer: increment(1)
+                });
+                b.viewer = (b.viewer || 0) + 1; // Update state lokal juga
+            } catch (error) {
+                console.error("Gagal update viewer:", error);
+            }
 
-            let isiPenuh = b.isiBerita || b.isi || '<p style="color:red;">Isi berita kosong.</p>';
+            let isiPenuh = b.isiBerita || '<p style="color:red;">Isi berita kosong.</p>';
             let kategoriBerita = Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || 'Umum');
-            let tanggalBerita = b.tglPublish || b.tanggal || '-';
+            let tanggalBerita = b.tglPublish || '-';
 
             let areaIsi = document.getElementById('isi-berita-penuh');
             if (areaIsi) {
                 areaIsi.innerHTML = `
-                    <h2 style="color:#2c3e50; margin-bottom:6px;">${b.judul || 'Tanpa Judul'}</h2>
+                    <h2 style="color:var(--web-header-latar); margin-bottom:6px;">${b.judul || 'Tanpa Judul'}</h2>
                     <div style="font-size:13px; color:#666; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #eee;">
                         📂 Kategori: <b>${kategoriBerita}</b> | 👁️ Dibaca <b>${b.viewer}</b> kali | 📅 ${tanggalBerita}
                     </div>
@@ -892,191 +421,187 @@
 
             document.getElementById('area-slider-berita').style.display = 'none';
             document.getElementById('area-berita-penuh').style.display = 'block';
-            hentikanTimerSliderBerita();
+            window.hentikanTimerSliderBerita();
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        function bukaBeritaDariSlider() {
-            let beritaSaatIni = daftarSliderBerita[indeksSliderBerita];
+        window.bukaBeritaDariSlider = function() {
+            let beritaSaatIni = window.daftarSliderBerita[window.indeksSliderBerita];
             if (!beritaSaatIni) return;
-
-            let idx = daftarAktifDiLayar.findIndex(b => b.judul === beritaSaatIni.judul);
+            let idx = daftarAktifDiLayar.findIndex(b => b.id === beritaSaatIni.id || b.judul === beritaSaatIni.judul);
             if (idx !== -1) {
-                bacaBerita(idx);
+                window.bacaBerita(idx);
             } else {
                 daftarAktifDiLayar = [beritaSaatIni];
-                bacaBerita(0);
+                window.bacaBerita(0);
             }
         }
 
-        function kembaliKeSlider() {
+        window.kembaliKeSlider = function() {
             document.getElementById('area-slider-berita').style.display = 'block';
             document.getElementById('area-berita-penuh').style.display = 'none';
-            mulaiTimerSliderBerita();
+            window.mulaiTimerSliderBerita();
         }
 
-        function filterKategori(kat) {
+        window.filterKategori = function(kat) {
             let hasil = daftarBerita.filter(b => b.tampilkanDiWeb !== false && (Array.isArray(b.kategori) ? b.kategori.includes(kat) : b.kategori === kat));
-            tampilDaftarBerita(hasil);
-            kembaliKeSlider();
+            window.tampilDaftarBerita(hasil);
+            window.kembaliKeSlider();
         }
 
-        function tampilSemua() {
+        window.tampilSemua = function() {
             let beritaAktif = daftarBerita.filter(b => b.tampilkanDiWeb !== false);
-            tampilDaftarBerita(beritaAktif);
-            kembaliKeSlider();
+            window.tampilDaftarBerita(beritaAktif);
+            window.kembaliKeSlider();
         }
 
-        function cariBerita(k) {
+        window.cariBerita = function(k) {
+            if (!k) { window.tampilSemua(); return; }
             let beritaAktif = daftarBerita.filter(b => b.tampilkanDiWeb !== false);
             let hasil = beritaAktif.filter(b => (b.judul || '').toLowerCase().includes(k.toLowerCase()));
-            tampilDaftarBerita(hasil);
+            window.tampilDaftarBerita(hasil);
         }
 
-        function bukaTentangOrganisasi() {
-            let dataOrg = JSON.parse(localStorage.getItem('dataOrganisasi') || '{}');
-            let isi = dataOrg.isi || localStorage.getItem('isiIndukOrganisasi') || '<p style="color:#888;">Belum ada keterangan organisasi yang diinputkan dari Panel Admin.</p>';
-            let logo = dataOrg.logoOrganisasi || localStorage.getItem('logoOrganisasi') || '';
-
-            let areaIsi = document.getElementById('isi-berita-penuh');
-            if (areaIsi) {
-                areaIsi.innerHTML = `
-                    <h2 style="color:#2c3e50; margin-bottom:8px;">🏛️ Induk Organisasi</h2>
-                    <hr style="margin:10px 0 15px 0; border:0; border-top:2px solid #2c3e50;">
-                    ${logo ? `<div style="text-align:center; margin-bottom:15px;"><img src="${logo}" style="max-width:250px; height:auto; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.1);"></div>` : ''}
-                    <div class="isi-berita-konten" style="font-size:15px; line-height:1.7; color:#333;">${isi}</div>
-                `;
-            }
-
-            document.getElementById('area-slider-berita').style.display = 'none';
-            document.getElementById('area-berita-penuh').style.display = 'block';
-            hentikanTimerSliderBerita();
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-
-        // SLIDER BERITA UTAMA
-        let indeksSliderBerita = 0;
-        let daftarSliderBerita = [];
+        // === SLIDER BERITA UTAMA ===
+        window.indeksSliderBerita = 0;
+        window.daftarSliderBerita = [];
         let timerSliderBerita = null;
 
-        function muatSliderBeritaUtama() {
-            if (typeof daftarBerita !== 'undefined' && daftarBerita.length > 0) {
-                daftarSliderBerita = daftarBerita.filter(b => b.tampilkanDiWeb !== false);
-            } else {
-                daftarSliderBerita = [];
+        window.muatSliderBeritaUtama = function() {
+            window.daftarSliderBerita = daftarBerita.filter(b => b.tampilkanDiWeb !== false && b.beritaUtama === true);
+            if (window.daftarSliderBerita.length === 0) {
+                window.daftarSliderBerita = daftarBerita.filter(b => b.tampilkanDiWeb !== false).slice(0, 5); // Fallback ke 5 berita terbaru
             }
-
-            indeksSliderBerita = 0;
-            tampilItemSliderBerita();
-            mulaiTimerSliderBerita();
+            window.indeksSliderBerita = 0;
+            window.tampilItemSliderBerita();
+            window.mulaiTimerSliderBerita();
         }
 
-        function tampilItemSliderBerita() {
-            let gambarKosong = 'data:image/svg+xml;charset=UTF-8,' +
-                encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="220"><rect fill="#333" width="400" height="220"/><text x="50%" y="50%" text-anchor="middle" fill="#888" font-size="14">Tidak Ada Gambar</text></svg>');
-
+        window.tampilItemSliderBerita = function() {
+            let gambarKosong = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="220"><rect fill="#333" width="400" height="220"/><text x="50%" y="50%" text-anchor="middle" fill="#888" font-size="14">Tidak Ada Gambar</text></svg>');
             let elGambar = document.getElementById('gambar-slider-berita');
             let elJudul = document.getElementById('judul-slider-berita');
             let elKategori = document.getElementById('kategori-slider-berita');
 
             if (!elGambar || !elJudul) return;
 
-            if (daftarSliderBerita.length === 0) {
+            if (window.daftarSliderBerita.length === 0) {
                 elGambar.src = gambarKosong;
                 elJudul.textContent = 'Belum Ada Berita Utama';
                 if (elKategori) elKategori.textContent = '';
                 return;
             }
 
-            let b = daftarSliderBerita[indeksSliderBerita];
-
+            let b = window.daftarSliderBerita[window.indeksSliderBerita];
             let sumberGambar = gambarKosong;
-            let isiPenuh = b.isiBerita || b.isi || '';
-            let cocok = isiPenuh.match(/src\s*=\s*["']([^"']+\.(jpg|jpeg|png|gif|webp))[^"']*["']/i);
-            if (!cocok) cocok = isiPenuh.match(/src\s*=\s*["']([^"']+)["']/i);
-            if (cocok && cocok[1]) sumberGambar = cocok[1];
+            if (b.isiBerita) {
+                let cocok = b.isiBerita.match(/src\s*=\s*["']([^"']+)["']/i);
+                if (cocok && cocok[1]) sumberGambar = cocok[1];
+            }
 
             elGambar.src = sumberGambar;
             elJudul.textContent = b.judul || '(Tanpa Judul)';
-
             let kategoriStr = Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || 'Nasional');
-            let tglStr = b.tglPublish || b.tanggal || '-';
-            if (elKategori) {
-                elKategori.textContent = `📂 ${kategoriStr} | 📅 ${tglStr}`;
+            if (elKategori) elKategori.textContent = `📂 ${kategoriStr} | 📅 ${b.tglPublish || '-'}`;
+        }
+
+        window.mulaiTimerSliderBerita = function() {
+            window.hentikanTimerSliderBerita();
+            if (window.daftarSliderBerita.length > 1) {
+                timerSliderBerita = setInterval(() => { window.geserSliderBerita(1); }, 5000);
             }
         }
 
-        function mulaiTimerSliderBerita() {
-            hentikanTimerSliderBerita();
-            if (daftarSliderBerita.length > 1) {
-                timerSliderBerita = setInterval(() => {
-                    geserSliderBerita(1);
-                }, 5000);
-            }
+        window.hentikanTimerSliderBerita = function() {
+            if (timerSliderBerita) { clearInterval(timerSliderBerita); timerSliderBerita = null; }
         }
 
-        function hentikanTimerSliderBerita() {
-            if (timerSliderBerita) {
-                clearInterval(timerSliderBerita);
-                timerSliderBerita = null;
-            }
+        window.geserSliderBerita = function(arah) {
+            if (window.daftarSliderBerita.length === 0) return;
+            window.indeksSliderBerita += arah;
+            if (window.indeksSliderBerita < 0) window.indeksSliderBerita = window.daftarSliderBerita.length - 1;
+            if (window.indeksSliderBerita >= window.daftarSliderBerita.length) window.indeksSliderBerita = 0;
+            window.tampilItemSliderBerita();
         }
 
-        function geserSliderBerita(arah) {
-            if (daftarSliderBerita.length === 0) return;
-            indeksSliderBerita += arah;
-            if (indeksSliderBerita < 0) indeksSliderBerita = daftarSliderBerita.length - 1;
-            if (indeksSliderBerita >= daftarSliderBerita.length) indeksSliderBerita = 0;
+        window.tombolPanahKanan = function() { window.geserSliderBerita(1); window.mulaiTimerSliderBerita(); }
+        window.tombolPanahKiri = function() { window.geserSliderBerita(-1); window.mulaiTimerSliderBerita(); }
 
-            tampilItemSliderBerita();
+        // === IKLAN (HEADER, SAMPING, AFILIASI) ===
+        window.muatIklanHeaderWeb = async function() {
+            let wadahIklan = document.getElementById('iklan-header-tempat');
+            if (!wadahIklan) return;
+            try {
+                const querySnapshot = await getDocs(collection(db, "iklan_header"));
+                let daftarIklan = [];
+                querySnapshot.forEach((doc) => { daftarIklan.push({ id: doc.id, ...doc.data() }); });
+
+                if (daftarIklan.length === 0) {
+                    wadahIklan.innerHTML = '<em style="color:#888; font-size:12px;">Space Iklan Header</em>';
+                    return;
+                }
+
+                let sekarang = new Date().toISOString().slice(0, 10);
+                let daftarAktif = daftarIklan.filter(item => (!item.mulai || item.mulai <= sekarang) && (!item.akhir || item.akhir >= sekarang));
+                if (daftarAktif.length === 0) daftarAktif = daftarIklan; // Fallback jika tanggal tidak diatur
+
+                wadahIklan.innerHTML = daftarAktif.map((iklan, index) => {
+                    let htmlGambar = `<img src="${iklan.gambar}" alt="${iklan.judul || 'Iklan'}" style="width:100%; height:100%; max-height:120px; object-fit:contain; display:block;">`;
+                    let isi = iklan.link ? `<a href="${iklan.link}" target="_blank" style="display:block; width:100%; height:100%;">${htmlGambar}</a>` : htmlGambar;
+                    return `<div class="item-slide-header" style="display: ${index === 0 ? 'block' : 'none'}; width:100%; height:100%;">${isi}</div>`;
+                }).join('');
+
+                if (daftarAktif.length > 1) {
+                    let idx = 0;
+                    setInterval(() => {
+                        let slides = wadahIklan.querySelectorAll('.item-slide-header');
+                        if (slides.length === 0) return;
+                        slides[idx].style.display = 'none';
+                        idx = (idx + 1) % slides.length;
+                        slides[idx].style.display = 'block';
+                    }, 4000);
+                }
+            } catch (error) { console.error("Gagal muat iklan header:", error); }
         }
 
-        function tombolPanahKanan() {
-            geserSliderBerita(1);
-            mulaiTimerSliderBerita();
+        window.muatIklanSampingWeb = async function() {
+            // Menggunakan koleksi iklan_header sebagai fallback jika iklan_samping belum dipisah
+            try {
+                const querySnapshot = await getDocs(collection(db, "iklan_header")); 
+                let semuaIklan = [];
+                querySnapshot.forEach((doc) => { semuaIklan.push({ id: doc.id, ...doc.data() }); });
+
+                let sekarang = new Date().toISOString().slice(0, 10);
+                window.daftarIklanSamping = semuaIklan.filter(item => {
+                    let mulaiPas = !item.mulai || item.mulai <= sekarang;
+                    let akhirPas = !item.akhir || item.akhir >= sekarang;
+                    return mulaiPas && akhirPas;
+                });
+
+                window.indeksIklanSamping = 0;
+                window.tampilkanIklanSampingAktif();
+                window.mulaiTimerIklanSamping();
+            } catch (error) { console.error("Gagal muat iklan samping:", error); }
         }
 
-        function tombolPanahKiri() {
-            geserSliderBerita(-1);
-            mulaiTimerSliderBerita();
-        }
-
-        // IKLAN SAMPING SLIDER
-        let daftarIklanSamping = [];
-        let indeksIklanSamping = 0;
+        window.daftarIklanSamping = [];
+        window.indeksIklanSamping = 0;
         let timerIklanSamping = null;
 
-        function muatIklanSampingWeb() {
-            let rawData = localStorage.getItem('daftarIklanSamping') || localStorage.getItem('daftarIklan') || '[]';
-            let semuaIklan = JSON.parse(rawData);
-
-            let sekarang = new Date().toISOString().slice(0, 10);
-            daftarIklanSamping = semuaIklan.filter(item => {
-                let jenisPas = !item.jenis || item.jenis === 'samping' || item.posisi === 'samping';
-                let mulaiPas = !item.mulai || item.mulai <= sekarang;
-                let akhirPas = !item.akhir || item.akhir >= sekarang;
-                return jenisPas && mulaiPas && akhirPas;
-            });
-
-            indeksIklanSamping = 0;
-            tampilkanIklanSampingAktif();
-            mulaiTimerIklanSamping();
-        }
-
-        function tampilkanIklanSampingAktif() {
+        window.tampilkanIklanSampingAktif = function() {
             let wadah = document.getElementById('konten-iklan-samping');
             let btnKiri = document.getElementById('btn-iklan-kiri');
             let btnKanan = document.getElementById('btn-iklan-kanan');
             if (!wadah) return;
 
-            if (daftarIklanSamping.length === 0) {
+            if (window.daftarIklanSamping.length === 0) {
                 wadah.innerHTML = '<span style="color:#888;">Belum ada iklan</span>';
                 if (btnKiri) btnKiri.style.display = 'none';
                 if (btnKanan) btnKanan.style.display = 'none';
                 return;
             }
 
-            if (daftarIklanSamping.length > 1) {
+            if (window.daftarIklanSamping.length > 1) {
                 if (btnKiri) btnKiri.style.display = 'block';
                 if (btnKanan) btnKanan.style.display = 'block';
             } else {
@@ -1084,239 +609,127 @@
                 if (btnKanan) btnKanan.style.display = 'none';
             }
 
-            let iklan = daftarIklanSamping[indeksIklanSamping];
+            let iklan = window.daftarIklanSamping[window.indeksIklanSamping];
             let htmlGambar = `<img src="${iklan.gambar}" alt="${iklan.judul || 'Iklan Samping'}" style="max-width:100%; height:auto; display:block; margin:0 auto; border-radius:4px;">`;
+            wadah.innerHTML = iklan.link ? `<a href="${iklan.link}" target="_blank">${htmlGambar}</a>` : htmlGambar;
+        }
 
-            if (iklan.link) {
-                wadah.innerHTML = `<a href="${iklan.link}" target="_blank">${htmlGambar}</a>`;
-            } else {
-                wadah.innerHTML = htmlGambar;
+        window.mulaiTimerIklanSamping = function() {
+            window.hentikanTimerIklanSamping();
+            if (window.daftarIklanSamping.length > 1) {
+                timerIklanSamping = setInterval(() => { window.geserIklanSamping(1); }, 10000);
             }
         }
-
-        function mulaiTimerIklanSamping() {
-            hentikanTimerIklanSamping();
-            if (daftarIklanSamping.length > 1) {
-                timerIklanSamping = setInterval(() => {
-                    geserIklanSamping(1);
-                }, 10000);
-            }
+        window.hentikanTimerIklanSamping = function() { if (timerIklanSamping) { clearInterval(timerIklanSamping); timerIklanSamping = null; } }
+        window.geserIklanSamping = function(arah) {
+            if (window.daftarIklanSamping.length === 0) return;
+            window.indeksIklanSamping += arah;
+            if (window.indeksIklanSamping < 0) window.indeksIklanSamping = window.daftarIklanSamping.length - 1;
+            if (window.indeksIklanSamping >= window.daftarIklanSamping.length) window.indeksIklanSamping = 0;
+            window.tampilkanIklanSampingAktif();
         }
+        window.tombolIklanKiri = function() { window.geserIklanSamping(-1); window.mulaiTimerIklanSamping(); }
+        window.tombolIklanKanan = function() { window.geserIklanSamping(1); window.mulaiTimerIklanSamping(); }
 
-        function hentikanTimerIklanSamping() {
-            if (timerIklanSamping) {
-                clearInterval(timerIklanSamping);
-                timerIklanSamping = null;
-            }
-        }
-
-        function geserIklanSamping(arah) {
-            if (daftarIklanSamping.length === 0) return;
-            indeksIklanSamping += arah;
-            if (indeksIklanSamping < 0) indeksIklanSamping = daftarIklanSamping.length - 1;
-            if (indeksIklanSamping >= daftarIklanSamping.length) indeksIklanSamping = 0;
-            tampilkanIklanSampingAktif();
-        }
-
-        function tombolIklanKiri() {
-            geserIklanSamping(-1);
-            mulaiTimerIklanSamping();
-        }
-
-        function tombolIklanKanan() {
-            geserIklanSamping(1);
-            mulaiTimerIklanSamping();
-        }
-
-        let indeksAfiliasi = 0;
-        let timerAutoSlideAfiliasi = null;
-
-        function muatAfiliasiWeb() {
-            let rawData = localStorage.getItem('daftarAfiliasi');
+        window.muatAfiliasiWeb = async function() {
             let wadah = document.getElementById('slider-afiliasi');
             if (!wadah) return;
-
-            if (!rawData) {
-                wadah.innerHTML = '<p style="padding:10px; color:#888; font-size:12px; text-align:center;">Belum ada iklan</p>';
-                return;
-            }
-
             try {
-                let data = JSON.parse(rawData);
-                if (Array.isArray(data) && data.length > 0) {
+                const querySnapshot = await getDocs(collection(db, "afiliasi"));
+                let data = [];
+                querySnapshot.forEach((doc) => { data.push(doc.data()); });
+
+                if (data.length > 0) {
                     wadah.innerHTML = data.map(item => `
                         <a href="${item.link}" target="_blank" style="min-width:100%; box-sizing:border-box; display:block;">
                             <img src="${item.gambar}" alt="${item.nama}" style="width:100%; height:auto; max-height:250px; object-fit:cover; display:block; border-radius:4px;">
                         </a>
                     `).join('');
-
-                    mulaiAutoSlideAfiliasi(data.length);
+                    window.mulaiAutoSlideAfiliasi(data.length);
                 } else {
-                    wadah.innerHTML = '<p style="padding:10px; color:#888; font-size:12px; text-align:center;">Belum ada iklan</p>';
+                    wadah.innerHTML = '<p style="padding:10px; color:#888; font-size:12px; text-align:center; width:100%;">Belum ada iklan</p>';
                 }
-            } catch (e) {
-                console.error("Gagal memuat iklan afiliasi:", e);
-            }
+            } catch (error) { console.error("Gagal muat afiliasi:", error); }
         }
 
-        function updatePosisiSliderAfiliasi() {
+        window.indeksAfiliasi = 0;
+        let timerAutoSlideAfiliasi = null;
+        window.updatePosisiSliderAfiliasi = function() {
             let wadah = document.getElementById('slider-afiliasi');
-            if (wadah) {
-                wadah.style.transform = `translateX(-${indeksAfiliasi * 100}%)`;
-            }
+            if (wadah) wadah.style.transform = `translateX(-${window.indeksAfiliasi * 100}%)`;
         }
-
-        function slideAfiliasiNext() {
-            let rawData = localStorage.getItem('daftarAfiliasi');
-            let data = rawData ? JSON.parse(rawData) : [];
-            if (data.length <= 1) return;
-
-            indeksAfiliasi = (indeksAfiliasi + 1) % data.length;
-            updatePosisiSliderAfiliasi();
+        window.slideAfiliasiNext = function() {
+            // Hitung ulang jumlah slide untuk keamanan
+            let totalSlide = document.querySelectorAll('#slider-afiliasi > a').length || 1;
+            if (totalSlide <= 1) return;
+            window.indeksAfiliasi = (window.indeksAfiliasi + 1) % totalSlide;
+            window.updatePosisiSliderAfiliasi();
         }
-
-        function slideAfiliasiPrev() {
-            let rawData = localStorage.getItem('daftarAfiliasi');
-            let data = rawData ? JSON.parse(rawData) : [];
-            if (data.length <= 1) return;
-
-            indeksAfiliasi = (indeksAfiliasi - 1 + data.length) % data.length;
-            updatePosisiSliderAfiliasi();
+        window.slideAfiliasiPrev = function() {
+            let totalSlide = document.querySelectorAll('#slider-afiliasi > a').length || 1;
+            if (totalSlide <= 1) return;
+            window.indeksAfiliasi = (window.indeksAfiliasi - 1 + totalSlide) % totalSlide;
+            window.updatePosisiSliderAfiliasi();
         }
-
-        function mulaiAutoSlideAfiliasi(totalData) {
+        window.mulaiAutoSlideAfiliasi = function(totalData) {
             if (timerAutoSlideAfiliasi) clearInterval(timerAutoSlideAfiliasi);
-            if (totalData > 1) {
-                timerAutoSlideAfiliasi = setInterval(() => {
-                    slideAfiliasiNext();
-                }, 4000);
-            }
+            if (totalData > 1) timerAutoSlideAfiliasi = setInterval(() => { window.slideAfiliasiNext(); }, 4000);
         }
 
-        let timerIklanHeader = null; // Variabel penampung interval timer
-
-        function muatIklanHeaderWeb() {
-            let wadahIklan = document.getElementById('iklan-header-tempat');
-            if (!wadahIklan) return;
-
-            let daftarIklan = JSON.parse(localStorage.getItem('daftarIklanHeader') || '[]');
-            if (!daftarIklan || daftarIklan.length === 0) {
-                wadahIklan.innerHTML = '<em style="color:#ccc; font-size:12px;">Iklan Header</em>';
-                return;
-            }
-
-            let sekarang = new Date().toISOString().slice(0, 10);
-
-            // 1. UBAH .find() MENJADI .filter() AGAR MENAMPUNG BANYAK IKLAN
-            let daftarAktif = daftarIklan.filter(item => {
-                let mulaiPas = !item.mulai || item.mulai <= sekarang;
-                let akhirPas = !item.akhir || item.akhir >= sekarang;
-                return mulaiPas && akhirPas;
-            });
-
-            // Jika tidak ada yang sesuai tanggal, gunakan seluruh daftar iklan yang ada
-            if (daftarAktif.length === 0) {
-                daftarAktif = daftarIklan;
-            }
-
-            // 2. RENDER SEMUA IKLAN KE WADAH
-            wadahIklan.innerHTML = daftarAktif.map((iklan, index) => {
-                let htmlGambar = `<img src="${iklan.gambar}" alt="${iklan.judul || 'Iklan Header'}" style="width:100%; height:100%; object-fit:cover; display:block;">`;
-                let isi = iklan.link ? `<a href="${iklan.link}" target="_blank" style="display:block; width:100%; height:100%;">${htmlGambar}</a>` : htmlGambar;
-
-                // Tampilkan slide pertama saja, selebihnya disembunyikan
-                return `<div class="item-slide-header" style="display: ${index === 0 ? 'block' : 'none'}; width:100%; height:100%;">${isi}</div>`;
-            }).join('');
-
-            // 3. JALANKAN GULIR OTOMATIS JIKA IKLAN LEBIH DARI 1
-            if (daftarAktif.length > 1) {
-                let indexSekarang = 0;
-
-                // Hentikan timer lama jika ada agar tidak bentrok
-                if (timerIklanHeader) clearInterval(timerIklanHeader);
-
-                timerIklanHeader = setInterval(() => {
-                    let slides = wadahIklan.querySelectorAll('.item-slide-header');
-                    if (slides.length === 0) return;
-
-                    // Sembunyikan iklan yang aktif saat ini
-                    slides[indexSekarang].style.display = 'none';
-
-                    // Pindah ke indeks iklan berikutnya
-                    indexSekarang = (indexSekarang + 1) % slides.length;
-
-                    // Tampilkan iklan berikutnya
-                    slides[indexSekarang].style.display = 'block';
-                }, 4000); // 4000 ms = berganti setiap 4 detik
-            }
-        }
-
-        function muatPengaturanAdmin() {
-            let logo = localStorage.getItem('logoWebsite');
-            if (logo) {
-                let elLogo = document.getElementById('logo-website');
-                if (elLogo) elLogo.src = logo;
-            }
-
-            let pimred = JSON.parse(localStorage.getItem('tentangPerusahaan') || '{}');
-            if (pimred.namaPemimpinRedaksi) {
-                let elPimred = document.getElementById('pemimpin-redaksi');
-                if (elPimred) {
-                    elPimred.innerHTML = `
-                        ${pimred.foto ? `<img src="${pimred.foto}" style="max-width:100%; border-radius:4px;"><br>` : ''}
-                        <b>${pimred.namaPemimpinRedaksi}</b>
-                    `;
+        // === PENGATURAN & FOOTER ===
+        window.muatPengaturanAdmin = async function() {
+            try {
+                const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
+                if (docSnap.exists()) {
+                    let d = docSnap.data();
+                    if (d.namaAdmin) {
+                        let elPimred = document.getElementById('pemimpin-redaksi');
+                        if (elPimred) elPimred.innerHTML = `<b>${d.namaAdmin}</b><br><small>Pemimpin Redaksi</small>`;
+                    }
+                    if (d.telp) {
+                        let elTelp = document.getElementById('teks-pengumuman'); // Fallback sementara
+                    }
                 }
-            }
-
-            let logoOrg = localStorage.getItem('logoOrganisasi');
-            if (logoOrg) {
-                let elOrg = document.getElementById('logo-induk-organisasi');
-                if (elOrg) elOrg.innerHTML = `<img src="${logoOrg}" style="max-width:100%; height:auto;" alt="Logo Induk Organisasi">`;
-            }
-
-            let pengumuman = JSON.parse(localStorage.getItem('daftarPengumuman') || '[]');
-            if (pengumuman.length) {
-                let elTeks = document.getElementById('teks-pengumuman');
-                if (elTeks) elTeks.textContent = pengumuman.join(' — ');
-            }
+            } catch (error) { console.error("Gagal muat pengaturan:", error); }
         }
 
-        function muatSettingUtamaFooter() {
-            let setting = JSON.parse(localStorage.getItem('pengaturanUtama') || '{}');
+        window.muatDataFooter = async function() {
+            try {
+                const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
+                if (docSnap.exists()) {
+                    let d = docSnap.data();
+                    let nama = d.namaPerusahaan || 'Tribuana Putra News';
+                    let elNama = document.getElementById('footer-nama-perusahaan');
+                    let elCopyright = document.getElementById('copyright-nama-perusahaan');
+                    if (elNama) elNama.innerText = nama;
+                    if (elCopyright) elCopyright.innerText = nama;
 
-            let elNama = document.getElementById('footer-nama-pt');
-            if (elNama) elNama.textContent = setting.namaPerusahaan || setting.namaWeb || 'Tribuana Putra News';
+                    let alamat = d.alamatPerusahaan || 'Priangan Timur, Jawa Barat';
+                    let elAlamat = document.getElementById('footer-alamat-perusahaan');
+                    if (elAlamat) elAlamat.innerText = alamat;
 
-            let elAlamat = document.getElementById('footer-alamat-pt');
-            if (elAlamat) elAlamat.textContent = setting.alamatPerusahaan || setting.alamat || 'Priangan Timur, Jawa Barat';
+                    let telp = d.telp || '-';
+                    let elTelp = document.getElementById('footer-telp');
+                    if (elTelp) elTelp.innerText = telp;
 
-            let elKontak = document.getElementById('footer-kontak-pt');
-            if (elKontak) {
-                let noTelp = setting.noTelp || setting.wa || '-';
-                elKontak.textContent = `📞 Telp/WA: ${noTelp}`;
-            }
+                    let email = d.emailKontak || '-';
+                    let elEmail = document.getElementById('footer-email');
+                    if (elEmail) elEmail.innerText = email;
 
-            let elSosmed = document.getElementById('footer-sosmed-pt');
-            if (elSosmed) {
-                let fb = setting.facebook ? `<a href="${setting.facebook}" target="_blank">Facebook</a>` : '';
-                let ig = setting.instagram ? `<a href="${setting.instagram}" target="_blank">Instagram</a>` : '';
-                let yt = setting.youtube ? `<a href="${setting.youtube}" target="_blank">YouTube</a>` : '';
-
-                let sosmedList = [fb, ig, yt].filter(Boolean).join(' | ');
-                elSosmed.innerHTML = sosmedList || '<span style="opacity:0.7;">Media Sosial Belum Diatur</span>';
-            }
-
-            let elCopy = document.getElementById('footer-copyright-pt');
-            if (elCopy) {
-                let teksCopy = setting.copyright || `© ${new Date().getFullYear()} ${setting.namaWeb || 'Tribuana Putra News'}. All Rights Reserved.`;
-                elCopy.textContent = teksCopy;
-            }
+                    let elemFb = document.getElementById('link-fb');
+                    if (elemFb && d.fbLink) { elemFb.href = d.fbLink; elemFb.style.display = 'inline-flex'; }
+                    let elemIg = document.getElementById('link-ig');
+                    if (elemIg && d.igLink) { elemIg.href = d.igLink; elemIg.style.display = 'inline-flex'; }
+                    let elemYt = document.getElementById('link-yt');
+                    if (elemYt && d.ytLink) { elemYt.href = d.ytLink; elemYt.style.display = 'inline-flex'; }
+                }
+                let elTahun = document.getElementById('tahun-copyright');
+                if (elTahun) elTahun.innerText = new Date().getFullYear();
+            } catch (error) { console.error("Gagal muat footer:", error); }
         }
 
-        const PASSWORD_ADMIN = "admin123";
-
-        function simpanKomentar(e) {
+        // === FORMULIR & ADMIN ===
+        window.simpanKomentar = async function(e) {
             e.preventDefault();
             let nama = document.getElementById('kom_nama').value;
             let email = document.getElementById('kom_email').value;
@@ -1324,33 +737,36 @@
             let isi = document.getElementById('kom_isi').value;
             let tgl = new Date().toLocaleString('id-ID');
 
-            let daftarKomentar = JSON.parse(localStorage.getItem('daftarKomentar') || '[]');
-            daftarKomentar.push({Tanggal: tgl, Nama: nama, Email: email, WhatsApp: wa, Komentar: isi});
-
-            localStorage.setItem('daftarKomentar', JSON.stringify(daftarKomentar));
-            alert("✅ Komentar Anda berhasil dikirim!");
-            document.getElementById('form-komentar').reset();
-        }
-
-        function bukaKomentarAdmin() {
-            let pwd = prompt("Masukkan Password Admin untuk melihat Komentar:");
-            if (pwd === PASSWORD_ADMIN) {
-                let data = JSON.parse(localStorage.getItem('daftarKomentar') || '[]');
-                if (data.length === 0) {
-                    alert("Belum ada data komentar.");
-                    return;
-                }
-
-                let konfirmasi = confirm(`Terdapat ${data.length} komentar.\n\nKlik OK untuk mendownload file Excel data komentar.`);
-                if (konfirmasi) {
-                    unduhExcel(data, "Data_Komentar_Web.xlsx", "Komentar");
-                }
-            } else if (pwd !== null) {
-                alert("❌ Password Salah!");
+            try {
+                await addDoc(collection(db, "komentar"), {
+                    Tanggal: tgl, Nama: nama, Email: email, WhatsApp: wa, Komentar: isi, createdAt: new Date()
+                });
+                alert("✅ Komentar Anda berhasil dikirim!");
+                document.getElementById('form-komentar').reset();
+            } catch (error) {
+                console.error("Gagal kirim komentar:", error);
+                alert("❌ Gagal mengirim komentar.");
             }
         }
 
-        function simpanLanggananIklan(e) {
+        window.bukaKomentarAdmin = async function() {
+            let pwd = prompt("Masukkan Password Admin untuk melihat Komentar:");
+            if (pwd === PASSWORD_ADMIN) {
+                try {
+                    const q = query(collection(db, "komentar"), orderBy("createdAt", "desc"));
+                    const querySnapshot = await getDocs(q);
+                    let data = [];
+                    querySnapshot.forEach((doc) => { data.push(doc.data()); });
+                    
+                    if (data.length === 0) { alert("Belum ada data komentar."); return; }
+                    if (confirm(`Terdapat ${data.length} komentar.\n\nKlik OK untuk mendownload file Excel.`)) {
+                        window.unduhExcel(data, "Data_Komentar_Web.xlsx", "Komentar");
+                    }
+                } catch (error) { console.error("Gagal ambil komentar:", error); alert("Gagal memuat data."); }
+            } else if (pwd !== null) { alert("❌ Password Salah!"); }
+        }
+
+        window.simpanLanggananIklan = async function(e) {
             e.preventDefault();
             let instansi = document.getElementById('iklan_instansi').value;
             let email = document.getElementById('iklan_email').value;
@@ -1358,221 +774,85 @@
             let ket = document.getElementById('iklan_keterangan').value;
             let tgl = new Date().toLocaleString('id-ID');
 
-            let daftarPelanggan = JSON.parse(localStorage.getItem('daftarPelangganIklan') || '[]');
-            daftarPelanggan.push({
-                Tanggal: tgl,
-                Nama_Instansi: instansi,
-                Email: email,
-                WhatsApp: wa,
-                Keterangan: ket
-            });
-
-            localStorage.setItem('daftarPelangganIklan', JSON.stringify(daftarPelanggan));
-            alert("✅ Pengajuan iklan berhasil disimpan!");
-            document.getElementById('form-iklan-langganan').reset();
-        }
-
-        function bukaPelangganAdmin() {
-            let pwd = prompt("Masukkan Password Admin untuk melihat Data Pelanggan Iklan:");
-            if (pwd === PASSWORD_ADMIN) {
-                let data = JSON.parse(localStorage.getItem('daftarPelangganIklan') || '[]');
-                if (data.length === 0) {
-                    alert("Belum ada data pelanggan berlangganan iklan.");
-                    return;
-                }
-
-                let konfirmasi = confirm(`Terdapat ${data.length} pengajuan pelanggan iklan.\n\nKlik OK untuk mendownload file Excel data pelanggan.`);
-                if (konfirmasi) {
-                    unduhExcel(data, "Data_Pelanggan_Iklan.xlsx", "Pelanggan_Iklan");
-                }
-            } else if (pwd !== null) {
-                alert("❌ Password Salah!");
+            try {
+                await addDoc(collection(db, "pelanggan_iklan"), {
+                    Tanggal: tgl, Nama_Instansi: instansi, Email: email, WhatsApp: wa, Keterangan: ket, createdAt: new Date()
+                });
+                alert("✅ Pengajuan iklan berhasil disimpan!");
+                document.getElementById('form-iklan-langganan').reset();
+            } catch (error) {
+                console.error("Gagal simpan pengajuan:", error);
+                alert("❌ Gagal menyimpan pengajuan.");
             }
         }
 
-        function unduhExcel(dataJSON, namaFile, namaSheet) {
+        window.bukaPelangganAdmin = async function() {
+            let pwd = prompt("Masukkan Password Admin untuk melihat Data Pelanggan Iklan:");
+            if (pwd === PASSWORD_ADMIN) {
+                try {
+                    const q = query(collection(db, "pelanggan_iklan"), orderBy("createdAt", "desc"));
+                    const querySnapshot = await getDocs(q);
+                    let data = [];
+                    querySnapshot.forEach((doc) => { data.push(doc.data()); });
+                    
+                    if (data.length === 0) { alert("Belum ada data pelanggan."); return; }
+                    if (confirm(`Terdapat ${data.length} pengajuan.\n\nKlik OK untuk mendownload file Excel.`)) {
+                        window.unduhExcel(data, "Data_Pelanggan_Iklan.xlsx", "Pelanggan_Iklan");
+                    }
+                } catch (error) { console.error("Gagal ambil pelanggan:", error); alert("Gagal memuat data."); }
+            } else if (pwd !== null) { alert("❌ Password Salah!"); }
+        }
+
+        window.unduhExcel = function(dataJSON, namaFile, namaSheet) {
             let ws = XLSX.utils.json_to_sheet(dataJSON);
             let wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, namaSheet);
             XLSX.writeFile(wb, namaFile);
         }
 
-        function bukaHalamanStatis(jenis) {
+        // === HALAMAN STATIS ===
+        window.bukaHalamanStatis = function(jenis) {
             let judul = "";
-            let kontenHtml = "";
+            let kontenHtml = "<p style='color:#888;'>Data halaman ini dikelola melalui Panel Admin.</p>";
 
             document.getElementById('halaman-berita-utama').style.display = 'none';
             document.getElementById('halaman-statis').style.display = 'block';
 
-            if (jenis === 'tentang') {
-                judul = "Tentang Perusahaan";
-                let data = JSON.parse(localStorage.getItem('tentangPerusahaan') || '{}');
-                let fotoHtml = data.foto ? `<img src="${data.foto}" style="max-width:200px; float:left; margin:0 15px 15px 0; border-radius:6px;">` : '';
-                let pimredHtml = data.namaPemimpinRedaksi ? `<p><b>Pemimpin Redaksi:</b> ${data.namaPemimpinRedaksi}</p><br>` : '';
-                kontenHtml = fotoHtml + pimredHtml + (data.isi || '<p>Data belum diisi.</p>');
-
-            } else if (jenis === 'redaksi') {
-                judul = "Data Redaksi";
-                let redaksi = JSON.parse(localStorage.getItem('daftarRedaksi') || '[]');
-                if (redaksi.length > 0) {
-                    kontenHtml = `<table style="width:100%; border-collapse:collapse;" border="1">
-                <thead><tr style="background:#f4f4f4;"><th style="padding:8px;">No</th><th style="padding:8px;">Jabatan</th><th style="padding:8px;">Nama</th></tr></thead>
-                <tbody>`;
-                    redaksi.forEach((r, idx) => {
-                        kontenHtml += `<tr>
-                    <td style="padding:8px; text-align:center;">${idx + 1}</td>
-                    <td style="padding:8px;">${r.jabatan}</td>
-                    <td style="padding:8px;">${r.nama}</td>
-                </tr>`;
-                    });
-                    kontenHtml += `</tbody></table>`;
-                } else {
-                    kontenHtml = "<p>Data redaksi belum diisi.</p>";
-                }
-
-            } else if (jenis === 'organisasi') {
-                judul = "Induk Organisasi";
-                let data = JSON.parse(localStorage.getItem('dataOrganisasi') || '{}');
-                let logoHtml = data.logoOrganisasi ? `<img src="${data.logoOrganisasi}" style="max-width:180px; display:block; margin-bottom:15px;">` : '';
-                kontenHtml = logoHtml + (data.isi || '<p>Data organisasi belum diisi.</p>');
-
-            } else if (jenis === 'pedoman') {
-                judul = "Pedoman Media Siber";
-                kontenHtml = localStorage.getItem('pedomanMediaSiber') || '<p>Pedoman Media Siber belum diisi.</p>';
-            }
+            if (jenis === 'tentang') judul = "Tentang Perusahaan";
+            else if (jenis === 'redaksi') judul = "Data Redaksi";
+            else if (jenis === 'organisasi') { judul = "Induk Organisasi"; }
+            else if (jenis === 'pedoman') judul = "Pedoman Media Siber";
 
             document.getElementById('judul-halaman-statis').innerHTML = judul;
             document.getElementById('isi-halaman-statis').innerHTML = kontenHtml;
-
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        function bukaBeritaUtama() {
+        window.bukaBeritaUtama = function() {
             document.getElementById('halaman-statis').style.display = 'none';
             document.getElementById('halaman-berita-utama').style.display = 'block';
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        function muatDataFooter() {
-            let d = JSON.parse(localStorage.getItem('settingUtama') || '{}');
-
-            let nama = d.namaPerusahaan || 'Tribuana Putra News';
-            let elNama = document.getElementById('footer-nama-perusahaan');
-            let elCopyright = document.getElementById('copyright-nama-perusahaan');
-            if (elNama) elNama.innerText = nama;
-            if (elCopyright) elCopyright.innerText = nama;
-
-            let alamat = d.alamatPerusahaan || 'Alamat Perusahaan belum diisi';
-            let elAlamat = document.getElementById('footer-alamat-perusahaan');
-            if (elAlamat) elAlamat.innerText = alamat;
-
-            let telp = d.telp || '-';
-            let elTelp = document.getElementById('footer-telp');
-            if (elTelp) elTelp.innerText = telp;
-
-            let email = d.emailKontak || '-';
-            let elEmail = document.getElementById('footer-email');
-            if (elEmail) elEmail.innerText = email;
-
-            let elemFb = document.getElementById('link-fb');
-            if (elemFb) {
-                if (d.fbLink && d.fbLink.trim() !== '') {
-                    elemFb.href = formatUrl(d.fbLink);
-                    let teksFb = document.getElementById('teks-fb');
-                    if (teksFb) teksFb.innerText = 'Facebook';
-                    elemFb.style.display = 'inline-flex';
-                } else {
-                    elemFb.style.display = 'none';
-                }
-            }
-
-            let elemIg = document.getElementById('link-ig');
-            if (elemIg) {
-                if (d.igLink && d.igLink.trim() !== '') {
-                    elemIg.href = formatUrl(d.igLink);
-                    let teksIg = document.getElementById('teks-ig');
-                    if (teksIg) teksIg.innerText = 'Instagram';
-                    elemIg.style.display = 'inline-flex';
-                } else {
-                    elemIg.style.display = 'none';
-                }
-            }
-
-            let elemYt = document.getElementById('link-yt');
-            if (elemYt) {
-                if (d.ytLink && d.ytLink.trim() !== '') {
-                    elemYt.href = formatUrl(d.ytLink);
-                    let teksYt = document.getElementById('teks-yt');
-                    if (teksYt) teksYt.innerText = 'YouTube';
-                    elemYt.style.display = 'inline-flex';
-                } else {
-                    elemYt.style.display = 'none';
-                }
-            }
-
-            let elTahun = document.getElementById('tahun-copyright');
-            if (elTahun) elTahun.innerText = new Date().getFullYear();
+        window.bukaTentangOrganisasi = function() {
+            window.bukaHalamanStatis('organisasi');
         }
 
-        function muatRunningTextWeb() {
-            let rawData = localStorage.getItem('runningTextData');
-            let wadahMarquee = document.querySelector('.running marquee');
-
-            if (!rawData || !wadahMarquee) return;
-
-            wadahMarquee.style.whiteSpace = 'nowrap';
-
-            try {
-                let data = JSON.parse(rawData);
-                if (Array.isArray(data) && data.length > 0) {
-                    let itemTeks = [];
-
-                    data.forEach((item) => {
-                        let teks = "" + item.teks;
-
-                        if (item.link && item.link.trim() !== '') {
-                            let urlValid = formatUrl(item.link);
-                            itemTeks.push(`<a href="${urlValid}" target="_blank" style="display:inline; text-decoration:none; color:inherit; cursor:pointer;">${teks}</a>`);
-                        } else {
-                            itemTeks.push(`<span style="display:inline;">${teks}</span>`);
-                        }
-                    });
-
-                    let pemisah = '<span style="display:inline; margin: 0 25px; opacity:0.7;">✦</span>';
-                    wadahMarquee.innerHTML = itemTeks.join(pemisah);
-                }
-            } catch (e) {
-                console.error("Gagal memuat running text:", e);
-            }
-        }
-
-        function formatUrl(url) {
-            if (!url) return '#';
-            url = url.trim();
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                return 'https://' + url;
-            }
-            return url;
-        }
-
+        // === INISIALISASI ===
         document.addEventListener('DOMContentLoaded', () => {
-            terapkanWarnaWeb();
-            muatBerita();
-            muatPengaturanAdmin();
-            muatIklanHeaderWeb();
-            muatIklanSampingWeb();
-            muatAfiliasiWeb();
-            muatSettingUtamaFooter();
-            muatDataFooter();
-            muatRunningTextWeb();
+            window.muatBerita();
+            window.muatPengaturanAdmin();
+            window.muatIklanHeaderWeb();
+            window.muatIklanSampingWeb();
+            window.muatAfiliasiWeb();
+            window.muatDataFooter();
 
             let areaIklanSamping = document.getElementById('wadah-iklan-samping');
             if (areaIklanSamping) {
-                areaIklanSamping.addEventListener('mouseenter', hentikanTimerIklanSamping);
-                areaIklanSamping.addEventListener('mouseleave', mulaiTimerIklanSamping);
+                areaIklanSamping.addEventListener('mouseenter', window.hentikanTimerIklanSamping);
+                areaIklanSamping.addEventListener('mouseleave', window.mulaiTimerIklanSamping);
             }
         });
     </script>
 </body>
-
 </html>

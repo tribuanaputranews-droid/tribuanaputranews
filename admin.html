@@ -48,7 +48,6 @@
   </div>
 
   <div class="content">
-    <!-- DASHBOARD -->
     <div id="beranda" class="halaman aktif">
       <h2>Hai, Administrator 👋</h2>
       <p>Selamat datang di Panel Admin Tribuana Putra News.</p>
@@ -59,7 +58,6 @@
       </div>
     </div>
 
-    <!-- SETTING UTAMA -->
     <div id="setting-utama" class="halaman">
       <h3>⚙️ Setting Utama</h3>
       <div class="card">
@@ -78,7 +76,6 @@
       </div>
     </div>
 
-    <!-- DATA REDAKSI -->
     <div id="data-redaksi" class="halaman">
       <h3>👥 Data Redaksi</h3>
       <div class="card">
@@ -104,7 +101,6 @@
       </div>
     </div>
 
-    <!-- KONTEN BERITA -->
     <div id="konten-berita" class="halaman">
       <h3>📝 Konten Berita</h3>
       <div class="card">
@@ -143,7 +139,6 @@
       </div>
     </div>
 
-    <!-- ARSIP BERITA -->
     <div id="arsip-berita" class="halaman">
       <h3>📂 Arsip Berita</h3>
       <div class="card">
@@ -154,7 +149,6 @@
       </div>
     </div>
 
-    <!-- IKLAN HEADER -->
     <div id="iklan-header" class="halaman">
       <h3>📢 Iklan Header</h3>
       <div class="card">
@@ -174,7 +168,6 @@
       </div>
     </div>
 
-    <!-- AFILIASI -->
     <div id="afiliasi" class="halaman">
       <h3>🔗 Iklan Afiliasi</h3>
       <div class="card">
@@ -187,7 +180,6 @@
     </div>
   </div>
 
-  <!-- SCRIPT FIREBASE UTUH - FINAL VERSION -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -206,13 +198,11 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // === STATE GLOBAL (HANYA DIKLARASIKAN SEKALI) ===
     let sedangEdit = false;
     let idBeritaDiedit = null;
     let daftarRedaksi = [];
     let imgHeaderBase64 = "";
 
-    // === NAVIGASI ===
     window.tampilHalaman = function(id) {
       document.querySelectorAll('.halaman').forEach(h => h.classList.remove('aktif'));
       const el = document.getElementById(id);
@@ -225,7 +215,6 @@
       }
     };
 
-    // === SETTING UTAMA ===
     window.pratinjauLogo = function(input) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
@@ -279,7 +268,6 @@
       }
     };
 
-    // === DATA REDAKSI ===
     window.tampilTabelRedaksi = function() {
       const tb = document.getElementById('isi-tabel-redaksi');
       if (!tb) return;
@@ -370,7 +358,6 @@
       }
     };
 
-    // === BERITA ===
     window.sisipkanFotoBerita = function(input) {
       if (!input.files[0]) return;
       if (input.files[0].size > 500000) { alert("Gambar maksimal 500KB!"); input.value = ''; return; }
@@ -494,7 +481,6 @@
       document.getElementById('isi-berita').innerHTML = '';
     };
 
-    // === IKLAN ===
     window.pratinjauIklanHeader = function(input) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
@@ -575,7 +561,6 @@
       }
     };
 
-    // === INIT ===
     document.addEventListener('DOMContentLoaded', () => {
       console.log("Admin panel dimuat. Memulai inisialisasi...");
       window.muatSettingUtama();

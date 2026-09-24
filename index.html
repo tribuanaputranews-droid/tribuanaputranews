@@ -204,10 +204,27 @@
             min-width: 18.75rem;
         }
 
+        /* === PANEL KANAN DENGAN SCROLL TERPISAH (STICKY) === */
         .kanan {
             flex: 1;
             min-width: 15.625rem;
+            position: sticky;           /* Menempel di layar saat discroll */
+            top: 1.25rem;               /* Jarak 20px dari atas layar */
+            max-height: calc(100vh - 2.5rem); /* Maksimal setinggi layar */
+            overflow-y: auto;           /* Bisa discroll sendiri jika isinya kepanjangan */
+            padding-right: 0.5rem;      /* Ruang agar scrollbar tidak menabrak konten */
+            align-self: flex-start;     /* WAJIB: Agar sticky berfungsi di dalam flexbox */
         }
+
+        /* === MEMPERCANTIK SCROLLBAR KHUSUS SIDEBAR === */
+        .kanan::-webkit-scrollbar { width: 6px; }
+        .kanan::-webkit-scrollbar-track { background: transparent; }
+        .kanan::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .kanan::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Penyesuaian scrollbar untuk Mode Gelap */
+        body.gelap .kanan::-webkit-scrollbar-thumb { background: #475569; }
+        body.gelap .kanan::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
         .kotak {
             background: #ffffff;
@@ -356,6 +373,15 @@
                 margin-left: 0;
             }
         }
+            .isi-berita-konten img {
+                max-width: 100% !important;
+                height: auto !important;
+                display: block;
+                margin: 1rem auto;
+                border-radius: 0.375rem;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+       
     </style>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>

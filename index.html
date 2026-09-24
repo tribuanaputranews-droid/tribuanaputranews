@@ -392,6 +392,14 @@
             line-height: 1.6;
             list-style-position: outside;    /* Memastikan bullet/angka tetap rapi di dalam kotak */
         }
+        /* === TAMPILAN KOTAK SHARE DI MODE GELAP === */
+        body.gelap #isi-berita-penuh div[style*="background: #f8f9fa"] {
+            background: #2d2d2d !important;
+            border-color: #444 !important;
+        }
+        body.gelap #isi-berita-penuh div[style*="background: #f8f9fa"] p {
+            color: #e0e0e0 !important;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
@@ -744,11 +752,48 @@
                 }
             }
             
+            // === TAMBAHAN: Breadcrumb & Tombol Share ===
+            const urlBerita = window.location.href.split('#')[0]; // URL halaman saat ini
+            const judulEncode = encodeURIComponent(b.judul || 'Berita');
+            const teksShare = encodeURIComponent(`Baca berita menarik: ${b.judul}\n\n${urlBerita}`);
+            
+            // Buat Breadcrumb
+            const breadcrumb = `
+                <div style="font-size:13px; color:#666; margin-bottom:10px;">
+                    <a href="#" onclick="window.tampilSemua(); return false;" style="color:#2980b9; text-decoration:none;">Home</a> 
+                    <span> > </span> 
+                    <span>${kategoriBerita}</span>
+                </div>
+            `;
+
+            // Buat Tombol Share
+            const tombolShare = `
+                <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
+                    <p style="margin: 0 0 10px 0; font-size: 14px; font-weight: bold; color: #333;">Bagikan Berita Ini:</p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <a href="https://wa.me/?text=${teksShare}" target="_blank" 
+                           style="flex:1; text-align:center; padding: 8px; background: #25D366; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: bold;">
+                           📱 WhatsApp
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlBerita)}" target="_blank" 
+                           style="flex:1; text-align:center; padding: 8px; background: #1877F2; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: bold;">
+                           📘 Facebook
+                        </a>
+                        <button onclick="navigator.clipboard.writeText('${urlBerita}'); alert('Link berhasil disalin!');" 
+                           style="flex:1; padding: 8px; background: #6c757d; color: white; border: none; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer;">
+                           🔗 Salin Link
+                        </button>
+                    </div>
+                </div>
+            `;
+
             document.getElementById('isi-berita-penuh').innerHTML = `
                 ${videoHTML}
-                <h2 style="margin-bottom:6px; line-height:1.3;">${b.judul || 'Tanpa Judul'}</h2>
-                <div style="font-size:13px; color:#666; margin-bottom:15px; padding-bottom:10px; border-bottom:1px solid #eee;">📂 ${kategoriBerita} | 👁️ ${b.viewer || 0} kali | 📅 ${b.tglPublish || '-'}</div>
-                <div class="isi-berita-konten" style="font-size:16px; line-height:1.8; color:inherit">${isiPenuh}</div>
+                ${breadcrumb}
+                <h2 style="margin-bottom:6px; line-height:1.3; color: inherit;">${b.judul || 'Tanpa Judul'}</h2>
+                <div style="font-size:13px; color: inherit; opacity: 0.8; margin-bottom:15px; padding-bottom:10px; border-bottom:1px solid rgba(128,128,128,0.3);">👁️ ${b.viewer || 0} kali dibaca | 📅 ${b.tglPublish || '-'}</div>
+                ${tombolShare}
+                <div class="isi-berita-konten" style="font-size:16px; line-height:1.8; color: inherit;">${isiPenuh}</div>
             `;
             document.getElementById('area-slider-berita').style.display = 'none';
             document.getElementById('area-berita-penuh').style.display = 'block';

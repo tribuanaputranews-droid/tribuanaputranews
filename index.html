@@ -667,8 +667,9 @@
                         let match = b.isiBerita.match(/src\s*=\s*["']([^"']+)["']/i);
                         if (match && match[1]) gmb = match[1];
                     }
-                    div.innerHTML = `<img src="${gmb}" alt="Gambar"><div style="flex:1;"><h4 style="font-size:15px; margin-bottom:4px;">${b.judul || 'Tanpa Judul'}</h4><small style="color:#666;">📅 ${b.tglPublish || '-'} | 👁️ ${b.viewer || 0}</small><br><button onclick="window.bacaBerita(${idxSistem})" style="padding:4px 10px; font-size:12px; margin-top:6px; cursor:pointer; background:#27ae60; color:#fff; border:none; border-radius:3px;">Baca Berita</button></div>`;
+                    div.innerHTML = `<img src="${gmb}" alt="Gambar"><div style="flex:1;"><h4 style="font-size:15px; margin-bottom:4px; color: inherit;">${b.judul || 'Tanpa Judul'}</h4><small style="color: inherit; opacity: 0.8;">📅 ${b.tglPublish || '-'} | 👁️ ${b.viewer || 0}</small><br><button onclick="window.bacaBerita(${idxSistem})" style="padding:4px 10px; font-size:12px; margin-top:6px; cursor:pointer; background:#27ae60; color:#fff; border:none; border-radius:3px;">Baca Berita</button></div>`;
                     wadahGrup.appendChild(div);
+        
                 });
                 area.appendChild(wadahGrup);
             });
@@ -711,7 +712,7 @@
                 ${videoHTML}
                 <h2 style="margin-bottom:6px; line-height:1.3;">${b.judul || 'Tanpa Judul'}</h2>
                 <div style="font-size:13px; color:#666; margin-bottom:15px; padding-bottom:10px; border-bottom:1px solid #eee;">📂 ${kategoriBerita} | 👁️ ${b.viewer || 0} kali | 📅 ${b.tglPublish || '-'}</div>
-                <div class="isi-berita-konten" style="font-size:16px; line-height:1.8; color:#333;">${isiPenuh}</div>
+                <div class="isi-berita-konten" style="font-size:16px; line-height:1.8; color:inherit">${isiPenuh}</div>
             `;
             document.getElementById('area-slider-berita').style.display = 'none';
             document.getElementById('area-berita-penuh').style.display = 'block';

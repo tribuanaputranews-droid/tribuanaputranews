@@ -601,12 +601,19 @@
 
         document.getElementById('hari-ini').textContent = new Date().toLocaleDateString('id-ID', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
         let modeGelap = false;
+        if (localStorage.getItem('modeGelapTribuana') === 'true') {
+            modeGelap = true;
+            document.body.classList.add('gelap');
+        }        
         window.ubahMode = function () {
             modeGelap = !modeGelap;
             document.body.classList.toggle('gelap', modeGelap);
             document.getElementById('tombol-mode').textContent = modeGelap ? "☀️ Mode Terang" : "🌙 Mode Gelap";
+            localStorage.setItem('modeGelapTribuana', modeGelap.toString());
         };
-
+        if (modeGelap) {
+            document.getElementById('tombol-mode').textContent = "☀️ Mode Terang";
+        }
         window.muatBerita = async function () {
             try {
                 const querySnapshot = await getDocs(collection(db, "berita"));

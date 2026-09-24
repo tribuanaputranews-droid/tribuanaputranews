@@ -344,6 +344,10 @@
           <input type="file" id="foto-berita" accept="image/*" onchange="window.sisipkanFotoBerita(this)">
           <small style="color:#e74c3c;">*Maksimal 500KB per gambar.</small>
         </div>
+
+        <label style="margin-top:15px;">🎬 URL Video YouTube (Opsional)</label>
+        <input type="url" id="url-youtube" placeholder="Contoh: https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+        <small style="color:#666;">*Video akan tampil di atas berita. Kosongkan jika tidak ada video.</small>
         <label>Isi Berita</label>
         <div id="isi-berita" contenteditable="true"
           style="min-height:250px; border:1px solid #ccc; padding:10px; background:#fff;"></div>
@@ -699,6 +703,7 @@
         tglPublish: document.getElementById('tgl-publish').value, jamPublish: document.getElementById('jam-publish').value,
         metaKataKunci: document.getElementById('meta-kata-kunci').value, beritaUtama: document.getElementById('berita-utama').checked,
         tampilkanDiWeb: document.getElementById('tampilkan-berita').checked, isiBerita: document.getElementById('isi-berita').innerHTML,
+        videoYoutube: document.getElementById('url-youtube').value.trim(),
         viewer: 0, updatedAt: new Date()
       };
       try {
@@ -750,6 +755,7 @@
       document.getElementById('berita-utama').checked = b.beritaUtama || false;
       document.getElementById('tampilkan-berita').checked = b.tampilkanDiWeb !== false;
       document.getElementById('isi-berita').innerHTML = b.isiBerita || '';
+      document.getElementById('url-youtube').value = b.videoYoutube || '';
       const select = document.getElementById('kategori-berita');
       Array.from(select.options).forEach(opt => { opt.selected = (b.kategori && b.kategori.includes(opt.value)); });
       window.tampilHalaman('konten-berita');
@@ -768,6 +774,7 @@
       document.getElementById('berita-utama').checked = false;
       document.getElementById('tampilkan-berita').checked = true;
       document.getElementById('isi-berita').innerHTML = '';
+      document.getElementById('url-youtube').value = '';
     };
 
     window.lihatBeritaPDF = async function (id) {

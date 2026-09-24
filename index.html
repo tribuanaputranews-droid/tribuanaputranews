@@ -667,7 +667,7 @@
                         let match = b.isiBerita.match(/src\s*=\s*["']([^"']+)["']/i);
                         if (match && match[1]) gmb = match[1];
                     }
-                    div.innerHTML = `<img src="${gmb}" alt="Gambar"><div style="flex:1;"><h4 style="font-size:15px; margin-bottom:4px; color:var(--web-header-latar);">${b.judul || 'Tanpa Judul'}</h4><small style="color:#666;">📅 ${b.tglPublish || '-'} | 👁️ ${b.viewer || 0}</small><br><button onclick="window.bacaBerita(${idxSistem})" style="padding:4px 10px; font-size:12px; margin-top:6px; cursor:pointer; background:#27ae60; color:#fff; border:none; border-radius:3px;">Baca Berita</button></div>`;
+                    div.innerHTML = `<img src="${gmb}" alt="Gambar"><div style="flex:1;"><h4 style="font-size:15px; margin-bottom:4px;">${b.judul || 'Tanpa Judul'}</h4><small style="color:#666;">📅 ${b.tglPublish || '-'} | 👁️ ${b.viewer || 0}</small><br><button onclick="window.bacaBerita(${idxSistem})" style="padding:4px 10px; font-size:12px; margin-top:6px; cursor:pointer; background:#27ae60; color:#fff; border:none; border-radius:3px;">Baca Berita</button></div>`;
                     wadahGrup.appendChild(div);
                 });
                 area.appendChild(wadahGrup);

@@ -381,7 +381,17 @@
                 border-radius: 0.375rem;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
-       
+        .isi-berita-konten ul, 
+        .isi-berita-konten ol {
+            padding-left: 1.5rem !important; /* Memberi ruang aman untuk bullet/angka */
+            margin-left: 0 !important;       /* Mencegah teks lari ke luar sebelah kiri */
+            margin-bottom: 1rem;
+        }
+        .isi-berita-konten li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            list-style-position: outside;    /* Memastikan bullet/angka tetap rapi di dalam kotak */
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>

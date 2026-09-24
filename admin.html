@@ -776,6 +776,12 @@
       document.getElementById('isi-berita').innerHTML = '';
       document.getElementById('url-youtube').value = '';
     };
+    function extractYoutubeId(url) {
+      if (!url) return null;
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[2].length === 11) ? match[2] : null;
+    }
 
     window.lihatBeritaPDF = async function (id) {
       try {
@@ -786,6 +792,16 @@
         document.getElementById('detail-judul-berita').innerText = b.judul || 'Tanpa Judul';
         let kategori = Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || '-');
         document.getElementById('detail-meta-berita').innerText = `📅 ${b.tglPublish || '-'} ${b.jamPublish || ''} | 📂 ${kategori} | 👁️ ${b.viewer || 0} kali`;
+        let videoHTML = '';
+        if (b.videoYoutube) {
+            const videoId = extractYoutubeId(b.videoYoutube);
+            if (videoId) {
+                videoHTML = `<div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:8px; margin-bottom:20px;">
+                    <iframe src="https://www.youtube.com/embed/${videoId}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" allowfullscreen></iframe>
+                </div>`;
+            }
+        }
+        document.getElementById('detail-gambar-berita').innerHTML = videoHTML + gambarHTML;
 
         let gambarHTML = '';
         let isiBersih = b.isiBerita || '<p style="color:#888;">Isi kosong.</p>';

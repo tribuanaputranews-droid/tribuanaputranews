@@ -675,6 +675,16 @@
             } catch (error) {
                 document.getElementById('daftar-berita').innerHTML = '<p style="color:red; padding:10px;">Gagal memuat data.</p>';
             }
+            // === FITUR BUKA BERITA OTOMATIS DARI LINK SHARE ===
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#baca-')) {
+                const idTarget = hash.replace('#baca-', '');
+                const idx = daftarAktifDiLayar.findIndex(b => b.id === idTarget);
+                if (idx !== -1) {
+                    // Beri jeda sedikit agar UI siap, lalu buka berita
+                    setTimeout(() => { window.bacaBerita(idx); }, 500);
+                }
+            }
         };
 
         window.tampilDaftarBerita = function (list) {
@@ -753,7 +763,8 @@
             }
             
             // === TAMBAHAN: Breadcrumb & Tombol Share ===
-            const urlBerita = window.location.href.split('#')[0]; // URL halaman saat ini
+            const baseUrl = window.location.href.split('#')[0];
+            const urlBerita = `${baseUrl}#baca-${b.id}`; // Menambahkan ID berita di ujung URL
             const judulEncode = encodeURIComponent(b.judul || 'Berita');
             const teksShare = encodeURIComponent(`Baca berita menarik: ${b.judul}\n\n${urlBerita}`);
             
@@ -800,7 +811,7 @@
             window.hentikanTimerSliderBerita();
             window.scrollTo({top: 0, behavior: 'smooth'});
         };
-        window.kembaliKeSlider = function () {document.getElementById('area-slider-berita').style.display = 'block'; document.getElementById('area-berita-penuh').style.display = 'none'; window.mulaiTimerSliderBerita();};
+        window.kembaliKeSlider = function () {document.getElementById('area-slider-berita').style.display = 'block'; document.getElementById('area-berita-penuh').style.display = 'none'; window.mulaiTimerSliderBerita(); window.location.hash = '';};
         window.filterKategori = function (kat) {let hasil = daftarBerita.filter(b => b.tampilkanDiWeb !== false && (Array.isArray(b.kategori) ? b.kategori.includes(kat) : b.kategori === kat)); window.tampilDaftarBerita(hasil); window.kembaliKeSlider();};
         window.tampilSemua = function () {let beritaAktif = daftarBerita.filter(b => b.tampilkanDiWeb !== false); window.tampilDaftarBerita(beritaAktif); window.kembaliKeSlider();};
         window.cariBerita = function (k) {if (!k) {window.tampilSemua(); return;} let hasil = daftarBerita.filter(b => b.tampilkanDiWeb !== false && (b.judul || '').toLowerCase().includes(k.toLowerCase())); window.tampilDaftarBerita(hasil);};

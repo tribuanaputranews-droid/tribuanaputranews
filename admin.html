@@ -49,6 +49,19 @@
   </style>
 </head>
 <body>
+  <!-- LAYAR LOGIN ADMIN -->
+  <div id="layar-login" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#2c3e50; z-index:99999; display:flex; align-items:center; justify-content:center;">
+    <div style="background:white; padding:30px; border-radius:8px; text-align:center; width:300px; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+      <h3 style="margin-top:0; color:#2c3e50;">🔒 Login Admin</h3>
+      <p style="font-size:13px; color:#666; margin-bottom:15px;">Masukkan password untuk mengakses panel.</p>
+      <input type="password" id="input-password" placeholder="Password..." style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:4px; box-sizing:border-box;">
+      <button onclick="window.cekPasswordAdmin()" style="width:100%; padding:10px; background:#2980b9; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Masuk</button>
+      <p id="pesan-error" style="color:red; font-size:12px; margin-top:10px; display:none;">Password salah!</p>
+    </div>
+  </div>
+
+  <div class="sidebar">
+  <!-- (sisa kode sidebar tetap di bawahnya) -->
   <div class="sidebar">
     <h3>📋 Menu Admin</h3>
     <a href="#" onclick="window.tampilHalaman('beranda'); return false;">🏠 Dashboard</a>
@@ -284,7 +297,6 @@
         if (id === 'running-text') window.muatPengumuman();
       }
     };
-
     window.muatStatistikDashboard = async function () {
       try {
         const snap = await getDocs(collection(db, "berita"));
@@ -295,7 +307,6 @@
         document.getElementById('berita-unpublish').innerText = unpub;
       } catch (error) { console.error("Gagal muat statistik:", error); }
     };
-
     window.pratinjauLogo = function (input) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
@@ -311,7 +322,6 @@
         reader.readAsDataURL(input.files[0]);
       }
     };
-
     window.simpanSettingUtama = async function () {
       const data = {
         namaAdmin: document.getElementById('nama-admin').value, namaPerusahaan: document.getElementById('nama-perusahaan').value,
@@ -337,7 +347,6 @@
         window.muatSettingUtama();
       } catch (error) { alert("❌ Gagal: " + error.message); }
     };
-
     window.muatSettingUtama = async function () {
       const docSnap = await getDoc(doc(db, "pengaturan", "utama"));
       if (docSnap.exists()) {
@@ -356,7 +365,6 @@
         if (d.fotoPemimpinRedaksi) document.getElementById('pratinjau-foto-pemred').innerHTML = `<img src="${d.fotoPemimpinRedaksi}" class="img-preview" style="max-width:150px;">`;
       }
     };
-
     window.tampilTabelRedaksi = function () {
       const tb = document.getElementById('isi-tabel-redaksi');
       if (!tb) return;
@@ -393,7 +401,6 @@
         window.tampilTabelRedaksi();
       } catch (error) { console.error(error); }
     };
-
     window.pratinjauLogoOrganisasi = function (input) {
       if (input.files && input.files[0]) {
         if (input.files[0].size > 1000000) { alert("Maksimal 1MB!"); input.value = ''; return; }
@@ -428,7 +435,6 @@
         }
       } catch (error) { console.error(error); }
     };
-
     window.tampilTabelPengumuman = function () {
       const tb = document.getElementById('isi-tabel-pengumuman');
       if (!tb) return;
@@ -489,7 +495,6 @@
         window.resetFormBerita();
       } catch (e) { alert("❌ Gagal: " + e.message); }
     };
-
     window.muatArsipBerita = async function () {
       const tb = document.getElementById('daftar-arsip-berita');
       tb.innerHTML = '<tr><td colspan="7" style="text-align:center;">Memuat...</td></tr>';
@@ -515,7 +520,6 @@
         document.getElementById('berita-unpublish').innerText = unpub;
       } catch (error) { tb.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Gagal.</td></tr>'; }
     };
-
     window.editBeritaGlobal = async function (id) {
       const snap = await getDoc(doc(db, "berita", id));
       if (!snap.exists()) return;
@@ -534,11 +538,9 @@
       window.tampilHalaman('konten-berita');
       alert("Mode Edit Aktif.");
     };
-
     window.hapusBeritaGlobal = async function (id) {
       if (confirm("Hapus berita ini?")) { await deleteDoc(doc(db, "berita", id)); window.muatArsipBerita(); }
     };
-
     window.resetFormBerita = function () {
       sedangEdit = false; idBeritaDiedit = null;
       document.getElementById('judul-berita').value = '';
@@ -551,14 +553,12 @@
       quillEditor.setText(''); // Membersihkan Quill
       document.getElementById('url-youtube').value = '';
     };
-
     function extractYoutubeId(url) {
       if (!url) return null;
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
       const match = url.match(regExp);
       return (match && match[2].length === 11) ? match[2] : null;
     }
-
     window.lihatBeritaPDF = async function (id) {
       try {
         const snap = await getDoc(doc(db, "berita", id));
@@ -578,7 +578,6 @@
                 </div>`;
             }
         }
-
         let gambarHTML = '';
         let isiBersih = b.isiBerita || '<p style="color:#888;">Isi kosong.</p>';
         if (b.isiBerita) {
@@ -597,13 +596,11 @@
         document.body.style.overflow = 'hidden';
       } catch (error) { alert("Gagal memuat."); }
     };
-
     window.tutupModalBerita = function () {
       document.getElementById('modal-lihat-berita').style.display = 'none';
       document.body.style.overflow = 'auto';
       dataBeritaAktif = null;
     };
-
     window.downloadBeritaPDF = function () {
       if (!dataBeritaAktif) return;
       const element = document.getElementById('area-cetak-berita');
@@ -615,7 +612,6 @@
       html2pdf().set(opt).from(element).save().then(() => { btn.innerText = teksAsli; btn.disabled = false; })
         .catch(err => { console.error(err); alert("Gagal."); btn.innerText = teksAsli; btn.disabled = false; });
     };
-
     window.pratinjauIklanHeader = function (input) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
@@ -639,7 +635,6 @@
       snap.forEach(d => { const x = d.data(); const id = d.id; html += `<tr><td><img src="${x.gambar}" class="img-thumb"></td><td>${x.judul || '-'}</td><td><a href="${x.link}" target="_blank">Link</a></td><td><button class="btn-hapus" onclick="window.hapusIklanGlobal('iklan_header','${id}')">✖</button></td></tr>`; });
       tb.innerHTML = html;
     };
-
     window.pratinjauIklanSamping = function (input) {
       if (input.files && input.files[0]) {
         if (input.files[0].size > 1000000) { alert("Maksimal 1MB!"); input.value = ''; return; }
@@ -670,7 +665,6 @@
     window.hapusIklanSamping = async function (id) {
       if (confirm("Hapus?")) { await deleteDoc(doc(db, "iklan_samping", id)); window.muatDaftarIklanSamping(); }
     };
-
     window.simpanAfiliasi = async function () {
       const nama = document.getElementById('nama-afiliasi').value, link = document.getElementById('link-afiliasi').value, file = document.getElementById('file-gambar-afiliasi').files[0];
       if (!nama || !link || !file) { alert("Lengkapi data!"); return; }
@@ -699,10 +693,33 @@
     window.hapusIklanGlobal = async function (koleksi, id) {
       if (confirm("Hapus?")) { await deleteDoc(doc(db, koleksi, id)); if (koleksi === 'iklan_header') window.muatDaftarIklanHeader(); else window.muatDaftarAfiliasi(); }
     };
-
     document.addEventListener('DOMContentLoaded', () => {
       console.log("Admin dimuat.");
       
+      // --- LOGIKA LOGIN ADMIN ---
+      const PASSWORD_ADMIN = "admin123"; // GANTI PASSWORD DI SINI SESUKA ANDA
+      
+      window.cekPasswordAdmin = function() {
+        const pwd = document.getElementById('input-password').value;
+        if (pwd === PASSWORD_ADMIN) {
+          document.getElementById('layar-login').style.display = 'none';
+          localStorage.setItem('admin_logged_in', 'true'); // Ingat login di browser
+        } else {
+          document.getElementById('pesan-error').style.display = 'block';
+          document.getElementById('input-password').value = '';
+        }
+      };
+
+      // Cek apakah sudah pernah login sebelumnya
+      if (localStorage.getItem('admin_logged_in') === 'true') {
+        document.getElementById('layar-login').style.display = 'none';
+      }
+
+      // Support tombol Enter untuk login
+      document.getElementById('input-password').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') window.cekPasswordAdmin();
+      });
+
       // --- INISIALISASI EDITOR QUILL ---
       quillEditor = new Quill('#editor-berita', {
         theme: 'snow',
@@ -712,13 +729,12 @@
             ['bold', 'italic', 'underline', 'strike'],
             [{ 'color': [] }, { 'background': [] }],
             [{ 'list': 'ordered'}, { 'list': 'bullet' }, 'blockquote'],
-            ['link', 'image'], // Fitur Link dan Gambar
+            ['link', 'image'],
             ['clean']
           ]
         },
         placeholder: 'Tulis isi berita di sini...'
       });
-
       window.muatSettingUtama();
       window.muatDataRedaksi();
       window.muatStatistikDashboard();

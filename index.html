@@ -564,7 +564,10 @@
         };
 
         // Alias untuk konsistensi
-        window.bacaBerita = window.bacaBeritaLangsung;
+        window.bacaBerita = function(indeks) {
+            const b = daftarAktifDiLayar[indeks];
+            if (b) window.bacaBeritaLangsung(b);
+        };
 
         window.kembaliKeSlider = function () {
             document.title = "Tribuana Putra News — Portal Berita Online Priangan Timur";

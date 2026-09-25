@@ -624,7 +624,7 @@
                 if (docSnapUtama.exists()) {
                     const d = docSnapUtama.data();
                     let htmlPemred = '';
-                    if (d.fotoPemimpinRedaksi) htmlPemred += `<img src="${d.fotoPemimpinRedaksi}" style="max-width:150px; border-radius:8px; margin-bottom:10px; box-shadow:0 2px 4px rgba(0,0,0,0.1);" loading="lazy"><br>`;
+                    if (d.fotoPemimpinRedaksi) htmlPemred += `<img src="${d.fotoPemimpinRedaksi}" style="max-width:150px; border-radius:8px; margin-bottom:10px; box-shadow:0 2px 4px rgba(0,0,0,0.1);"><br>`;
                     if (d.namaAdmin) htmlPemred += `<b>${d.namaAdmin}</b><br><small style="color:#666;">Pemimpin Redaksi</small>`;
                     if (htmlPemred) document.getElementById('pemimpin-redaksi').innerHTML = htmlPemred;
                     if (d.logoWebsite) document.getElementById('logo-website').src = d.logoWebsite;
@@ -634,7 +634,7 @@
                     const dOrg = docSnapOrg.data();
                     if (dOrg.logo) {
                         const elOrg = document.getElementById('logo-induk-organisasi');
-                        if (elOrg) elOrg.innerHTML = `<img src="${dOrg.logo}" style="max-width:100%; height:auto; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.1);" alt="Logo Induk Organisasi" loading="lazy">`;
+                        if (elOrg) elOrg.innerHTML = `<img src="${dOrg.logo}" style="max-width:100%; height:auto; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.1);" alt="Logo Induk Organisasi">`;
                     }
                 }
             } catch (e) { console.error(e); }

@@ -252,6 +252,19 @@
                 <div style="margin-top:10px; text-align:center;">
                     <button onclick="window.bukaKomentarAdmin()" class="no-print" style="background:none; border:none; color:#2980b9; cursor:pointer; text-decoration:underline; font-size:13px;">🔒 Lihat Komentar (Admin)</button>
                 </div>
+                <div class="kotak">
+                    <h3>📢 Pasang / Berlangganan Iklan</h3>
+                    <form id="form-iklan-langganan" onsubmit="window.simpanLanggananIklan(event)">
+                        <input type="text" id="iklan_instansi" placeholder="Nama / Instansi" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
+                        <input type="email" id="iklan_email" placeholder="Email" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
+                        <input type="tel" id="iklan_wa" placeholder="No. WhatsApp" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
+                        <textarea id="iklan_keterangan" placeholder="Keterangan Iklan..." rows="3" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;"></textarea>
+                        <button type="submit" style="width:100%; padding:10px; background:#e67e22; color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Kirim Pengajuan Iklan</button>
+                        </form>
+                    <div style="margin-top:10px; text-align:center;">
+                        <button onclick="window.bukaPelangganAdmin()" class="no-print" style="background:none; border:none; color:#2980b9; cursor:pointer; text-decoration:underline; font-size:13px;">🔒 Lihat Pelanggan (Admin)</button>
+                    </div>
+                </div>
             </div>
         </aside>
     </div>
@@ -369,7 +382,7 @@
                 let gmb = 'https://via.placeholder.com/80x56?text=No+Img';
                 if (b.isiBerita) { const match = b.isiBerita.match(/src\s*=\s*["']([^"']+)["']/i); if (match && match[1]) gmb = match[1]; }
                 html += `<div class="widget-berita" style="cursor:pointer;" onclick="window.bacaBeritaDariWidget(${idx})">
-                    <img src="${gmb}" alt="Thumb" loading="lazy">
+                    <img src="${gmb}" alt="Thumb">
                     <div style="flex:1; min-width:0;">
                         <h4 style="color:inherit;">${b.judul || 'Tanpa Judul'}</h4>
                         <small>👁️ ${b.viewer || 0} | 📅 ${b.tglPublish || '-'}</small>
@@ -416,7 +429,7 @@
                     div.className = "berita-item";
                     let gmb = 'https://via.placeholder.com/100x70?text=No+Image';
                     if (b.isiBerita) { let match = b.isiBerita.match(/src\s*=\s*["']([^"']+)["']/i); if (match && match[1]) gmb = match[1]; }
-                    div.innerHTML = `<img src="${gmb}" alt="Gambar" loading="lazy"><div style="flex:1;"><h4 style="font-size:15px; margin-bottom:4px; color: inherit;">${b.judul || 'Tanpa Judul'}</h4><small style="color: inherit; opacity: 0.8;">📅 ${b.tglPublish || '-'} | 👁️ ${b.viewer || 0}</small><br><button onclick="window.bacaBerita(${idxSistem})" class="no-print" style="padding:4px 10px; font-size:12px; margin-top:6px; cursor:pointer; background:#27ae60; color:#fff; border:none; border-radius:3px;">Baca Berita</button></div>`;
+                    div.innerHTML = `<img src="${gmb}" alt="Gambar"><div style="flex:1;"><h4 style="font-size:15px; margin-bottom:4px; color: inherit;">${b.judul || 'Tanpa Judul'}</h4><small style="color: inherit; opacity: 0.8;">📅 ${b.tglPublish || '-'} | 👁️ ${b.viewer || 0}</small><br><button onclick="window.bacaBerita(${idxSistem})" class="no-print" style="padding:4px 10px; font-size:12px; margin-top:6px; cursor:pointer; background:#27ae60; color:#fff; border:none; border-radius:3px;">Baca Berita</button></div>`;
                     wadahGrup.appendChild(div);
                 });
                 area.appendChild(wadahGrup);
@@ -551,11 +564,10 @@
             try {
                 const snap = await getDocs(collection(db, "iklan_header")); let daftarIklan = []; snap.forEach((doc) => { daftarIklan.push(doc.data()); });
                 if (daftarIklan.length === 0) { wadahIklan.innerHTML = '<em style="color:#888; font-size:12px;">Space Iklan Header</em>'; return; }
-                wadahIklan.innerHTML = daftarIklan.map((iklan, index) => { let html = `<img src="${iklan.gambar}" style="width:100%; height:100%; max-height:120px; object-fit:contain; display:block;" loading="lazy">`; let isi = iklan.link ? `<a href="${iklan.link}" target="_blank" style="display:block; width:100%; height:100%;">${html}</a>` : html; return `<div class="item-slide-header" style="display: ${index === 0 ? 'block' : 'none'}; width:100%; height:100%;">${isi}</div>`; }).join('');
+                wadahIklan.innerHTML = daftarIklan.map((iklan, index) => { let html = `<img src="${iklan.gambar}" style="width:100%; height:100%; max-height:120px; object-fit:contain; display:block;">`; let isi = iklan.link ? `<a href="${iklan.link}" target="_blank" style="display:block; width:100%; height:100%;">${html}</a>` : html; return `<div class="item-slide-header" style="display: ${index === 0 ? 'block' : 'none'}; width:100%; height:100%;">${isi}</div>`; }).join('');
                 if (daftarIklan.length > 1) { let idx = 0; setInterval(() => { let slides = wadahIklan.querySelectorAll('.item-slide-header'); if (slides.length === 0) return; slides[idx].style.display = 'none'; idx = (idx + 1) % slides.length; slides[idx].style.display = 'block'; }, 4000); }
             } catch (e) { console.error(e); }
         };
-
         window.muatIklanSampingWeb = async function () {
             try {
                 const snap = await getDocs(collection(db, "iklan_samping"));
@@ -572,7 +584,7 @@
             if (btnKiri) btnKiri.style.display = window.daftarIklanSamping.length > 1 ? 'block' : 'none';
             if (btnKanan) btnKanan.style.display = window.daftarIklanSamping.length > 1 ? 'block' : 'none';
             let iklan = window.daftarIklanSamping[window.indeksIklanSamping];
-            let htmlGambar = `<img src="${iklan.gambar}" alt="${iklan.judul || 'Iklan'}" style="max-width:100%; height:auto; display:block; margin:0 auto; border-radius:4px; cursor:pointer;" loading="lazy" onclick="window.bukaLightboxIklan('${iklan.id}')">`;
+            let htmlGambar = `<img src="${iklan.gambar}" alt="${iklan.judul || 'Iklan'}" style="max-width:100%; height:auto; display:block; margin:0 auto; border-radius:4px; cursor:pointer;" onclick="window.bukaLightboxIklan('${iklan.id}')">`;
             if (iklan.judul) htmlGambar += `<div style="text-align:center; font-size:12px; color:#555; margin-top:6px; font-weight:bold;">${iklan.judul}</div>`;
             wadah.innerHTML = htmlGambar;
         };
@@ -596,7 +608,7 @@
             let wadah = document.getElementById('slider-afiliasi'); if (!wadah) return;
             try {
                 const snap = await getDocs(collection(db, "afiliasi")); let data = []; snap.forEach((doc) => { data.push(doc.data()); });
-                if (data.length > 0) { wadah.innerHTML = data.map(item => `<a href="${item.link}" target="_blank" style="min-width:100%; box-sizing:border-box; display:block;"><img src="${item.gambar}" style="width:100%; height:auto; max-height:250px; object-fit:cover; display:block; border-radius:4px;" loading="lazy"></a>`).join(''); window.mulaiAutoSlideAfiliasi(data.length); }
+                if (data.length > 0) { wadah.innerHTML = data.map(item => `<a href="${item.link}" target="_blank" style="min-width:100%; box-sizing:border-box; display:block;"><img src="${item.gambar}" style="width:100%; height:auto; max-height:250px; object-fit:cover; display:block; border-radius:4px;"></a>`).join(''); window.mulaiAutoSlideAfiliasi(data.length); }
                 else { wadah.innerHTML = '<p style="padding:10px; color:#888; font-size:12px; text-align:center; width:100%;">Belum ada iklan</p>'; }
             } catch (e) { console.error(e); }
         };

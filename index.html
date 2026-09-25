@@ -360,11 +360,36 @@
                 window.tampilDaftarBerita(beritaAktif);
                 window.muatSliderBeritaUtama();
                 window.muatWidgetSidebar();
+                window.cekHashDanBukaBerita();
             } catch (error) {
                 document.getElementById('daftar-berita').innerHTML = '<p style="color:red; padding:10px;">Gagal memuat data.</p>';
             }
         };
+        // === FUNGSI BARU: CEK LINK SHARE SAAT DATA SUDAH SIAP ===
+        window.cekHashDanBukaBerita = function() {
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#baca-')) {
+                const idTarget = hash.replace('#baca-', '');
+                const beritaTarget = daftarBerita.find(b => b.id === idTarget);
 
+                if (beritaTarget) {
+                    console.log("Link share terdeteksi, membuka:", beritaTarget.judul);
+                    
+                    // Paksa tampilan ke mode baca
+                    document.getElementById('halaman-berita-utama').style.display = 'block';
+                    document.getElementById('halaman-statis').style.display = 'none';
+                    document.getElementById('halaman-arsip').style.display = 'none';
+                    document.getElementById('area-slider-berita').style.display = 'none';
+                    document.getElementById('area-berita-penuh').style.display = 'block';
+
+                    // Render berita
+                    window.bacaBeritaLangsung(beritaTarget);
+                } else {
+                    console.warn("ID berita tidak ditemukan:", idTarget);
+                }
+            }
+        };
+        
         window.muatWidgetSidebar = function() {
             const beritaAktif = daftarBerita.filter(b => b.tampilkanDiWeb !== false);
             const terpopuler = [...beritaAktif].sort((a, b) => (b.viewer || 0) - (a.viewer || 0)).slice(0, 5);
@@ -914,16 +939,7 @@
             window.muatAfiliasiWeb();
             window.muatDataFooter();
             let areaIklan = document.getElementById('wadah-iklan-samping');
-            if (areaIklan) { areaIklan.addEventListener('mouseenter', window.hentikanTimerIklanSamping); areaIklan.addEventListener('mouseleave', window.mulaiTimerIklanSamping); }
-            
-            const hash = window.location.hash;
-            if (hash && hash.startsWith('#baca-')) {
-                const idTarget = hash.replace('#baca-', '');
-                setTimeout(() => {
-                    const idx = daftarBerita.findIndex(b => b.id === idTarget);
-                    if (idx !== -1) window.bacaBeritaDariWidget(idx);
-                }, 1000);
-            }
+            if (areaIklan) { areaIklan.addEventListener('mouseenter', window.hentikanTimerIklanSamping); areaIklan.addEventListener('mouseleave', window.mulaiTimerIklanSamping);}
         });
     </script>
 </body>

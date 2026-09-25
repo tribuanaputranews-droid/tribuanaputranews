@@ -99,14 +99,131 @@
             .isi-berita-konten img { max-width: 100% !important; box-shadow: none; }
         }
 
-        @media (max-width: 48rem) {
-            .container { flex-direction: column; }
-            .kanan { position: static; max-height: none; overflow-y: visible; }
-            #header-utama { flex-direction: column; text-align: center; }
-            .menu-bar ul { flex-direction: column; }
-            .sub-menu { position: static; box-shadow: none; padding-left: 1.25rem; }
-            .pencarian { margin-left: 0; margin-top: 0.625rem; width: 100%; }
-            .pencarian input { width: 100%; margin-left: 0; }
+        /* === PERBAIKAN RESPONSIF KHUSUS HP (MOBILE) === */
+        @media (max-width: 768px) {
+            /* 1. Layout Utama Jadi 1 Kolom */
+            .container { 
+                flex-direction: column; 
+                padding: 0 0.5rem; 
+                gap: 1rem;
+            }
+            .kiri, .kanan { 
+                width: 100%; 
+                min-width: 100%; 
+                flex: none; 
+            }
+            
+            /* 2. Hapus Sticky Sidebar di HP agar scroll lancar */
+            .kanan { 
+                position: static; 
+                max-height: none; 
+                overflow-y: visible; 
+                padding-right: 0; 
+            }
+
+            /* 3. Header Rapi di Layar Kecil */
+            #header-utama { 
+                flex-direction: column; 
+                text-align: center; 
+                padding: 0.5rem;
+                gap: 0.5rem;
+            }
+            .logo-area img { max-height: 3rem; margin: 0 auto; }
+            #iklan-header-tempat { 
+                width: 100%; 
+                margin: 0.5rem 0; 
+                min-height: 50px; 
+            }
+
+            /* 4. Menu Bar Mudah Di-Tap (Touch Friendly) */
+            .menu-bar ul { 
+                flex-direction: column; 
+                padding: 0; 
+            }
+            .menu-bar li { 
+                width: 100%; 
+                border-bottom: 1px solid rgba(255,255,255,0.1); 
+            }
+            .menu-bar a { 
+                padding: 0.875rem 1rem; 
+                font-size: 1rem;
+            }
+            .sub-menu { 
+                position: static; 
+                box-shadow: none; 
+                background: rgba(0,0,0,0.2); 
+                min-width: 100%;
+            }
+            .sub-menu a { 
+                padding: 0.75rem 1rem 0.75rem 2rem; 
+            }
+
+            /* 5. Kolom Pencarian Full Width */
+            .pencarian { 
+                width: 100%; 
+                margin: 0.5rem 0; 
+            }
+            .pencarian input { 
+                width: 100%; 
+                max-width: 100%; 
+                margin-left: 0; 
+                padding: 0.625rem;
+            }
+
+            /* 6. Tampilan Daftar Berita di HP */
+            .berita-item { 
+                flex-direction: column; 
+                gap: 0.5rem;
+            }
+            .berita-item img { 
+                width: 100%; 
+                height: auto; 
+                max-height: 200px; 
+                object-fit: cover; 
+            }
+
+            /* 7. Widget Sidebar di HP */
+            .widget-berita { 
+                flex-direction: column; 
+                gap: 0.5rem;
+            }
+            .widget-berita img { 
+                width: 100%; 
+                height: auto; 
+                max-height: 150px; 
+            }
+
+            /* 8. Footer Rata Tengah & Rapi */
+            .footer-container { 
+                flex-direction: column; 
+                text-align: center; 
+                gap: 1.5rem;
+            }
+            .footer-info, .footer-sosmed { 
+                min-width: 100%; 
+            }
+            .sosmed-links { 
+                justify-content: center; 
+                flex-wrap: wrap; 
+            }
+            .sosmed-links a { 
+                margin: 0 0.5rem 0.5rem 0; 
+            }
+
+            /* 9. Tombol Share & Aksi di HP (Stack ke Bawah) */
+            .no-print[style*="display: flex"] { 
+                flex-direction: column !important; 
+            }
+            .no-print[style*="display: flex"] > * { 
+                width: 100% !important; 
+                margin-bottom: 0.5rem !important; 
+            }
+
+            /* 10. Pastikan Gambar Artikel Tidak Meluber di HP */
+            .isi-berita-konten img {
+                max-width: 100% !important;
+                height: auto !important;
+            }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>

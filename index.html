@@ -4,15 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tribuana Putra News — Portal Berita Online Priangan Timur</title>
-    
-    <!-- FITUR 1: OPEN GRAPH META TAGS (Untuk Share di Sosmed) -->
     <meta property="og:title" content="Tribuana Putra News - Portal Berita Priangan Timur" />
-    <meta property="og:description" content="Berita terkini dari Tasikmalaya, Ciamis, Banjar, Garut, dan sekitarnya. Terpercaya dan Aktual." />
+    <meta property="og:description" content="Berita terkini dari Tasikmalaya, Ciamis, Banjar, Garut, dan sekitarnya." />
     <meta property="og:image" content="https://via.placeholder.com/1200x630/2c3e50/ffffff?text=Tribuana+Putra+News" />
-    <meta property="og:url" content="https://tribuanaputranews-droid.github.io/tribuanaputranews/" />
     <meta property="og:type" content="website" />
-    <meta name="description" content="Portal Berita Online Priangan Timur - Tribuana Putra News">
-
     <style>
         html { font-size: 16px; }
         :root { --web-header-latar: #ffffff; --web-header-teks: #000000; --web-menu-latar: #34495e; --web-menu-teks: #ffffff; --web-running-latar: #f1c40f; --web-running-teks: #000000; --web-footer-latar: #2c3e50; --web-footer-teks: #ffffff; }
@@ -27,7 +22,6 @@
         body.gelap .berita-item, body.gelap .widget-berita { border-color: #444; }
         body.gelap #iklan-header-tempat { background: #000000; }
 
-        /* === FITUR 4: PROGRESS BAR BACA ARTIKEL === */
         #progress-bar-container { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: transparent; z-index: 10001; }
         #progress-bar { height: 100%; background: #e74c3c; width: 0%; transition: width 0.1s ease-out; }
 
@@ -66,16 +60,12 @@
         .berita-item img { width: 6.25rem; height: 4.375rem; object-fit: cover; border-radius: 0.25rem; flex-shrink: 0; }
 
         .isi-berita-konten img { max-width: 100% !important; height: auto !important; display: block; margin: 1rem auto; border-radius: 0.25rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        
-        /* PERBAIKAN LIST AGAR TIDAK MELOMPAT KE KIRI */
         .isi-berita-konten ul, .isi-berita-konten ol { padding-left: 2rem !important; margin-left: 0 !important; margin-bottom: 1rem; list-style-position: outside !important; }
         .isi-berita-konten li { margin-bottom: 0.5rem; line-height: 1.6; text-align: left !important; padding-left: 0.25rem; }
         .isi-berita-konten ul li { list-style-type: disc !important; }
         .isi-berita-konten ol li { list-style-type: decimal !important; }
-        .isi-berita-konten .ql-indent-1 { padding-left: 2.5rem !important; }
-        .isi-berita-konten .ql-indent-2 { padding-left: 3.5rem !important; }
 
-        .widget-berita { display: flex; gap: 0.625rem; padding: 0.625rem 0; border-bottom: 1px solid #eee; }
+        .widget-berita { display: flex; gap: 0.625rem; padding: 0.625rem 0; border-bottom: 1px solid #eee; cursor: pointer; }
         .widget-berita:last-child { border-bottom: none; }
         .widget-berita img { width: 5rem; height: 3.5rem; object-fit: cover; border-radius: 0.25rem; flex-shrink: 0; }
         .widget-berita h4 { font-size: 0.875rem; margin: 0 0 0.25rem 0; line-height: 1.3; }
@@ -94,7 +84,6 @@
         .btn-cetak { flex:1; text-align:center; padding: 8px; background: #6c757d; color: white; border: none; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; }
         .btn-cetak:hover { background: #5a6268; }
         
-        /* === FITUR 3: TOMBOL KEMBALI KE ATAS === */
         #btn-back-to-top {
             position: fixed; bottom: 20px; right: 20px; background: #e74c3c; color: white; border: none; border-radius: 50%;
             width: 50px; height: 50px; font-size: 24px; cursor: pointer; display: none; z-index: 10000;
@@ -123,7 +112,6 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-    <!-- FITUR 4: PROGRESS BAR -->
     <div id="progress-bar-container"><div id="progress-bar"></div></div>
 
     <div class="sticky-top">
@@ -131,13 +119,13 @@
             <div class="logo-area"><img src="" alt="Logo" id="logo-website"></div>
             <div id="iklan-header-tempat"><em style="color:#888; font-size:12px;">Memuat Iklan...</em></div>
             <div>
-                <button onclick="window.ubahMode()" id="tombol-mode" style="padding:4px 8px; cursor:pointer; border:1px solid #ccc; background:#fff; border-radius:4px;"> Mode Gelap</button>
+                <button onclick="window.ubahMode()" id="tombol-mode" style="padding:4px 8px; cursor:pointer; border:1px solid #ccc; background:#fff; border-radius:4px;">🌙 Mode Gelap</button>
                 <div id="hari-ini" style="font-size:12px; margin-top:6px; color:#666;"></div>
             </div>
         </header>
         <nav class="menu-bar">
             <ul>
-                <li><a href="#" onclick="window.tampilSemua(); return false;"> Home</a></li>
+                <li><a href="#" onclick="window.tampilSemua(); return false;">🏠 Home</a></li>
                 <li><a href="#">Kabar Daerah ▼</a>
                     <div class="sub-menu">
                         <a href="#" onclick="window.filterKategori('Tasikmalaya'); return false;">Tasikmalaya</a>
@@ -171,7 +159,7 @@
         <main class="kiri">
             <div id="halaman-berita-utama">
                 <div class="kotak">
-                    <h3> Baca Berita Utama</h3>
+                    <h3>📖 Baca Berita Utama</h3>
                     <div id="area-slider-berita" style="position:relative; background:#000; color:#fff; border-radius:6px; overflow:hidden; min-height:200px;">
                         <img id="gambar-slider-berita" src="" style="width:100%; height:250px; object-fit:cover; opacity:0.9;">
                         <div style="position:absolute; bottom:0; padding:15px; background:linear-gradient(transparent, rgba(0,0,0,0.9)); width:100%;">
@@ -236,16 +224,14 @@
                     <p style="color:#888;">Memuat data...</p>
                 </div>
             </div>
-            
             <div class="kotak">
                 <h3>🔥 Berita Terpopuler</h3>
                 <div id="widget-terpopuler"><p style="color:#888; font-size:13px;">Memuat...</p></div>
             </div>
             <div class="kotak">
-                <h3> Berita Terbaru</h3>
+                <h3>🕒 Berita Terbaru</h3>
                 <div id="widget-terbaru"><p style="color:#888; font-size:13px;">Memuat...</p></div>
             </div>
-
             <div class="kotak">
                 <h3>📢 Data Iklan</h3>
                 <div id="wadah-iklan-samping" style="position:relative; width:100%; min-height:180px; background:#f9f9f9; border-radius:4px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
@@ -258,11 +244,10 @@
                 <h3>🔗 Iklan Afiliasi</h3>
                 <div class="slider-afiliasi-container" style="position:relative; overflow:hidden; border-radius:6px; background:#f4f4f4; min-height:150px;">
                     <div id="slider-afiliasi" style="display:flex; transition:transform 0.5s ease-in-out;"></div>
-                    <button onclick="window.slideAfiliasiPrev()" class="no-print" style="position:absolute; left:5px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:6px 10px; cursor:pointer; border-radius:3px; z-index:2;"></button>
+                    <button onclick="window.slideAfiliasiPrev()" class="no-print" style="position:absolute; left:5px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:6px 10px; cursor:pointer; border-radius:3px; z-index:2;">❮</button>
                     <button onclick="window.slideAfiliasiNext()" class="no-print" style="position:absolute; right:5px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:6px 10px; cursor:pointer; border-radius:3px; z-index:2;">❯</button>
                 </div>
             </div>
-
             <div class="kotak">
                 <h3>📢 Pasang / Berlangganan Iklan</h3>
                 <form id="form-iklan-langganan" onsubmit="window.simpanLanggananIklan(event)">
@@ -273,12 +258,11 @@
                     <button type="submit" style="width:100%; padding:10px; background:#e67e22; color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Kirim Pengajuan Iklan</button>
                 </form>
                 <div style="margin-top:10px; text-align:center;">
-                    <button onclick="window.bukaPelangganAdmin()" class="no-print" style="background:none; border:none; color:#2980b9; cursor:pointer; text-decoration:underline; font-size:13px;"> Lihat Pelanggan (Admin)</button>
+                    <button onclick="window.bukaPelangganAdmin()" class="no-print" style="background:none; border:none; color:#2980b9; cursor:pointer; text-decoration:underline; font-size:13px;">🔒 Lihat Pelanggan (Admin)</button>
                 </div>
             </div>
-
             <div class="kotak">
-                <h3> Kolom Komentar</h3>
+                <h3>💬 Kolom Komentar</h3>
                 <form id="form-komentar" onsubmit="window.simpanKomentar(event)">
                     <input type="text" id="kom_nama" placeholder="Nama Lengkap" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
                     <input type="email" id="kom_email" placeholder="Email" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
@@ -287,7 +271,7 @@
                     <button type="submit" style="width:100%; padding:10px; background:#27ae60; color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Kirim Komentar</button>
                 </form>
                 <div style="margin-top:10px; text-align:center;">
-                    <button onclick="window.bukaKomentarAdmin()" class="no-print" style="background:none; border:none; color:#2980b9; cursor:pointer; text-decoration:underline; font-size:13px;"> Lihat Komentar (Admin)</button>
+                    <button onclick="window.bukaKomentarAdmin()" class="no-print" style="background:none; border:none; color:#2980b9; cursor:pointer; text-decoration:underline; font-size:13px;">🔒 Lihat Komentar (Admin)</button>
                 </div>
             </div>
         </aside>
@@ -321,7 +305,6 @@
         </div>
     </footer>
 
-    <!-- FITUR 3: TOMBOL KEMBALI KE ATAS -->
     <button id="btn-back-to-top" title="Kembali ke Atas">↑</button>
 
     <script type="module">
@@ -355,25 +338,21 @@
         window.ubahMode = function () {
             modeGelap = !modeGelap;
             document.body.classList.toggle('gelap', modeGelap);
-            document.getElementById('tombol-mode').textContent = modeGelap ? "️ Mode Terang" : "🌙 Mode Gelap";
+            document.getElementById('tombol-mode').textContent = modeGelap ? "☀️ Mode Terang" : "🌙 Mode Gelap";
             localStorage.setItem('modeGelapTribuana', modeGelap.toString());
         };
         if (modeGelap) { document.getElementById('tombol-mode').textContent = "☀️ Mode Terang"; }
 
-        // === FITUR 3 & 4: SCROLL LISTENER (Progress Bar & Back to Top) ===
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (winScroll / height) * 100;
             document.getElementById("progress-bar").style.width = scrolled + "%";
-
             const btn = document.getElementById("btn-back-to-top");
             if (winScroll > 300) btn.style.display = "block";
             else btn.style.display = "none";
         });
-        document.getElementById("btn-back-to-top").addEventListener('click', () => {
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        });
+        document.getElementById("btn-back-to-top").addEventListener('click', () => { window.scrollTo({top: 0, behavior: 'smooth'}); });
 
         window.muatBerita = async function () {
             try {
@@ -390,21 +369,18 @@
                 window.tampilDaftarBerita(beritaAktif);
                 window.muatSliderBeritaUtama();
                 window.muatWidgetSidebar();
-                
-                // === CEK HASH SETELAH DATA DIMUAT ===
-                window.cekHashDanBukaBerita(); 
+                window.cekHashDanBukaBerita();
             } catch (error) {
+                console.error("Gagal memuat berita:", error);
                 document.getElementById('daftar-berita').innerHTML = '<p style="color:red; padding:10px;">Gagal memuat data.</p>';
             }
         };
 
-        // === FUNGSI CEK LINK SHARE (HASH ROUTING) ===
         window.cekHashDanBukaBerita = function() {
             const hash = window.location.hash;
             if (hash && hash.startsWith('#baca-')) {
                 const idTarget = hash.replace('#baca-', '');
                 const beritaTarget = daftarBerita.find(b => b.id === idTarget);
-
                 if (beritaTarget) {
                     document.getElementById('halaman-berita-utama').style.display = 'block';
                     document.getElementById('halaman-statis').style.display = 'none';
@@ -435,11 +411,11 @@
                 const idx = daftarBerita.indexOf(b);
                 let gmb = 'https://via.placeholder.com/80x56?text=No+Img';
                 if (b.isiBerita) { const match = b.isiBerita.match(/src\s*=\s*["']([^"']+)["']/i); if (match && match[1]) gmb = match[1]; }
-                html += `<div class="widget-berita" style="cursor:pointer;" onclick="window.bacaBeritaDariWidget(${idx})">
+                html += `<div class="widget-berita" onclick="window.bacaBeritaDariWidget(${idx})">
                     <img src="${gmb}" alt="Thumb">
                     <div style="flex:1; min-width:0;">
                         <h4 style="color:inherit;">${b.judul || 'Tanpa Judul'}</h4>
-                        <small>️ ${b.viewer || 0} |  ${b.tglPublish || '-'}</small>
+                        <small>👁️ ${b.viewer || 0} | 📅 ${b.tglPublish || '-'}</small>
                     </div>
                 </div>`;
             });
@@ -447,9 +423,8 @@
         }
 
         window.bacaBeritaDariWidget = function(indeks) {
-            const idxAktif = daftarAktifDiLayar.indexOf(daftarBerita[indeks]);
-            if (idxAktif !== -1) window.bacaBerita(idxAktif);
-            else window.bacaBeritaLangsung(daftarBerita[indeks]);
+            const b = daftarBerita[indeks];
+            if (b) window.bacaBeritaLangsung(b);
         };
 
         window.tampilDaftarBerita = function (list) {
@@ -482,7 +457,10 @@
                     let div = document.createElement('div');
                     div.className = "berita-item";
                     let gmb = 'https://via.placeholder.com/100x70?text=No+Image';
-                    if (b.isiBerita) { let match = b.isiBerita.match(/src\s*=\s*["']([^"']+)["']/i); if (match && match[1]) gmb = match[1]; }
+                    if (b.isiBerita) { 
+                        let match = b.isiBerita.match(/src\s*=\s*["']([^"']+)["']/i); 
+                        if (match && match[1]) gmb = match[1]; 
+                    }
                     div.innerHTML = `<img src="${gmb}" alt="Gambar"><div style="flex:1;"><h4 style="font-size:15px; margin-bottom:4px; color: inherit;">${b.judul || 'Tanpa Judul'}</h4><small style="color: inherit; opacity: 0.8;">📅 ${b.tglPublish || '-'} | 👁️ ${b.viewer || 0}</small><br><button onclick="window.bacaBerita(${idxSistem})" class="no-print" style="padding:4px 10px; font-size:12px; margin-top:6px; cursor:pointer; background:#27ae60; color:#fff; border:none; border-radius:3px;">Baca Berita</button></div>`;
                     wadahGrup.appendChild(div);
                 });
@@ -490,28 +468,35 @@
             });
         };
 
-        // === FUNGSI BACA BERITA (DENGAN FITUR 5: WAKTU BACA) ===
+        window.bacaBerita = async function(indeks) {
+            if (typeof indeks !== 'number' || indeks < 0 || indeks >= daftarAktifDiLayar.length) {
+                console.error("Indeks berita tidak valid:", indeks);
+                return;
+            }
+            const b = daftarAktifDiLayar[indeks];
+            if (b) {
+                window.bacaBeritaLangsung(b);
+            }
+        };
+
         window.bacaBeritaLangsung = async function(b) {
             if (!b || !b.id) return;
-            try { await updateDoc(doc(db, "berita", b.id), { viewer: increment(1) }); } catch (error) {}
+            try { await updateDoc(doc(db, "berita", b.id), { viewer: increment(1) }); b.viewer = (b.viewer || 0) + 1; } catch (error) {}
             
-            // Update Title Browser (SEO Dasar)
             document.title = `${b.judul} - Tribuana Putra News`;
-
             let isiPenuh = b.isiBerita || '<p style="color:red; padding:20px;">⚠️ Isi kosong.</p>';
             let kategoriBerita = Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || 'Umum');
             
-            // FITUR 5: HITUNG ESTIMASI WAKTU BACA
             const textContent = b.isiBerita ? b.isiBerita.replace(/<[^>]+>/g, '') : '';
             const wordCount = textContent.trim().split(/\s+/).length;
-            const readingTime = Math.ceil(wordCount / 200); // Asumsi 200 kata per menit
+            const readingTime = Math.ceil(wordCount / 200);
             const waktuBacaText = readingTime > 0 ? `| ⏱️ ${readingTime} menit baca` : '';
 
             let videoHTML = '';
             if (b.videoYoutube) {
                 const videoId = extractYoutubeId(b.videoYoutube);
                 if (videoId) {
-                    videoHTML = `<div style="margin-bottom:20px;"><div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15);"><iframe src="https://www.youtube.com/embed/${videoId}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></div>`;
+                    videoHTML = `<div style="margin-bottom:20px;"><div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15);"><iframe src="https://www.youtube.com/embed/${videoId}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" allowfullscreen></iframe></div></div>`;
                 }
             }
 
@@ -536,14 +521,14 @@
             let beritaTerkaitHTML = '';
             const terkait = daftarBerita.filter(x => x.id !== b.id && x.tampilkanDiWeb !== false && (Array.isArray(x.kategori) ? x.kategori.some(k => b.kategori.includes(k)) : x.kategori === b.kategori)).slice(0, 4);
             if (terkait.length > 0) {
-                beritaTerkaitHTML = `<div class="no-print" style="margin-top:30px; padding-top:20px; border-top:2px solid #eee;"><h3 style="color:#2c3e50; margin-bottom:15px;"> Berita Terkait</h3><div style="display:flex; flex-direction:column; gap:12px;">`;
+                beritaTerkaitHTML = `<div class="no-print" style="margin-top:30px; padding-top:20px; border-top:2px solid #eee;"><h3 style="color:#2c3e50; margin-bottom:15px;">📰 Berita Terkait</h3><div style="display:flex; flex-direction:column; gap:12px;">`;
                 terkait.forEach(t => {
                     const tIdx = daftarBerita.indexOf(t);
                     let tGmb = 'https://via.placeholder.com/120x80?text=No+Img';
                     if (t.isiBerita) { const m = t.isiBerita.match(/src\s*=\s*["']([^"']+)["']/i); if (m && m[1]) tGmb = m[1]; }
-                    beritaTerkaitHTML += `<div style="display:flex; gap:12px; padding:12px; background:#f8f9fa; border-radius:6px; cursor:pointer;" onclick="window.bacaBeritaLangsung(daftarBerita[${tIdx}])">
+                    beritaTerkaitHTML += `<div style="display:flex; gap:12px; padding:12px; background:#f8f9fa; border-radius:6px; cursor:pointer;" onclick="window.bacaBeritaDariWidget(${tIdx})">
                         <img src="${tGmb}" style="width:120px; height:80px; object-fit:cover; border-radius:4px; flex-shrink:0;">
-                        <div style="flex:1;"><h4 style="margin:0 0 6px 0; font-size:15px; color:#2c3e50; line-height:1.3;">${t.judul}</h4><small style="color:#666;"> ${t.tglPublish || '-'} | 👁️ ${t.viewer || 0}</small></div>
+                        <div style="flex:1;"><h4 style="margin:0 0 6px 0; font-size:15px; color:#2c3e50; line-height:1.3;">${t.judul}</h4><small style="color:#666;">📅 ${t.tglPublish || '-'} | 👁️ ${t.viewer || 0}</small></div>
                     </div>`;
                 });
                 beritaTerkaitHTML += `</div></div>`;
@@ -559,14 +544,10 @@
                 ${beritaTerkaitHTML}
             `;
             
+            document.getElementById('area-slider-berita').style.display = 'none';
+            document.getElementById('area-berita-penuh').style.display = 'block';
             window.hentikanTimerSliderBerita();
             window.scrollTo({top: 0, behavior: 'smooth'});
-        };
-
-        // Alias untuk konsistensi
-        window.bacaBerita = function(indeks) {
-            const b = daftarAktifDiLayar[indeks];
-            if (b) window.bacaBeritaLangsung(b);
         };
 
         window.kembaliKeSlider = function () {
@@ -607,14 +588,19 @@
             let sumberGambar = gambarKosong;
             if (b.isiBerita) { let cocok = b.isiBerita.match(/src\s*=\s*["']([^"']+)["']/i); if (cocok && cocok[1]) sumberGambar = cocok[1]; }
             elGambar.src = sumberGambar; elJudul.textContent = b.judul || '(Tanpa Judul)';
-            if (elKategori) elKategori.textContent = `📂 ${Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || 'Nasional')} |  ${b.tglPublish || '-'}`;
+            if (elKategori) elKategori.textContent = `📂 ${Array.isArray(b.kategori) ? b.kategori.join(', ') : (b.kategori || 'Nasional')} | 📅 ${b.tglPublish || '-'}`;
         };
         window.mulaiTimerSliderBerita = function () { window.hentikanTimerSliderBerita(); if (window.daftarSliderBerita.length > 1) timerSliderBerita = setInterval(() => { window.geserSliderBerita(1); }, 5000); };
         window.hentikanTimerSliderBerita = function () { if (timerSliderBerita) { clearInterval(timerSliderBerita); timerSliderBerita = null; } };
         window.geserSliderBerita = function (arah) { if (window.daftarSliderBerita.length === 0) return; window.indeksSliderBerita += arah; if (window.indeksSliderBerita < 0) window.indeksSliderBerita = window.daftarSliderBerita.length - 1; if (window.indeksSliderBerita >= window.daftarSliderBerita.length) window.indeksSliderBerita = 0; window.tampilItemSliderBerita(); };
         window.tombolPanahKanan = function () { window.geserSliderBerita(1); window.mulaiTimerSliderBerita(); };
         window.tombolPanahKiri = function () { window.geserSliderBerita(-1); window.mulaiTimerSliderBerita(); };
-        window.bukaBeritaDariSlider = function () { let beritaSaatIni = window.daftarSliderBerita[window.indeksSliderBerita]; if (!beritaSaatIni) return; let idx = daftarAktifDiLayar.findIndex(b => b.id === beritaSaatIni.id || b.judul === beritaSaatIni.judul); if (idx !== -1) window.bacaBerita(idx); };
+        window.bukaBeritaDariSlider = function () { 
+            let beritaSaatIni = window.daftarSliderBerita[window.indeksSliderBerita]; 
+            if (!beritaSaatIni) return; 
+            let idx = daftarAktifDiLayar.findIndex(b => b.id === beritaSaatIni.id || b.judul === beritaSaatIni.judul); 
+            if (idx !== -1) window.bacaBerita(idx); 
+        };
 
         function extractYoutubeId(url) { if (!url) return null; const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/; const match = url.match(regExp); return (match && match[2].length === 11) ? match[2] : null; }
 

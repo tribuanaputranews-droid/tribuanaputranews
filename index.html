@@ -150,30 +150,46 @@
                 font-size: 0.75rem; 
                 padding: 6px 10px; 
             }
-
-            /* 4. Menu Navigasi Mobile-Friendly */
+            /* 4. Menu Navigasi Mobile Horizontal Scroll */
             .menu-bar ul { 
-                flex-direction: column; 
-                padding: 0; 
+                flex-direction: row;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch; /* Scroll halus di iOS/iPhone */
+                padding: 0 0.5rem;
+                scrollbar-width: none; /* Sembunyikan scrollbar di Firefox */
+                -ms-overflow-style: none; /* Sembunyikan scrollbar di IE/Edge */
+            }
+            .menu-bar ul::-webkit-scrollbar {
+                display: none; /* Sembunyikan scrollbar di Chrome, Safari, Opera */
             }
             .menu-bar li { 
-                width: 100%; 
-                border-bottom: 1px solid rgba(255,255,255,0.1); 
+                width: auto;
+                flex-shrink: 0; /* Mencegah item menu mengecil/terpotong */
+                border-bottom: none; 
             }
             .menu-bar a { 
                 padding: 0.875rem 1rem; 
                 font-size: 0.9375rem;
+                white-space: nowrap; /* Mencegah teks menu turun ke baris baru */
             }
+            /* Sub-menu tetap dropdown agar rapi saat diklik di HP */
             .sub-menu { 
-                position: static; 
-                box-shadow: none; 
-                background: rgba(0,0,0,0.15); 
-                min-width: 100%;
+                position: absolute; 
+                top: 100%;
+                left: 0;
+                box-shadow: 0 0.25rem 0.375rem rgba(0,0,0,0.2); 
+                background: var(--web-menu-latar); 
+                min-width: 12rem;
+                z-index: 1001;
             }
             .sub-menu a { 
-                padding: 0.75rem 1rem 0.75rem 2rem; 
+                padding: 0.75rem 1rem; 
                 font-size: 0.875rem;
+                white-space: normal;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
+            
             .pencarian { 
                 width: 100%; 
                 margin: 0.5rem 0; 

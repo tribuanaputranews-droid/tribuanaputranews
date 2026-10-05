@@ -150,39 +150,50 @@
                 font-size: 0.75rem; 
                 padding: 6px 10px; 
             }
-            /* 4. Menu Navigasi Mobile Horizontal Scroll */
+            /* 4. Menu Navigasi Mobile Horizontal Scroll + Dropdown */
             .menu-bar ul { 
                 flex-direction: row;
                 flex-wrap: nowrap;
                 overflow-x: auto;
-                -webkit-overflow-scrolling: touch; /* Scroll halus di iOS/iPhone */
+                overflow-y: visible; /* PENTING: Agar dropdown tidak terpotong ke bawah */
+                -webkit-overflow-scrolling: touch; /* Scroll halus di iOS */
                 padding: 0 0.5rem;
-                scrollbar-width: none; /* Sembunyikan scrollbar di Firefox */
-                -ms-overflow-style: none; /* Sembunyikan scrollbar di IE/Edge */
+                scrollbar-width: none;
+                -ms-overflow-style: none;
             }
             .menu-bar ul::-webkit-scrollbar {
-                display: none; /* Sembunyikan scrollbar di Chrome, Safari, Opera */
+                display: none; /* Sembunyikan scrollbar agar rapi */
             }
             .menu-bar li { 
                 width: auto;
-                flex-shrink: 0; /* Mencegah item menu mengecil/terpotong */
-                border-bottom: none; 
+                flex-shrink: 0; /* Mencegah teks menu terjepit */
+                border-bottom: none;
+                position: relative;
             }
             .menu-bar a { 
                 padding: 0.875rem 1rem; 
                 font-size: 0.9375rem;
-                white-space: nowrap; /* Mencegah teks menu turun ke baris baru */
+                white-space: nowrap; /* Mencegah teks turun baris */
             }
-            /* Sub-menu tetap dropdown agar rapi saat diklik di HP */
+            
+            /* Sub-menu default tersembunyi */
             .sub-menu { 
+                display: none;
                 position: absolute; 
                 top: 100%;
                 left: 0;
-                box-shadow: 0 0.25rem 0.375rem rgba(0,0,0,0.2); 
                 background: var(--web-menu-latar); 
                 min-width: 12rem;
-                z-index: 1001;
+                z-index: 9999; /* Pastikan muncul di atas semua elemen lain */
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                border-radius: 0 0 4px 4px;
             }
+
+            /* Tampilkan sub-menu HANYA saat parent LI memiliki kelas 'mobile-menu-open' */
+            .menu-bar li.mobile-menu-open .sub-menu {
+                display: block;
+            }
+
             .sub-menu a { 
                 padding: 0.75rem 1rem; 
                 font-size: 0.875rem;
@@ -317,7 +328,7 @@
         <nav class="menu-bar">
             <ul>
                 <li><a href="#" onclick="window.tampilSemua(); return false;">🏠 Home</a></li>
-                <li><a href="#">Kabar Daerah ▼</a>
+                <li><a href="#" onclick="event.preventDefault(); this.parentElement.classList.toggle('mobile-menu-open');">Kabar Daerah ▼</a>
                     <div class="sub-menu">
                         <a href="#" onclick="window.filterKategori('Tasikmalaya'); return false;">Tasikmalaya</a>
                         <a href="#" onclick="window.filterKategori('Kota Tasikmalaya'); return false;">Kota Tasikmalaya</a>
@@ -1087,5 +1098,17 @@
             if (areaIklan) { areaIklan.addEventListener('mouseenter', window.hentikanTimerIklanSamping); areaIklan.addEventListener('mouseleave', window.mulaiTimerIklanSamping); }
         });
     </script>
+        <script>
+        // Menutup sub-menu mobile jika mengetuk di luar area menu
+        document.addEventListener('click', function(event) {
+            const menuItems = document.querySelectorAll('.menu-bar li');
+            menuItems.forEach(item => {
+                // Jika yang diklik BUKAN bagian dari item menu, hapus kelas open-nya
+                if (!item.contains(event.target)) {
+                    item.classList.remove('mobile-menu-open');
+                }
+            });
+        });
+    </script>  
 </body>
 </html>

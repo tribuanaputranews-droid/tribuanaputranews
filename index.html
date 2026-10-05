@@ -214,10 +214,20 @@
                 font-size: 0.9375rem;
             }
 
-            /* 5. Running Text */
+            /* 5. Running Text - Tetap Muncul di Bawah Layar */
             .running { 
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                z-index: 9999;
                 font-size: 0.8125rem; 
-                padding: 0.5rem 0.75rem;
+                padding: 0.625rem 0.75rem;
+                box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+            }
+            /* Beri ruang di bawah agar konten tidak tertutup running text */
+            .footer-utama {
+                margin-bottom: 2.5rem;
             }
 
             /* 6. Slider Berita Utama */
